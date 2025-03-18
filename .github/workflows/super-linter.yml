@@ -1,12 +1,13 @@
----
 name: Lint
 
 on: # yamllint disable-line rule:truthy
   push:
-    - test-*
-    - main
+    branches:
+      - test-*
+      - main
   pull_request:
-    - main
+    branches:
+      - main
 
 permissions: {}
 
