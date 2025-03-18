@@ -1,3 +1,4 @@
+---
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: "v5.0.0"
@@ -9,7 +10,16 @@ repos:
     rev: "3.2.386"
     hooks:
       - id: checkov
-        args: ["--skip-results-upload", "--enable-secret-scan-all-files", "--skip-check", "CKV_GIT_1", "--skip-check", "CKV_GIT_3", "--skip-check", "CKV_GIT_5", "--skip-check", "CKV2_GIT_1", "--skip-check", "CKV2_GHA_1"]
+        args:
+          [
+            "--skip-results-upload",
+            "--enable-secret-scan-all-files",
+            "--skip-check", "CKV_GIT_1",
+            "--skip-check", "CKV_GIT_3",
+            "--skip-check", "CKV_GIT_5",
+            "--skip-check", "CKV2_GIT_1",
+            "--skip-check", "CKV2_GHA_1",
+          ]
   - repo: https://github.com/gruntwork-io/pre-commit
     rev: "v0.1.26"
     hooks:
