@@ -9,7 +9,7 @@ baseline: .github/linters/.checkov.baseline
 output-baseline-as-skipped: true
 
 # Don't report passed checks in output
-quiet: true
+quiet: false
 
 # The tests directory contains files that we need for test cases that are
 # expected to fail. Checkov would catch those issues, so we exclude the tests
