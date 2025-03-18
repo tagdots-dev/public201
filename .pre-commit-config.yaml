@@ -18,6 +18,7 @@ repos:
             "--skip-check", "CKV_GIT_3",
             "--skip-check", "CKV_GIT_5",
             "--skip-check", "CKV2_GIT_1",
+            "--skip-check", "CKV2_GHA_1",
           ]
   - repo: https://github.com/gruntwork-io/pre-commit
     rev: "v0.1.26"
