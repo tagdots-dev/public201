@@ -1,6 +1,14 @@
 name: Licensed
 
 on:
+  push:
+    branches:
+      - main
+      - test-*
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
   workflow_call:
 
 jobs:
