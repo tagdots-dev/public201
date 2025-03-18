@@ -19,12 +19,6 @@ repos:
             "--skip-check", "CKV_GIT_5",
             "--skip-check", "CKV2_GIT_1",
           ]
-          # Skip Check
-          # ID         - Description
-          # CKV_GIT_1  - Ensure GitHub repo is Private
-          # CKV_GIT_3  - GitHub Repo doesn’t have vulnerability alerts enabled
-          # CKV_GIT_5  - GitHub PRs should require at least 2 approvals
-          # CKV2_GIT_1 - Ensure each Repo has branch protection associated
   - repo: https://github.com/gruntwork-io/pre-commit
     rev: "v0.1.26"
     hooks:
