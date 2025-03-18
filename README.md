@@ -1,2 +1,2 @@
 # public201
-repo test
+test public repository
