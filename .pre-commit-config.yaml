@@ -1,0 +1,23 @@
+# .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: "v5.0.0"
+    hooks:
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+  - repo: https://github.com/bridgecrewio/checkov.git
+    rev: "3.2.386"
+    hooks:
+      - id: checkov
+        args:
+          [
+            "--skip-results-upload",
+            "--enable-secret-scan-all-files",
+            "--skip-check", "CKV_GIT_1",
+            "--skip-check", "CKV_GIT_3",
+            "--skip-check", "CKV2_GIT_1",
+            "--quiet"
+          ]
+          # Skip Check
+          # ID         - Description
