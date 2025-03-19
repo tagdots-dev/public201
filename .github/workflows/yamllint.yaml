@@ -22,3 +22,8 @@ jobs:
       uses: actions/checkout@v4
     - name: yaml-lint
       uses: ibiqlik/action-yamllint@v3
+      with:
+        config_file: config/cfg-yamllint.yaml
+        tflint_version: v3.1.1
+    - name: Show version
+      run: yamllint --version
