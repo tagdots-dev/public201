@@ -1,5 +1,13 @@
 ---
 repos:
+  ## Check Github Action
+  - repo: https://github.com/sirosen/check-jsonschema
+    rev: "0.31.3"
+    hooks:
+      - name: Check GitHub Actions Workflows
+        id: check-github-workflows
+        args: ["--verbose"]
+
   ## Check Files and Configurations
   - repo: https://github.com/adrienverge/yamllint
     rev: "v1.36.2"
@@ -71,14 +79,6 @@ repos:
             "--skip-check", "CKV_DOCKER_3",
             "--quiet"
           ]
-
-  ## Check Github Action
-  - repo: https://github.com/sirosen/check-jsonschema
-    rev: "0.31.3"
-    hooks:
-      - name: check github actions workflows
-        id: check-github-workflows
-        args: ["--verbose"]
 #
 #  - repo: https://github.com/pre-commit/mirrors-prettier
 #    rev: "v4.0.0-alpha.8"
