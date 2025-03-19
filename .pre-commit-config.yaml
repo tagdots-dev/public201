@@ -16,15 +16,13 @@ repos:
         id: yamllint
         args:
           [
-            "-c", ".github/workflows/config/yamllint-cfg.yaml"
+            "-c=.github/workflows/config/yamllint-cfg.yaml"
           ]
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: "v5.0.0"
     hooks:
-      # check file format
       - name: Check json
         id: check-json
-      # check misc
       - name: Check added large files
         id: check-added-large-files
       - name: Check executables with shebangs
@@ -32,7 +30,6 @@ repos:
       - name: Check shebangs scripts are executable
         id: check-shebang-scripts-are-executable
         exclude: .py$
-      # fix content
       - name: Fix end of file without newline
         id: end-of-file-fixer
         exclude: ^dist/
@@ -41,7 +38,6 @@ repos:
         exclude: ^dist/
       - name: Fix to sort requirements.txt
         id: requirements-txt-fixer
-      # security
       - name: Detect aws credentials
         id: detect-aws-credentials
         args:
