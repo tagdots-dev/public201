@@ -1,0 +1,24 @@
+---
+name: YAML-Linter
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches:
+      - main
+      - test-*
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  yaml-lint:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v4
+    - name: yaml-lint
+      uses: ibiqlik/action-yamllint@v3

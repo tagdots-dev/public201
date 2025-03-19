@@ -1,6 +1,6 @@
+---
 name: Terraform-Linter
-
-on:
+on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - main
@@ -11,11 +11,11 @@ on:
 
 jobs:
   tflint:
-    runs-on: ${{ matrix.os }}
-
     strategy:
       matrix:
         os: [ubuntu-latest]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
     - name: Checkout source code
