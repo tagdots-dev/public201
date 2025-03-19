@@ -1,27 +1,27 @@
 ---
-  name: Terraform-Validate
-  on:  # yamllint disable-line rule:truthy
-    push:
-      branches:
-        - main
-        - test-*
-    pull_request:
-      branches:
-        - main
+name: Terraform-Validate
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches:
+      - main
+      - test-*
+  pull_request:
+    branches:
+      - main
 
-  jobs:
-    tflint:
-      strategy:
-        matrix:
-          os: [ubuntu-latest]
+jobs:
+  tfvalidate:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
 
-      runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
 
-      steps:
+    steps:
       - name: Checkout source code
         uses: actions/checkout@v4
       - name: terraform validate
-        uses: dflook/terraform-validate@v1
         id: validate
+        uses: dflook/terraform-validate@v1
         # with:
         #   path: my-terraform-config
