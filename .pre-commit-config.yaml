@@ -15,9 +15,7 @@ repos:
       - name: Check yaml
         id: yamllint
         args:
-          [
-            "-c=.github/workflows/config/yamllint-cfg.yaml"
-          ]
+          [--strict, -c=.github/workflows/config/yamllint-cfg.yaml]
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: "v5.0.0"
     hooks:
