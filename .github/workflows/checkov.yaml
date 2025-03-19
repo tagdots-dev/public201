@@ -27,8 +27,8 @@ jobs:
         with:
           # skip-results-upload:
           # enable-secrets-scan-all-files:
-          skip_results_upload: ""
-          enable_secrets_scan_all_files: ""
+          skip_results_upload: "true"
+          enable_secrets_scan_all_files: "true"
           skip_check: CKV_GIT_1,CKV_GIT_3,CKV_GIT_5,CKV2_GIT_1,CKV2_GHA_1,CKV_DOCKER_2,CKV_DOCKER_3
           quiet: true
           # Skip Check
