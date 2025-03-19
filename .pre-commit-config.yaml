@@ -19,6 +19,7 @@ repos:
     rev: "3.2.386"
     hooks:
       - id: checkov
+        name: checkov
         args:
           [
             "--skip-results-upload",
