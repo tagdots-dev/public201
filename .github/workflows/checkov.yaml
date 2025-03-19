@@ -36,3 +36,5 @@ jobs:
           # CKV_GIT_5  - GitHub pull requests should require at least 2 approvals
           # CKV2_GIT_1 - Ensure each Repository has branch protection associated
           # CKV2_GHA_1 - Ensure top-level permissions are not set to write-all
+      - name: Show version
+        run: checkov --version

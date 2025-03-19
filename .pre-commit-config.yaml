@@ -6,6 +6,15 @@ repos:
       - id: check-yaml
       - id: end-of-file-fixer
       - id: trailing-whitespace
+  - repo: https://github.com/adrienverge/yamllint
+    rev: "v1.36.2"
+    hooks:
+      - id: yamllint
+        args:
+          [
+            "-c",
+            ".github/workflows/config/yamllint-cfg.yaml"
+          ]
   - repo: https://github.com/bridgecrewio/checkov.git
     rev: "3.2.386"
     hooks:
