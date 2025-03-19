@@ -24,14 +24,25 @@ jobs:
       - name: Checkov GitHub Action
         id: checkov
         uses: bridgecrewio/checkov-action@v12
-        env:
-          ENABLE_SECRETS_SCAN_ALL_FILES: true
-          SKIP_RESULTS_UPLOAD: true
-        with:
+      - name: Run Checkov
+        id: run-checkov
+        run: checkov -d .
+          [
+            "--skip-results-upload",
+            "--enable-secret-scan-all-files",
+            "--skip-check", "CKV_GIT_1",
+            "--skip-check", "CKV_GIT_3",
+            "--skip-check", "CKV_GIT_5",
+            "--skip-check", "CKV2_GIT_1",
+            "--skip-check", "CKV2_GHA_1",
+            "--skip-check", "CKV_DOCKER_2",
+            "--skip-check", "CKV_DOCKER_3",
+            "--quiet"
+          ]
           # skip_results_upload: ''
           # enable_secrets_scan_all_files: ''
-          skip_check: CKV_GIT_1,CKV_GIT_3,CKV_GIT_5,CKV2_GIT_1,CKV2_GHA_1,CKV_DOCKER_2,CKV_DOCKER_3
-          quiet: true
+          # skip_check: CKV_GIT_1,CKV_GIT_3,CKV_GIT_5,CKV2_GIT_1,CKV2_GHA_1,CKV_DOCKER_2,CKV_DOCKER_3
+          # quiet: true
           # Skip Check
           # ID         - Description
           # CKV_GIT_1  - Ensure GitHub repository is Private
