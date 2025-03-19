@@ -1,4 +1,4 @@
-name: Lint
+name: tflint
 on:
   push:
     branches:
@@ -10,11 +10,12 @@ on:
 
 jobs:
   tflint:
-    runs-on: ${{ matrix.os }}
+    # runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
+    # strategy:
+    #   matrix:
+    #     os: [ubuntu-latest, windows-latest]
 
     steps:
     - uses: actions/checkout@v4
