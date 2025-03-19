@@ -58,7 +58,7 @@ repos:
         id: checkov
         args:
           [
-            "-d", ".",
+            "-d", ".", "-a",
             "--skip-results-upload",
             "--enable-secret-scan-all-files",
             "--skip-check", "CKV_GIT_1",
