@@ -1,61 +1,63 @@
 ---
 repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: "v5.0.0"
-    hooks:
-      # check file format
-      - name: check json
-        id: check-json
-      - name: check yaml
-        id: check-yaml
-      # check misc
-      - name: check added large files
-        id: check-added-large-files
-      - name: check executables with shebangs
-        id: check-executables-have-shebangs
-      - name: check shebangs scripts are executable
-        id: check-shebang-scripts-are-executable
-        exclude: .py$
-      # update content
-      - name: update end of file without newline
-        id: end-of-file-fixer
-        exclude: ^dist/
-      - name: update to trim whitespace from ends of lines
-        id: trailing-whitespace
-        exclude: ^dist/
-      - name: update to sort requirements.txt
-        id: requirements-txt-fixer
-      # security
-      - name: detect aws credentials
-        id: detect-aws-credentials
-        args:
-          - --allow-missing-credentials
-      - name: detect private key
-        id: detect-private-key
-
-  # Check Files and Configurations
+  ## Check Files and Configurations
   - repo: https://github.com/adrienverge/yamllint
     rev: "v1.36.2"
     hooks:
-      - name: validate yaml lint
+      - name: Check yaml
         id: yamllint
         args:
           [
             "-c",
             ".github/workflows/config/yamllint-cfg.yaml"
           ]
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: "v5.0.0"
+    hooks:
+      # check file format
+      - name: Check json
+        id: check-json
+      # check misc
+      - name: Check added large files
+        id: check-added-large-files
+      - name: Check executables with shebangs
+        id: check-executables-have-shebangs
+      - name: Check shebangs scripts are executable
+        id: check-shebang-scripts-are-executable
+        exclude: .py$
+      # fix content
+      - name: Fix end of file without newline
+        id: end-of-file-fixer
+        exclude: ^dist/
+      - name: Fix to trim whitespace from ends of lines
+        id: trailing-whitespace
+        exclude: ^dist/
+      - name: Fix to sort requirements.txt
+        id: requirements-txt-fixer
+      # security
+      - name: Detect aws credentials
+        id: detect-aws-credentials
+        args:
+          - --allow-missing-credentials
+      - name: Detect private key
+        id: detect-private-key
+
+  ## Terraform
   - repo: https://github.com/gruntwork-io/pre-commit
     rev: "v0.1.26"
     hooks:
-      - name: terraform-fmt
+      - name: Terraform format
         id: terraform-fmt
-      - name: terraform-lint
+      - name: Terraform linter
         id: tflint
+
+  ## Scan IaC
   - repo: https://github.com/bridgecrewio/checkov.git
     rev: "3.2.386"
     hooks:
-      - name: scan IaC
+      - name: Checkov to scan IaC
         id: checkov
+        files: \.tf$|\.tfvars$|\.json$|\.y(a)?ml$|\.py$|\.sh$|\.md$
         args:
           [
             "--skip-results-upload",
@@ -67,9 +69,10 @@ repos:
             "--skip-check", "CKV2_GHA_1",
             "--skip-check", "CKV_DOCKER_2",
             "--skip-check", "CKV_DOCKER_3",
+            "--quiet"
           ]
 
-  # Check Github Action
+  ## Check Github Action
   - repo: https://github.com/sirosen/check-jsonschema
     rev: "0.31.3"
     hooks:
