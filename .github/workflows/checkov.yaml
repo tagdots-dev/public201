@@ -20,7 +20,7 @@ jobs:
         id: checkov
         uses: bridgecrewio/checkov-action@v12
         with:
-          skip_check: [CKV_GIT_1,CKV_GIT_3,CKV_GIT_5,CKV2_GIT_1,CKV2_GHA_1]
+          skip_check: CKV_GIT_1,CKV_GIT_3,CKV_GIT_5,CKV2_GIT_1,CKV2_GHA_1
           quiet: false
           skip_results_upload:
           enable_secrets_scan_all_files:
