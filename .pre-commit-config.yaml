@@ -67,7 +67,6 @@ repos:
             "--skip-check", "CKV2_GHA_1",
             "--skip-check", "CKV_DOCKER_2",
             "--skip-check", "CKV_DOCKER_3",
-            "--quiet"
           ]
 
   # Check Github Action
