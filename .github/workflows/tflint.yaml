@@ -19,6 +19,8 @@ jobs:
     steps:
     - name: Checkout source code
       uses: actions/checkout@v4
+    - name: Create Cache plugin dir
+      run: mkdir -p ~/.tflint.d/plugins
     - name: Cache plugin dir
       uses: actions/cache@v4
       with:
