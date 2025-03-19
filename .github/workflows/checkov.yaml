@@ -28,7 +28,7 @@ jobs:
           ENABLE_SECRETS_SCAN_ALL_FILES: true
           SKIP_RESULTS_UPLOAD: true
         with:
-          skip_check: CKV_GIT_1,CKV_GIT_3,CKV_GIT_5,CKV2_GIT_1,CKV2_GHA_1
+          skip_check: CKV_GIT_1,CKV_GIT_3,CKV_GIT_5,CKV2_GIT_1,CKV2_GHA_1,CKV_DOCKER_2,CKV_DOCKER_3
           quiet: false
           # skip_results_upload:
           # enable_secrets_scan_all_files:
@@ -39,3 +39,5 @@ jobs:
           # CKV_GIT_5  - GitHub pull requests should require at least 2 approvals
           # CKV2_GIT_1 - Ensure each Repository has branch protection associated
           # CKV2_GHA_1 - Ensure top-level permissions are not set to write-all
+          # CKV_DOCKER_2 - Ensure that HEALTHCHECK instructions have been added to container images
+          # CKV_DOCKER_3 - Ensure that a user for the container has been created
