@@ -1,4 +1,4 @@
-name: tflint
+name: Terraform-Linter
 
 on:
   push:
