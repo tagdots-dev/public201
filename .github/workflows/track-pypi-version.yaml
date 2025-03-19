@@ -25,8 +25,8 @@ jobs:
         uses: Verbalinsurection/track-pypi-version@1.1.6
         id: checkr
         with:
-          compush: 'true'
-          backup: 'false'
-          reqfile: './requirements.txt'
+          compush: "true"
+          backup: "true"
+          reqfile: "./requirements.txt"
       - name: Get if update needed output
         run: echo ${{ steps.checkr.outputs.commit }}
