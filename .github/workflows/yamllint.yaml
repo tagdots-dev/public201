@@ -23,6 +23,6 @@ jobs:
     - name: yaml-lint
       uses: ibiqlik/action-yamllint@v3
       with:
-        config_file: config/cfg-yamllint.yaml
+        config_file: .github/workflows/config/cfg-yamllint.yaml
     - name: Show version
       run: yamllint --version
