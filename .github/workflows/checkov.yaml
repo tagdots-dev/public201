@@ -32,7 +32,7 @@ jobs:
           skip_check: CKV_GIT_1,CKV_GIT_3,CKV_GIT_5,CKV2_GIT_1,CKV2_GHA_1,CKV_DOCKER_2,CKV_DOCKER_3
           quiet: true
           # Skip Check
-          # ID           - Description
+          # ID           Description
           # CKV_GIT_1    - Ensure GitHub repository is Private
           # CKV_GIT_3    - GitHub Repository defined in Terraform doesn’t have vulnerability alerts enabled
           # CKV_GIT_5    - GitHub pull requests should require at least 2 approvals
