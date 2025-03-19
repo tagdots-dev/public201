@@ -25,7 +25,7 @@ jobs:
       uses: actions/cache@v4
       with:
         path: ~/.tflint.d/plugins
-        key: ${{ matrix.os }}-tflint-${{ hashFiles('.tflint.hcl') }}
+        key: ${{ matrix.os }}-tflint-$(date '+%Y%m%d')
     - name: Setup TFLint
       uses: terraform-linters/setup-tflint@v4
       with:
