@@ -5,6 +5,11 @@ repos:
     hooks:
       - id: end-of-file-fixer
       - id: trailing-whitespace
+  - repo: https://github.com/codespell-project/codespell
+    rev: "v2.4.1"
+    hooks:
+      - id: codespell
+        files: ^.*\.md$
   - repo: https://github.com/adrienverge/yamllint
     rev: "v1.36.2"
     hooks:
