@@ -1,4 +1,5 @@
 name: tflint
+
 on:
   push:
     branches:
@@ -36,6 +37,7 @@ jobs:
       run: tflint --init
       env:
         # https://github.com/terraform-linters/tflint/blob/master/docs/user-guide/plugins.md#avoiding-rate-limiting
+        # Summary: TFLint calls the GitHub API to get release metadata
         GITHUB_TOKEN: ${{ github.token }}
     - name: Run TFLint
       run: tflint --recursive -f json
