@@ -28,5 +28,9 @@ jobs:
           compush: "true"
           backup: "true"
           reqfile: "./requirements.txt"
-      - name: Get if update needed output
-        run: echo ${{ steps.checkr.outputs.commit }}
+      - name: Save state
+        run: echo "{name}={value}" >> $GITHUB_STATE
+      - name: Set output
+        run: echo "{name}={value}" >> $GITHUB_OUTPUT
+      # - name: Get if update needed output
+      #   run: echo ${{ steps.checkr.outputs.commit }}
