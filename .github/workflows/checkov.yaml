@@ -1,0 +1,26 @@
+name: checkov
+
+on:
+  push:
+    branches:
+      - main
+      - test-*
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+      - name: Checkov GitHub Action
+        id: checkov
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          skip_check: CKV_GIT_1, CKV_GIT_3, CKV_GIT_5, CKV2_GIT_1, CKV2_GHA_1
+          output_format: json
+          log_level: WARNING
+          quiet: false
