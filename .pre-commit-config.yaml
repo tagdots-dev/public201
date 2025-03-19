@@ -30,10 +30,10 @@ repos:
         exclude: .py$
       - name: Fix end of file without newline
         id: end-of-file-fixer
-        exclude: ^dist/
+        exclude: ^test/
       - name: Fix to trim whitespace from ends of lines
         id: trailing-whitespace
-        exclude: ^dist/
+        exclude: ^test/
       - name: Fix to sort requirements.txt
         id: requirements-txt-fixer
       - name: Detect aws credentials
