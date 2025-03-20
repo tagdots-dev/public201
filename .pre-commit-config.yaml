@@ -1,12 +1,13 @@
 ---
 repos:
-  ## Check and Flag Issues with Configurations, Files, Format
+  ## Check and Flag Issues on Configurations, File Format, Stylistic Issues
   - repo: https://github.com/sirosen/check-jsonschema
     rev: "0.31.3"
     hooks:
       - name: Check GitHub Actions Workflows
         id: check-github-workflows
         args: ["--verbose"]
+
   - repo: https://github.com/adrienverge/yamllint
     rev: "v1.36.2"
     hooks:
@@ -14,12 +15,14 @@ repos:
         id: yamllint
         args:
           [--strict, -c=.github/workflows/config/yamllint-cfg.yaml]
+
   - repo: https://github.com/hadolint/hadolint
     rev: "v2.12.0"
     hooks:
       - name: Check Dockerfile
         id: hadolint
         args: [--config, .github/workflows/config/hadolint-cfg.yaml]
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: "v5.0.0"
     hooks:
@@ -56,7 +59,19 @@ repos:
       - name: Terraform linter
         id: tflint
 
-  ## Scan IaC
+  ## Python
+  - repo: https://github.com/pycqa/isort
+    rev: "6.0.1"
+    hooks:
+      - name: Python isort
+        id: isort
+  - repo: https://github.com/pycqa/flake8
+    rev: "7.1.2"
+    hooks:
+      - name: Python flake8
+        id: flake8
+
+  ## Scan IaC and Miscellaneous
   - repo: https://github.com/bridgecrewio/checkov.git
     rev: "3.2.386"
     hooks:
@@ -76,12 +91,3 @@ repos:
             "--skip-check", "CKV_DOCKER_3",
             "--quiet"
           ]
-#
-#  - repo: https://github.com/pre-commit/mirrors-prettier
-#    rev: "v4.0.0-alpha.8"
-#    hooks:
-#      - id: prettier
-#  - repo: https://github.com/pryorda/dockerfilelint-precommit-hooks
-#    rev: v0.1.0
-#    hooks:
-#      - id: dockerfilelint

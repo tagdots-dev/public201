@@ -40,4 +40,4 @@ jobs:
         # Summary: TFLint calls the GitHub API to get release metadata
         GITHUB_TOKEN: ${{ github.token }}
     - name: Run TFLint
-      run: tflint --recursive -f json
+      run: tflint --recursive -f sarif
