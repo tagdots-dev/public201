@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 from setuptools import find_packages, setup
 
+
 project = "opp-ddog-metric"
 version = "1.0.0"
 
 setup(
-    name=project,
+    # name=project,
     version=version,
     description="Get OPP DB row count and write metric to Datadog",
     author="Globality Engineering",
