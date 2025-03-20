@@ -1,14 +1,12 @@
 ---
 repos:
-  ## Check Github Action
+  ## Check and Flag Issues with Configurations, Files, Format
   - repo: https://github.com/sirosen/check-jsonschema
     rev: "0.31.3"
     hooks:
       - name: Check GitHub Actions Workflows
         id: check-github-workflows
         args: ["--verbose"]
-
-  ## Check Files and Configurations
   - repo: https://github.com/adrienverge/yamllint
     rev: "v1.36.2"
     hooks:
@@ -16,6 +14,12 @@ repos:
         id: yamllint
         args:
           [--strict, -c=.github/workflows/config/yamllint-cfg.yaml]
+  - repo: https://github.com/hadolint/hadolint
+    rev: "v2.12.0"
+    hooks:
+      - name: Check Dockerfile
+        id: hadolint
+        args: [--config, .github/workflows/config/hadolint-cfg.yaml]
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: "v5.0.0"
     hooks:
