@@ -2,15 +2,15 @@
 from setuptools import find_packages, setup
 
 
-project = "opp-ddog-metric"
+project = "app-ddog-metric"
 version = "1.0.0"
 
 setup(
     # name=project,
     version=version,
     description="Get OPP DB row count and write metric to Datadog",
-    author="Globality Engineering",
-    author_email="engineering@globality.com",
+    author="Test User 101",
+    author_email="engineering@testuser101.com",
     packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
     include_package_data=True,
     zip_safe=False,
@@ -22,7 +22,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'opp-ddog-metric = opp_ddog_metrics.main:cli'
+            'app-ddog-metric = app_ddog_metrics.main:cli'
         ],
     },
     extras_require={
