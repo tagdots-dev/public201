@@ -25,6 +25,7 @@ repos:
     hooks:
       - name: Check Json
         id: check-json
+        types: [json]
       - name: Check added large files
         id: check-added-large-files
         args: ['--maxkb=2000']
@@ -61,18 +62,18 @@ repos:
   - repo: https://github.com/PyCQA/autoflake
     rev: v2.2.1
     hooks:
-      - name: Python autoflake (remove unused import & variables)
+      - name: Python autoflake
         id: autoflake
         args: ["--remove-all-unused-imports", "--in-place", "--recursive"]
   - repo: https://github.com/pycqa/isort
     rev: "6.0.1"
     hooks:
-      - name: Python isort (organize & sort import statements)
+      - name: Python isort
         id: isort
   - repo: https://github.com/pycqa/flake8
     rev: "7.1.2"
     hooks:
-      - name: Python flake8 (linter)
+      - name: Python flake8
         id: flake8
 
   ## Scan IaC and Miscellaneous
