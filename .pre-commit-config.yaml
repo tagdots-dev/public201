@@ -64,6 +64,8 @@ repos:
     hooks:
       - name: Python fix to sort requirements.txt
         id: requirements-txt-fixer
+      - name: Python check files parse as valid python
+        id: check-ast
   - repo: https://github.com/PyCQA/autoflake
     rev: v2.2.1
     hooks:
