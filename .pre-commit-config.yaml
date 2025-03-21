@@ -7,35 +7,33 @@ repos:
       - name: Check GitHub Actions Workflows
         id: check-github-workflows
         args: ["--verbose"]
-
-  - repo: https://github.com/adrienverge/yamllint
-    rev: "v1.36.2"
-    hooks:
-      - name: Check yaml
-        id: yamllint
-        args:
-          [--strict, -c=.github/config/yamllint-cfg.yaml]
-
   - repo: https://github.com/hadolint/hadolint
     rev: "v2.12.0"
     hooks:
       - name: Check Dockerfile
         id: hadolint
         args: [--config, .github/config/hadolint-cfg.yaml]
-
+  - repo: https://github.com/adrienverge/yamllint
+    rev: "v1.36.2"
+    hooks:
+      - name: Check Yaml
+        id: yamllint
+        args:
+          [--strict, -c=.github/config/yamllint-cfg.yaml]
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: "v5.0.0"
     hooks:
-      - name: Check json
+      - name: Check Json
         id: check-json
       - name: Check added large files
         id: check-added-large-files
+        args: ['--maxkb=2000']
       - name: Check executables with shebangs
         id: check-executables-have-shebangs
       - name: Check shebangs scripts are executable
         id: check-shebang-scripts-are-executable
         exclude: .py$
-      - name: Fix end of file without newline
+      - name: Fix newline at end of file
         id: end-of-file-fixer
         exclude: ^test/
       - name: Fix to trim whitespace from ends of lines
@@ -60,15 +58,21 @@ repos:
         id: tflint
 
   ## Python
+  - repo: https://github.com/PyCQA/autoflake
+    rev: v2.2.1
+    hooks:
+      - name: Python autoflake (remove unused import & variables)
+        id: autoflake
+        args: ["--remove-all-unused-imports", "--in-place", "--recursive"]
   - repo: https://github.com/pycqa/isort
     rev: "6.0.1"
     hooks:
-      - name: Python isort
+      - name: Python isort (organize & sort import statements)
         id: isort
   - repo: https://github.com/pycqa/flake8
     rev: "7.1.2"
     hooks:
-      - name: Python flake8
+      - name: Python flake8 (linter)
         id: flake8
 
   ## Scan IaC and Miscellaneous
