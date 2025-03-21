@@ -40,8 +40,6 @@ repos:
       - name: Fix to trim whitespace from ends of lines
         id: trailing-whitespace
         exclude: ^test/
-      - name: Fix to sort requirements.txt
-        id: requirements-txt-fixer
       - name: Detect aws credentials
         id: detect-aws-credentials
         args:
@@ -62,14 +60,14 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: "v5.0.0"
     hooks:
-      - name: Python fix to sort requirements.txt
+      - name: Python sort requirements.txt
         id: requirements-txt-fixer
       - name: Python check files parse as valid python
         id: check-ast
   - repo: https://github.com/PyCQA/autoflake
     rev: v2.2.1
     hooks:
-      - name: Python autoflake
+      - name: Python autoflake (removes unused imports and unused variables from Python code)
         id: autoflake
         args: ["--remove-all-unused-imports", "--in-place", "--recursive"]
   - repo: https://github.com/pycqa/isort
