@@ -23,7 +23,7 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: "v5.0.0"
     hooks:
-      - name: Check Json
+      - name: Check JSON
         id: check-json
         types: [json]
       - name: Check added large files
@@ -64,12 +64,6 @@ repos:
         id: requirements-txt-fixer
       - name: Python check files parse as valid python
         id: check-ast
-  - repo: https://github.com/PyCQA/autoflake
-    rev: v2.2.1
-    hooks:
-      - name: Python autoflake (removes unused imports and unused variables from Python code)
-        id: autoflake
-        args: ["--remove-all-unused-imports", "--in-place", "--recursive"]
   - repo: https://github.com/pycqa/isort
     rev: "6.0.1"
     hooks:
