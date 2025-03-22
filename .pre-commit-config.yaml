@@ -6,20 +6,22 @@ repos:
     hooks:
       - name: Check GitHub Actions Workflows
         id: check-github-workflows
-        args: ["--verbose"]
+        args:
+          ["--verbose"]
   - repo: https://github.com/hadolint/hadolint
     rev: "v2.12.0"
     hooks:
       - name: Check Dockerfile
         id: hadolint
-        args: [--config, .github/config/hadolint-cfg.yaml]
+        args:
+          ["--config", ".github/config/hadolint-cfg.yaml"]
   - repo: https://github.com/adrienverge/yamllint
     rev: "v1.36.2"
     hooks:
       - name: Check Yaml
         id: yamllint
         args:
-          [--strict, -c=.github/config/yamllint-cfg.yaml]
+          ["--strict", "-c=.github/config/yamllint-cfg.yaml"]
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: "v5.0.0"
     hooks:
@@ -28,22 +30,21 @@ repos:
         types: [json]
       - name: Check added large files
         id: check-added-large-files
-        args: ['--maxkb=2000']
+        args:
+          ['--maxkb=2000']
       - name: Check executables with shebangs
         id: check-executables-have-shebangs
       - name: Check shebangs scripts are executable
         id: check-shebang-scripts-are-executable
-        exclude: .py$
+        exclude: ".py$"
       - name: Fix newline at end of file
         id: end-of-file-fixer
-        exclude: ^test/
+        exclude: "^tests/"
       - name: Fix to trim whitespace from ends of lines
         id: trailing-whitespace
-        exclude: ^test/
+        exclude: "^tests/"
       - name: Detect aws credentials
         id: detect-aws-credentials
-        args:
-          - --allow-missing-credentials
       - name: Detect private key
         id: detect-private-key
 
@@ -79,7 +80,7 @@ repos:
   - repo: https://github.com/bridgecrewio/checkov.git
     rev: "3.2.386"
     hooks:
-      - name: Checkov scan IaC
+      - name: Checkov Scan
         id: checkov
         files: \.tf$|\.tfvars$|\.json$|\.y(a)?ml$|\.py$|\.sh$|\.md$
         args:
