@@ -55,6 +55,7 @@ jobs:
     - name: yaml-lint
       uses: ibiqlik/action-yamllint@v3
       with:
+        no_warnings: true
         config_file: .github/config/yamllint-cfg.yaml
     - name: Show version
       run: yamllint --version
