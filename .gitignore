@@ -90,3 +90,4 @@ id_rsa
 logs
 *.log
 *.tmp
+test_*

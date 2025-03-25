@@ -4,8 +4,8 @@
 0. get auth token
 1. extract repo url and rev from .pre-commit-config.yaml
 2. get latest release or tag for each repo and compare them with the current rev
-
 3. update .pre-commit-config.yaml
+
 4. create a commit and pull request
 
 5. create a Dockerfile
@@ -16,17 +16,15 @@ options:
 - dry-run (default)
 - no-dry-run
 
-- location root (default)
-- location somewhere else
+- file root folder (default)
+- file somewhere else
 """
 
-# import json
-# import logging
 import os
-# import pprint
 import sys
 
 import click
+import ulid
 import yaml
 from github import Github
 
@@ -54,10 +52,9 @@ def get_owner_repo(file):
         with open(f'{file}', 'r') as f:
             data = yaml.safe_load(f)
             for r in data['repos']:
-                # from .pre-commit-config.yaml
                 owner_repo = '/'.join(r['repo'].rsplit('/', 2)[-2:]).replace('.git', '')
                 current_rev = r['rev']
-                get_rev_variances(file, data, owner_repo, current_rev)
+                get_rev_variances(file, owner_repo, current_rev)
 
     except FileNotFoundError as f:
         print(f'File Not Found Error: {f}.')
@@ -71,21 +68,26 @@ def get_owner_repo(file):
         print(f'Exception Error to get owner/repo: {e}.')
 
 
-def get_rev_variances(file, data, owner_repo, current_rev):
+def get_rev_variances(file, owner_repo, current_rev):
     try:
         try:
             repo = gh.get_repo(owner_repo)
             latest_release = repo.get_latest_release()
             if not current_rev == latest_release.tag_name:
-                print(f'{owner_repo} ({current_rev}) is not using the latest rev ({latest_release.tag_name}); DO SOMETHING')
-                update_config(file, data, latest_release.tag_name)
+                print(f'{owner_repo} ({current_rev}) is not using the latest rev ({latest_release.tag_name})')
+                add_variance_to_dict(owner_repo, current_rev, latest_release.tag_name)
 
         except NameError as n:
             print(f"NameError: {n}")
+        except TypeError as t:
+            print(f'TypeError: {t}')
         except Exception as e:
-            if f"{e.status}" == "404":
-                """ repo uses latest tag instead of github releases """
-                get_latest_tag(file, data, repo, owner_repo, current_rev)
+            if f'{e.status}':
+                if f'{e.status}' == "404":
+                    """ pre-commit hooks repo uses latest tag instead of github releases """
+                    get_latest_tag(file, repo, owner_repo, current_rev)
+                else:
+                    print(f'Exception Error to get rev variances: {owner_repo} {e}.')
             else:
                 print(f'Exception Error to get rev variances: {owner_repo} {e}.')
 
@@ -93,26 +95,57 @@ def get_rev_variances(file, data, owner_repo, current_rev):
         print(f'Exception Error to get rev variances: {owner_repo} {e}.')
 
 
-def get_latest_tag(file, data, repo, owner_repo, current_rev):
+def get_latest_tag(file, repo, owner_repo, current_rev):
     try:
-        # tags = repo.get_tags()
         tag = next(x for x in repo.get_tags() if ("beta" and "alpha") not in x.name)
-
         if not current_rev == tag.name:
-            print(f'{owner_repo} ({current_rev}) is not using the latest rev ({tag.name}); DO SOMETHING')
-            update_config(file, data, tag.name)
+            print(f'{owner_repo} ({current_rev}) is not using the latest rev ({tag.name})')
+            add_variance_to_dict(owner_repo, current_rev, tag.name)
 
     except Exception as e:
         print(f'Exception Error to get latest tag: {owner_repo} - {e}')
 
 
-def update_config(file, data, tag_name):
-    # if 'repos' in data and 'rev' in data['repos'][0] and 'repo' in data['repos'][0]:
-    #     data['repos'][0]['rev'] = tag_name
+def add_variance_to_dict(owner_repo, current_rev, new_rev):
+    variance_dict = {}
+    variance_dict.update(owner_repo=owner_repo, current_rev=current_rev, new_rev=new_rev)
+    variance_list.append(variance_dict)
 
-    # with open(file, 'w', encoding='utf-8') as file:
-    #     yaml.dump(data, file, default_flow_style=False, allow_unicode=True)
-    print("test")
+
+def update_pre_commit(file, dry_run, variance_list):
+    if len(variance_list) > 0:
+        if not dry_run:
+            try:
+                with open(file, 'r') as f:
+                    data = yaml.safe_load(f)
+
+                x = len(data['repos'])
+                for i in range(x):
+                    for variance_dict in variance_list:
+                        if variance_dict['owner_repo'] in data['repos'][i]['repo'] and \
+                                variance_dict['current_rev'] in data['repos'][i]['rev']:
+                            data['repos'][i]['rev'] = variance_dict['new_rev']
+
+                with open(file, 'w') as f:
+                    yaml.dump(data, f, indent=2, sort_keys=False)
+                print(f'\nUpdate to {file} is successfully completed')
+
+            except Exception as e:
+                print(f'Exception Error: {e}')
+        else:
+            print(f'\nThere is no update to {file} (dry-run={dry_run}).')
+    else:
+        print(f'\nThere is no update to {file}.')
+
+
+def stage_file(file):
+    # repo = 'xxxx'
+    # message = f'update {file}.'
+    # content = repo.get_contents(file)
+    stage_file_ulid = ulid.new()
+    # branch = f'update-pre-commit-{stage_file_ulid}'
+    # stage_changes = repo.update_file(file, message, content, branch)
+    print(f'ulid: {stage_file_ulid}')
 
 
 @click.command()
@@ -121,8 +154,16 @@ def update_config(file, data, tag_name):
 def main(file, dry_run):
     print(f"Starting autoupdate on {file} (dry-run={dry_run})...\n")
     try:
+        global variance_list
+        variance_list = []
         get_auth()
         get_owner_repo(file)
+        update_pre_commit(file, dry_run, variance_list)
+
+        if dry_run is False and len(variance_list) > 0:
+            stage_file()
+            # create_pr()
+
     except Exception:
         sys.exit(1)
 
