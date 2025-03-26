@@ -164,15 +164,10 @@ def push_commit(gh, file, owner_repo, active_branch_name):
     repo_obj = git.Repo(repo_path)
 
     repo_obj.index.add(files_to_stage)  # other option ('*')
-    print('add')
     repo_obj.index.write()
-    print('write')
     commit = repo_obj.index.commit(message)
-    print(commit)
-    print('commit')
-
-    # origin = repo.remote("origin")
-    # print(origin)
+    origin = repo_obj.remote("origin")
+    print(origin)
 
     print(f'from branch: {branch}')
     print(f'commit hash: {commit.hexsha}')
