@@ -1,4 +1,5 @@
 click
+git
 PyGithub
 PyYAML
-ulid-py
+ulid
