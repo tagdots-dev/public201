@@ -35,7 +35,7 @@ def get_auth():
         print('Got Github Token successfully.\n')
 
 
-def get_owner_repo(file, gh):
+def get_owner_repo(file):
     """
     create a repos_revs_list that captures all <owner/repo> and <rev>
     """
@@ -162,16 +162,22 @@ def push_commit(gh, file, owner_repo, active_branch_name):
     files_to_stage = [file, 'update.py']
 
     repo_obj = git.Repo(repo_path)
-    stage_changes = repo_obj.index.add(files_to_stage)  # other option ('*')
-    write_to_mem = repo_obj.index.write()
-    commit_changes = repo_obj.index.commit(message)
 
-    logging.info(stage_changes)
-    logging.info(write_to_mem)
-    logging.info(commit_changes)
+    repo_obj.index.add(files_to_stage)  # other option ('*')
+    print('add')
+    repo_obj.index.write()
+    print('write')
+    commit = repo_obj.index.commit(message)
+    print(commit)
+    print('commit')
+
+    # origin = repo.remote("origin")
+    # print(origin)
 
     print(f'from branch: {branch}')
-    print(f'commit hash: {commit_changes.hexsha}')
+    print(f'commit hash: {commit.hexsha}')
+
+    # repo.git.push("--set-upstream", origin, branch)
 
     # """ create commit """
     # repo.index.add([file])
@@ -206,7 +212,7 @@ def main(file, dry_run):
         global variance_list
         variance_list = []
         gh = get_auth()
-        # repos_revs_list = get_owner_repo(file, gh)
+        # repos_revs_list = get_owner_repo(file)
         # get_rev_variances(file, repos_revs_list)
 
         # if dry_run is False and len(variance_list) > 0:
