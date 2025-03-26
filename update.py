@@ -141,7 +141,6 @@ def checkout_new_branch():
     create a git object to 1) create a new branch name 2) checkout this new branch
     """
     repo_path = os.getcwd()
-    print(repo_path)
     branch_suffix = ulid.new()
     repo_obj = git.Repo(repo_path)
     repo_obj_branch_name = repo_obj.create_head(f'update/hooks_{branch_suffix}')
@@ -210,7 +209,6 @@ def main(file, dry_run):
         # repos_revs_list = get_owner_repo(file, gh)
         # get_rev_variances(file, repos_revs_list)
 
-        print(variance_list)
         # if dry_run is False and len(variance_list) > 0:
         #     update_pre_commit(file, dry_run, variance_list)
         #     owner_repo, active_branch_name = checkout_new_branch(gh)
@@ -228,7 +226,6 @@ def main(file, dry_run):
 
         # stage_change(gh, file, repos_revs_list, variance_list)
         owner_repo, active_branch_name = checkout_new_branch()
-        print(active_branch_name)
 
         push_commit(gh, file, owner_repo, active_branch_name)
 
