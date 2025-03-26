@@ -162,24 +162,17 @@ def push_commit(gh, file, owner_repo, active_branch_name):
     message = 'update pre-commit hooks version'
     files_to_stage = [file]
 
-    print(files_to_stage)
-
     repo_obj = git.Repo(repo_path)
+    stage_changes = repo_obj.index.add(files_to_stage)  # other option ('*')
+    write_to_mem = repo_obj.index.write()
+    commit_changes = repo_obj.index.commit(message)
 
-    stage = repo_obj.index.add(files_to_stage)  # other option ('*')
-    print(stage)
-    print(repo_obj.git.status())
-    # ok so far #
+    logging.info(stage_changes)
+    logging.info(write_to_mem)
+    logging.info(commit_changes)
 
-    save = repo_obj.index.write()
-    print(save)
-    print(repo_obj.git.status())
-
-    commit = repo_obj.index.commit(message)
-    print(commit)
-    print(repo_obj.git.status())
-
-    print(f"成功创建提交，提交哈希: {branch} - {commit.hexsha}")
+    print(f'from branch: {branch}')
+    print(f'commit hash: {commit_changes.hexsha}')
 
     # """ create commit """
     # repo.index.add([file])
