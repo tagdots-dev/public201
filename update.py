@@ -166,13 +166,13 @@ def push_commit(gh, file, owner_repo, active_branch_name):
     repo_obj.index.add(files_to_stage)  # other option ('*')
     repo_obj.index.write()
     commit = repo_obj.index.commit(message)
-    origin = repo_obj.remote("origin")
-    print(origin)
+    # origin = repo_obj.remote("origin")
 
     print(f'from branch: {branch}')
     print(f'commit hash: {commit.hexsha}')
 
-    # repo.git.push("--set-upstream", origin, branch)
+    push = repo_obj.git.push("--set-upstream", 'origin', branch)
+    print(push)
 
     # """ create commit """
     # repo.index.add([file])
