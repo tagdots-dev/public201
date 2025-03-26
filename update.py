@@ -160,7 +160,7 @@ def push_commit(gh, file, owner_repo, active_branch_name):
     repo_path = os.getcwd()
     branch = active_branch_name
     message = 'update pre-commit hooks version'
-    files_to_stage = [file]
+    files_to_stage = [file, 'update.py']
 
     repo_obj = git.Repo(repo_path)
     stage_changes = repo_obj.index.add(files_to_stage)  # other option ('*')
