@@ -160,7 +160,7 @@ def push_commit(gh, file, active_branch_name):
         repo_obj.index.write()
         commit = repo_obj.index.commit(message)
         repo_obj.git.push("--set-upstream", 'origin', branch)
-        print('Push commits successfully:')
+        print('\nPush commits successfully:')
         print(f'from local branch: {branch}')
         print(f'with commit hash : {commit.hexsha}')
 
@@ -179,11 +179,12 @@ def create_pr(gh, owner_repo, active_branch_name, default_branch, variance_list)
     pr_branch = active_branch_name
     pr_title = 'update pre-commit hooks version'
 
-    print('Creating a Pull Request as follows:')
-    print(f'Purpose/Title: {pr_title}')
+    print('\nCreating a Pull Request as follows:')
+    print(f'Owner/Repo.  : {owner_repo}')
+    print(f'Purpose      : {pr_title}')
+    print(f'Rev Variances: {pr_body}')
     print(f'Source Branch: {pr_branch}')
     print(f'PR for Branch: {pr_base_branch}')
-    print(f'Rev Variances: {pr_body}')
     try:
         pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
         print(f"Pull request created successfully: {pr.html_url}")
