@@ -169,11 +169,13 @@ def push_commit(gh, file, active_branch_name):
         print(f'Exception Error to push commit: {e}')
 
 
-def create_pr(gh, owner_repo, active_branch_name, default_branch, variance_list):
+def create_pr(owner_repo, active_branch_name, default_branch, variance_list):
     """
     create Pull Request
     """
-    repo = gh.get_repo(owner_repo)
+    github_token = os.environ['GH_TOKEN']
+    ghpr = Github(github_token)
+    repo = ghpr.get_repo(owner_repo)
     pr_base_branch = default_branch
     # pr_body = variance_list
     pr_body = 'test'
@@ -186,10 +188,10 @@ def create_pr(gh, owner_repo, active_branch_name, default_branch, variance_list)
     print(f'Rev Variances: {pr_body}')
     print(f'Source Branch: {pr_branch}')
     print(f'PR for Branch: {pr_base_branch}')
-    time.sleep(90)
+    time.sleep(30)
     try:
         pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
-        print(f"Pull request created successfully: {pr.html_url}")
+        print(f'Pull request created successfully: {pr.html_url}')
     except Exception as e:
         print(f"Exception Error to create PR: {e}")
 
@@ -219,7 +221,7 @@ def main(file, dry_run, default_branch):
             update_pre_commit(file, dry_run, variance_list)
             owner_repo, active_branch_name = checkout_new_branch()
             push_commit(gh, file, active_branch_name)
-            create_pr(gh, owner_repo, active_branch_name, default_branch, variance_list)
+            create_pr(owner_repo, active_branch_name, default_branch, variance_list)
             cleanup(active_branch_name)
 
     except Exception:
