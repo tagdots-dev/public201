@@ -6,7 +6,6 @@ Purpose: update .pre-commit-config.yaml and create a PR
 
 import os
 import sys
-import time
 
 import click
 import git
@@ -180,6 +179,11 @@ def create_pr(gh, owner_repo, active_branch_name, default_branch, variance_list)
     pr_branch = active_branch_name
     pr_title = 'update pre-commit hooks version'
 
+    print('Creating a Pull Request as follows:')
+    print(f'Purpose/Title: {pr_title}')
+    print(f'Source Branch: {pr_branch}')
+    print(f'PR for Branch: {pr_base_branch}')
+    print(f'Rev Variances: {pr_body}')
     try:
         pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
         print(f"Pull request created successfully: {pr.html_url}")
@@ -212,7 +216,6 @@ def main(file, dry_run, default_branch):
             update_pre_commit(file, dry_run, variance_list)
             owner_repo, active_branch_name = checkout_new_branch()
             push_commit(gh, file, active_branch_name)
-            time.sleep(5)
             create_pr(gh, owner_repo, active_branch_name, default_branch, variance_list)
             cleanup(active_branch_name)
 
@@ -223,8 +226,8 @@ def main(file, dry_run, default_branch):
 if __name__ == '__main__':
     main()
 
-# from github import Github
 # import os
+# from github import Github
 # github_token = os.environ['GH_TOKEN']
 # global gh
 # gh = Github(github_token)
