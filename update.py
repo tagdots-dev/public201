@@ -172,6 +172,8 @@ def create_pr(gh, owner_repo, active_branch_name, default_branch, variance_list)
     """
     create Pull Request
     """
+    github_token = os.environ['GH_TOKEN']
+    gh = Github(github_token)
     repo = gh.get_repo(owner_repo)
     pr_base_branch = default_branch
     # pr_body = variance_list
