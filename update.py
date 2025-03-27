@@ -177,17 +177,17 @@ def create_pr(gh, owner_repo, active_branch_name, default_branch, variance_list)
     create PR
     """
     repo = gh.get_repo(owner_repo)
-    pr_base_branch = default_branch
+    # pr_base_branch = default_branch
     # pr_body = variance_list
     pr_body = 'test'
     pr_branch = active_branch_name
     pr_title = 'update pre-commit hooks version'
 
     try:
-        pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
+        pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base='test-01')
         print(f"Pull request created successfully: {pr.html_url}")
     except Exception as e:
-        print(f"Exception Error to create pull request: {e}")
+        print(f"Exception Error to create PR: {e}")
 
 
 def cleanup(active_branch_name):
