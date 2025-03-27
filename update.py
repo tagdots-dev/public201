@@ -178,7 +178,8 @@ def create_pr(gh, owner_repo, active_branch_name, default_branch, variance_list)
     """
     repo = gh.get_repo(owner_repo)
     pr_base_branch = default_branch
-    pr_body = variance_list
+    # pr_body = variance_list
+    pr_body = 'test'
     pr_branch = active_branch_name
     pr_title = 'update pre-commit hooks version'
 
