@@ -160,14 +160,12 @@ def push_commit(gh, file, active_branch_name):
         repo_obj.index.add(files_to_stage)  # other option ('*')
         repo_obj.index.write()
         commit = repo_obj.index.commit(message)
-
-        print(f'from branch: {branch}')
-        print(f'commit hash: {commit.hexsha}')
+        print(f'from local branch: {branch}')
+        print(f'push commit hash : {commit.hexsha}')
 
         push = repo_obj.git.push("--set-upstream", 'origin', branch)
         print(push)
-        # On branch update/hooks_xxxxxxxxxxxxxxxxxxxxxxxxxx
-        # nothing to commit, working tree clean
+
     except Exception as e:
         print(f'Exception Error to push commit: {e}')
 
