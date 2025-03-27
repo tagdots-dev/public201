@@ -174,7 +174,7 @@ def push_commit(gh, file, active_branch_name):
 
 def create_pr(gh, owner_repo, active_branch_name, default_branch, variance_list):
     """
-    create PR
+    create Pull Request
     """
     repo = gh.get_repo(owner_repo)
     pr_base_branch = default_branch
