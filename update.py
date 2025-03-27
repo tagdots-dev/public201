@@ -182,7 +182,6 @@ def create_pr(gh, owner_repo, active_branch_name, default_branch, variance_list)
     pr_body = 'test'
     pr_branch = active_branch_name
     pr_title = 'update pre-commit hooks version'
-
     try:
         pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base='test-01')
         print(f"Pull request created successfully: {pr.html_url}")
