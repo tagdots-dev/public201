@@ -6,6 +6,7 @@ Purpose: update .pre-commit-config.yaml and create a PR
 
 import os
 import sys
+import time
 
 import click
 import git
@@ -159,10 +160,10 @@ def push_commit(gh, file, active_branch_name):
         repo_obj.index.add(files_to_stage)  # other option ('*')
         repo_obj.index.write()
         commit = repo_obj.index.commit(message)
-        push = repo_obj.git.push("--set-upstream", 'origin', branch)
+        repo_obj.git.push("--set-upstream", 'origin', branch)
+        print('Push commits successfully:')
         print(f'from local branch: {branch}')
-        print(f'push commit hash : {commit.hexsha}')
-        print(push)
+        print(f'with commit hash : {commit.hexsha}')
 
     except Exception as e:
         print(f'Exception Error to push commit: {e}')
@@ -211,6 +212,7 @@ def main(file, dry_run, default_branch):
             update_pre_commit(file, dry_run, variance_list)
             owner_repo, active_branch_name = checkout_new_branch()
             push_commit(gh, file, active_branch_name)
+            time.sleep(5)
             create_pr(gh, owner_repo, active_branch_name, default_branch, variance_list)
             cleanup(active_branch_name)
 
