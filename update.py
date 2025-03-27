@@ -186,9 +186,9 @@ def create_pr(gh, owner_repo, active_branch_name, default_branch, variance_list)
     print(f'Rev Variances: {pr_body}')
     print(f'Source Branch: {pr_branch}')
     print(f'PR for Branch: {pr_base_branch}')
-    time.sleep(15)
+    time.sleep(60)
     try:
-        pr = repo.create_pull(title='update pre-commit hooks version', body='test', head=pr_branch, base='main')
+        pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
         print(f"Pull request created successfully: {pr.html_url}")
     except Exception as e:
         print(f"Exception Error to create PR: {e}")
