@@ -142,7 +142,6 @@ def checkout_new_branch():
     repo_obj_branch_name.checkout()
     repo_obj_remote_url = repo_obj.remotes.origin.url
     owner_repo = '/'.join(repo_obj_remote_url.rsplit('/', 2)[-2:]).replace('.git', '')
-
     return owner_repo, repo_obj_branch_name
 
 
@@ -160,10 +159,9 @@ def push_commit(gh, file, active_branch_name):
         repo_obj.index.add(files_to_stage)  # other option ('*')
         repo_obj.index.write()
         commit = repo_obj.index.commit(message)
+        push = repo_obj.git.push("--set-upstream", 'origin', branch)
         print(f'from local branch: {branch}')
         print(f'push commit hash : {commit.hexsha}')
-
-        push = repo_obj.git.push("--set-upstream", 'origin', branch)
         print(push)
 
     except Exception as e:
