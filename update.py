@@ -179,16 +179,18 @@ def create_pr(gh, owner_repo, active_branch_name, default_branch, variance_list)
     repo = gh.get_repo(owner_repo)
     print(repo)
     pr_base_branch = default_branch
+    print(pr_base_branch)
     # pr_body = variance_list
     pr_body = 'test'
     pr_branch = active_branch_name
+    print(pr_branch)
     pr_title = 'update pre-commit hooks version'
 
     try:
         pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
         print(f"Pull request created successfully: {pr.html_url}")
     except Exception as e:
-        print(f"Error creating pull request: {e}")
+        print(f"Exception Error to create pull request: {e}")
 
 
 def cleanup(active_branch_name):
@@ -232,16 +234,14 @@ if __name__ == '__main__':
     main()
 
 
-# from github import Github
-# import os
-# global gh
-# github_token = os.environ['GH_TOKEN']
-# gh = Github(github_token)
-# repo = gh.get_repo("tagdots-dev/public201")
-# file = 'test_pre-commit.yaml'
-# contents = repo.get_contents(path=file, ref="test-01")
-# final_contents = contents.decoded_content.decode()
-# stage_change_result = repo.update_file(contents.path, 'update hooks', final_contents, contents.sha)
+global gh
+github_token = os.environ['GH_TOKEN']
+gh = Github(github_token)
+repo = gh.get_repo("tagdots-dev/public201")
+file = 'test_pre-commit.yaml'
+contents = repo.get_contents(path=file, ref="test-01")
+final_contents = contents.decoded_content.decode()
+stage_change_result = repo.update_file(contents.path, 'update hooks', final_contents, contents.sha)
 
 
 ###########################################################
@@ -293,26 +293,6 @@ if __name__ == '__main__':
 
 #     # except Exception:
 #     #     print(f'test')
-
-
-# ''' NOT WORKING YET '''
-
-    # ''' REMOTE '''
-    # # # create repo object
-    # # repo = gh.get_repo(owner_repo)
-
-    # # try:
-    # #     # 获取 main 分支的引用
-    # #     ref = repo.get_git_ref('heads/test-01')
-    # #     print(f"引用名称: {ref.ref}")                 # refs/heads/test-01
-    # #     print(f"引用指向的提交 SHA: {ref.object.sha}") # remote origin head SHA
-
-    # #     branch = 'test-01'
-    # #     message = 'update pre-commit hooks version'
-
-    # # except Exception as e:
-    # #     print(f"发生错误: {e}")
-
 
 # def stage_change(gh, file):
 #     print(gh)
