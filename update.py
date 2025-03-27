@@ -210,15 +210,10 @@ def main(file, dry_run, default_branch):
         get_rev_variances(file, repos_revs_list)
 
         if len(variance_list) > 0 and not dry_run:
-            print('1')
             update_pre_commit(file, dry_run, variance_list)
-            print('2')
             owner_repo, active_branch_name = checkout_new_branch()
-            print('3')
             push_commit(gh, file, active_branch_name)
-            print('4')
             create_pr(gh, owner_repo, active_branch_name, default_branch, variance_list)
-            print('5')
             cleanup(active_branch_name)
 
     except Exception:
@@ -228,16 +223,17 @@ def main(file, dry_run, default_branch):
 if __name__ == '__main__':
     main()
 
+# from github import Github
+# import os
+# github_token = os.environ['GH_TOKEN']
+# global gh
+# gh = Github(github_token)
+# repo = gh.get_repo("tagdots-dev/public201")
 
-global gh
-github_token = os.environ['GH_TOKEN']
-gh = Github(github_token)
-repo = gh.get_repo("tagdots-dev/public201")
-file = 'test_pre-commit.yaml'
-contents = repo.get_contents(path=file, ref="test-01")
-final_contents = contents.decoded_content.decode()
-stage_change_result = repo.update_file(contents.path, 'update hooks', final_contents, contents.sha)
-
+# file = 'test_pre-commit.yaml'
+# contents = repo.get_contents(path=file, ref="test-01")
+# final_contents = contents.decoded_content.decode()
+# stage_change_result = repo.update_file(contents.path, 'update hooks', final_contents, contents.sha)
 
 ###########################################################
 # def stage_change(gh, file, repos_revs_list, variance_list):
