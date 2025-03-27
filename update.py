@@ -4,7 +4,6 @@
 Purpose: update .pre-commit-config.yaml and create a PR
 """
 
-import logging
 import os
 import sys
 
@@ -31,8 +30,6 @@ def get_auth():
     except AssertionError:
         print('Assertion Error: Environment variable (GH_TOKEN) is not valid')
         sys.exit(1)
-    else:
-        print('Got Github Token successfully.\n')
 
 
 def get_owner_repo(file):
@@ -50,6 +47,7 @@ def get_owner_repo(file):
             current_rev = r['rev']
             each_repo_rev_dict.update(owner_repo=owner_repo, current_rev=current_rev)
             repos_revs_list.append(each_repo_rev_dict)
+
         return repos_revs_list
 
     except FileNotFoundError as f:
@@ -114,26 +112,23 @@ def update_pre_commit(file, dry_run, variance_list):
     """
     update pre-commit configuration file
     """
-    if len(variance_list) > 0 and not dry_run:
-        try:
-            with open(file, 'r') as f:
-                data = yaml.safe_load(f)
+    try:
+        with open(file, 'r') as f:
+            data = yaml.safe_load(f)
 
-            x = len(data['repos'])
-            for i in range(x):
-                for variance_dict in variance_list:
-                    if variance_dict['owner_repo'] in data['repos'][i]['repo'] and \
-                            variance_dict['current_rev'] in data['repos'][i]['rev']:
-                        data['repos'][i]['rev'] = variance_dict['new_rev']
+        x = len(data['repos'])
+        for i in range(x):
+            for variance_dict in variance_list:
+                if variance_dict['owner_repo'] in data['repos'][i]['repo'] and \
+                        variance_dict['current_rev'] in data['repos'][i]['rev']:
+                    data['repos'][i]['rev'] = variance_dict['new_rev']
 
-            with open(file, 'w') as f:
-                yaml.dump(data, f, indent=2, sort_keys=False)
-            print(f'\nUpdate to {file} is successfully completed')
+        with open(file, 'w') as f:
+            yaml.dump(data, f, indent=2, sort_keys=False)
+        print(f'\nUpdate to {file} is successfully completed')
 
-        except Exception as e:
-            print(f'Exception Error: {e}')
-    else:
-        print(f'\nThere is no update to {file}.')
+    except Exception as e:
+        print(f'Exception Error: {e}')
 
 
 def checkout_new_branch():
@@ -151,86 +146,81 @@ def checkout_new_branch():
     return owner_repo, repo_obj_branch_name
 
 
-def push_commit(gh, file, owner_repo, active_branch_name):
+def push_commit(gh, file, active_branch_name):
     """
     push commits to remote
     """
-    # try:
-    repo_path = os.getcwd()
-    branch = active_branch_name
-    message = 'update pre-commit hooks version'
-    files_to_stage = [file, 'update.py']
+    try:
+        repo_path = os.getcwd()
+        branch = active_branch_name
+        message = 'update pre-commit hooks version'
+        files_to_stage = [file, 'update.py']
 
-    repo_obj = git.Repo(repo_path)
+        repo_obj = git.Repo(repo_path)
+        repo_obj.index.add(files_to_stage)  # other option ('*')
+        repo_obj.index.write()
+        commit = repo_obj.index.commit(message)
 
-    repo_obj.index.add(files_to_stage)  # other option ('*')
-    repo_obj.index.write()
-    commit = repo_obj.index.commit(message)
-    # origin = repo_obj.remote("origin")
+        print(f'from branch: {branch}')
+        print(f'commit hash: {commit.hexsha}')
 
-    print(f'from branch: {branch}')
-    print(f'commit hash: {commit.hexsha}')
+        push = repo_obj.git.push("--set-upstream", 'origin', branch)
+        print(push)
+        # On branch update/hooks_xxxxxxxxxxxxxxxxxxxxxxxxxx
+        # nothing to commit, working tree clean
+    except Exception as e:
+        print(f'Exception Error to push commit: {e}')
 
-    push = repo_obj.git.push("--set-upstream", 'origin', branch)
-    print(push)
 
-    # """ create commit """
-    # repo.index.add([file])
+def create_pr(gh, owner_repo, active_branch_name, default_branch, variance_list):
+    """
+    create PR
+    """
+    repo = gh.get_repo(owner_repo)
+    pr_base_branch = default_branch
+    pr_body = variance_list
+    pr_branch = active_branch_name
+    pr_title = 'update pre-commit hooks version'
 
-    # # Create the commit
-    # repo.index.commit('update pre-commit hooks')
+    try:
+        pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
+        print(f"Pull request created successfully: {pr.html_url}")
+    except Exception as e:
+        print(f"Error creating pull request: {e}")
 
-    # # https://github.com/PyGithub/PyGithub/blob/main/github/Repository.py#L2374-L2403
-    # file_contents = repo.get_contents(path=file, ref="test-01")
-    # print("2")
-    # print(file_contents)
 
-    # with open(file, 'r') as f:
-    #     file_contents_read = f.read()
-    # print("3")
-
-    # # https://github.com/PyGithub/PyGithub/blob/main/github/Repository.py#L2743-L2801
-    # stage_change_result = repo.update_file(file, message, file_contents_read, file_contents.sha, branch)
-    # print(stage_change_result)
-
-    # # except Exception:
-    # #     print(f'test')
+def cleanup(active_branch_name):
+    """
+    remove local branch
+    """
+    print('test')
 
 
 @click.command()
 @click.option('--file', required=False, default='./.pre-commit-config.yaml', help='full file path.')
 @click.option('--dry-run', required=True, default=True, help='dry-run=False will update config file')
-def main(file, dry_run):
-    logging.info(f"Starting autoupdate on {file} (dry-run={dry_run})...\n")
+@click.option('--default-branch', required=False, default='main', help='main is default branch')
+def main(file, dry_run, default_branch):
+    print(f"Starting autoupdate on {file} (dry-run={dry_run})...\n")
     try:
         global gh
         global variance_list
         variance_list = []
         gh = get_auth()
-        # repos_revs_list = get_owner_repo(file)
-        # get_rev_variances(file, repos_revs_list)
+        repos_revs_list = get_owner_repo(file)
+        get_rev_variances(file, repos_revs_list)
 
-        # if dry_run is False and len(variance_list) > 0:
-        #     update_pre_commit(file, dry_run, variance_list)
-        #     owner_repo, active_branch_name = checkout_new_branch(gh)
-
-        #     # push changes to remote
-        #     push_commit(gh, file, owner_repo, active_branch_name)
-
-        #     # create pr
-        #     create_pr()
-
-        #     # delete local branch
-        #     delete_branch()
-
-        # repos_revs_list = []
-
-        # stage_change(gh, file, repos_revs_list, variance_list)
-        owner_repo, active_branch_name = checkout_new_branch()
-
-        push_commit(gh, file, owner_repo, active_branch_name)
-
-        # stage_change(gh, file)
+        if len(variance_list) > 0 and not dry_run:
+            print('1')
+            update_pre_commit(file, dry_run, variance_list)
+            print('2')
+            owner_repo, active_branch_name = checkout_new_branch()
+            print('3')
+            push_commit(gh, file, active_branch_name)
+            print('4')
+            create_pr(gh, owner_repo, active_branch_name, default_branch, variance_list)
+            print('5')
+            cleanup(active_branch_name)
 
     except Exception:
         sys.exit(1)
