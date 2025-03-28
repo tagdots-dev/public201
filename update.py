@@ -175,7 +175,7 @@ def create_pr(owner_repo, active_branch_name, default_branch, variance_list):
     """
     github_token = os.environ['GH_TOKEN']
     ghpr = Github(github_token)
-    repo = ghpr.get_repo(owner_repo)
+    repopr = ghpr.get_repo(owner_repo)
     pr_base_branch = default_branch
     # pr_body = variance_list
     pr_body = 'test'
@@ -188,9 +188,9 @@ def create_pr(owner_repo, active_branch_name, default_branch, variance_list):
     print(f'Rev Variances: {pr_body}')
     print(f'Source Branch: {pr_branch}')
     print(f'PR for Branch: {pr_base_branch}')
-    time.sleep(60)
+    time.sleep(180)
     try:
-        pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
+        pr = repopr.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
         print(f'Pull request created successfully: {pr.html_url}')
     except Exception as e:
         print(f"Exception Error to create PR: {e}")
