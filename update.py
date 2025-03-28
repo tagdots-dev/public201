@@ -182,10 +182,6 @@ def create_pr(owner_repo, active_branch_name, default_branch, variance_list):
     pr_branch = active_branch_name
     pr_title = 'update pre-commit hooks version'
 
-    user = gh.get_user()
-    username = user.login
-    print(username)
-
     print('\nCreating a Pull Request as follows:')
     print(f'Owner/Repo.  : {owner_repo}')
     print(f'Purpose      : {pr_title}')
@@ -225,8 +221,8 @@ def main(file, dry_run, default_branch):
             update_pre_commit(file, dry_run, variance_list)
             owner_repo, active_branch_name = checkout_new_branch()
             push_commit(gh, file, active_branch_name)
-            create_pr(owner_repo, active_branch_name, default_branch, variance_list)
-            cleanup(active_branch_name)
+            # create_pr(owner_repo, active_branch_name, default_branch, variance_list)
+            # cleanup(active_branch_name)
 
     except Exception:
         sys.exit(1)
