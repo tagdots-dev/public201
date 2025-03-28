@@ -190,12 +190,13 @@ def create_pr(owner_repo, active_branch_name, default_branch, variance_list):
     print(f'Source Branch: {pr_branch}')
     print(f'PR for Branch: {pr_base_branch}')
     time.sleep(20)
-    try:
-        # pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
-        repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
-        print('Pull request created successfully')
-    except Exception as e:
-        print(f"Exception Error to create PR: {e}")
+    repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
+    # try:
+    #     # pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
+    #     repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
+    #     print('Pull request created successfully')
+    # except Exception as e:
+    #     print(f"Exception Error to create PR: {e}")
 
 
 def cleanup(active_branch_name):
