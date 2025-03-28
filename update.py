@@ -143,10 +143,11 @@ def checkout_new_branch():
     repo_obj_branch_name.checkout()
     repo_obj_remote_url = repo_obj.remotes.origin.url
     owner_repo = '/'.join(repo_obj_remote_url.rsplit('/', 2)[-2:]).replace('.git', '')
+    print('\nCheckout new branch successfully....')
     return owner_repo, repo_obj_branch_name
 
 
-def push_commit(gh, file, active_branch_name):
+def push_commit(file, active_branch_name):
     """
     push commits to remote
     """
@@ -173,8 +174,8 @@ def create_pr(owner_repo, active_branch_name, default_branch, variance_list):
     """
     create Pull Request
     """
-    github_token = os.environ['GH_TOKEN']
-    gh = Github(github_token)
+    # github_token = os.environ['GH_TOKEN']
+    # gh = Github(github_token)
     repo = gh.get_repo(owner_repo)
     pr_base_branch = default_branch
     # pr_body = variance_list
@@ -190,8 +191,9 @@ def create_pr(owner_repo, active_branch_name, default_branch, variance_list):
     print(f'PR for Branch: {pr_base_branch}')
     time.sleep(20)
     try:
-        pr = repo.create_pull(title='update', body='test', head=pr_branch, base='main')
-        print(f'Pull request created successfully: {pr.html_url}')
+        # pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
+        repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
+        print('Pull request created successfully')
     except Exception as e:
         print(f"Exception Error to create PR: {e}")
 
@@ -220,8 +222,8 @@ def main(file, dry_run, default_branch):
         if len(variance_list) > 0 and not dry_run:
             update_pre_commit(file, dry_run, variance_list)
             owner_repo, active_branch_name = checkout_new_branch()
-            push_commit(gh, file, active_branch_name)
-            # create_pr(owner_repo, active_branch_name, default_branch, variance_list)
+            push_commit(file, active_branch_name)
+            create_pr(owner_repo, active_branch_name, default_branch, variance_list)
             # cleanup(active_branch_name)
 
     except Exception:
