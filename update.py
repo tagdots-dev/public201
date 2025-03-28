@@ -139,7 +139,7 @@ def checkout_new_branch():
     repo_path = os.getcwd()
     branch_suffix = ulid.new()
     repo_obj = git.Repo(repo_path)
-    repo_obj_branch_name = repo_obj.create_head(f'update/hooks_{branch_suffix}')
+    repo_obj_branch_name = repo_obj.create_head(f'upgrade/hooks_{branch_suffix}')
     repo_obj_branch_name.checkout()
     repo_obj_remote_url = repo_obj.remotes.origin.url
     owner_repo = '/'.join(repo_obj_remote_url.rsplit('/', 2)[-2:]).replace('.git', '')
@@ -166,7 +166,7 @@ def push_commit(gh, file, active_branch_name):
         print(f'with commit hash : {commit.hexsha}')
 
     except Exception as e:
-        print(f'Exception Error to push commit: {e}')
+        print(f'\nException Error to push commit: {e}')
 
 
 def create_pr(owner_repo, active_branch_name, default_branch, variance_list):
@@ -174,8 +174,8 @@ def create_pr(owner_repo, active_branch_name, default_branch, variance_list):
     create Pull Request
     """
     github_token = os.environ['GH_TOKEN']
-    ghpr = Github(github_token)
-    repopr = ghpr.get_repo(owner_repo)
+    gh = Github(github_token)
+    repo = gh.get_repo(owner_repo)
     pr_base_branch = default_branch
     # pr_body = variance_list
     pr_body = 'test'
@@ -190,7 +190,7 @@ def create_pr(owner_repo, active_branch_name, default_branch, variance_list):
     print(f'PR for Branch: {pr_base_branch}')
     time.sleep(180)
     try:
-        pr = repopr.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
+        pr = repo.create_pull(title='update', body='test', head=pr_branch, base='main')
         print(f'Pull request created successfully: {pr.html_url}')
     except Exception as e:
         print(f"Exception Error to create PR: {e}")
