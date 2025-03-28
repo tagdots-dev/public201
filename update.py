@@ -188,7 +188,7 @@ def create_pr(owner_repo, active_branch_name, default_branch, variance_list):
     print(f'Rev Variances: {pr_body}')
     print(f'Source Branch: {pr_branch}')
     print(f'PR for Branch: {pr_base_branch}')
-    time.sleep(180)
+    time.sleep(30)
     try:
         pr = repo.create_pull(title='update', body='test', head=pr_branch, base='main')
         print(f'Pull request created successfully: {pr.html_url}')
