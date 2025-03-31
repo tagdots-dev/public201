@@ -5,7 +5,6 @@ Purpose: update .pre-commit-config.yaml and create a PR
 """
 
 import os
-import subprocess
 import sys
 import time
 
@@ -140,7 +139,7 @@ def checkout_new_branch():
     repo_path = os.getcwd()
     branch_suffix = ulid.new()
     repo_obj = git.Repo(repo_path)
-    repo_obj_branch_name = repo_obj.create_head(f'update/hooks_{branch_suffix}')
+    repo_obj_branch_name = repo_obj.create_head(f'upgrade/hooks_{branch_suffix}')
     repo_obj_branch_name.checkout()
     repo_obj_remote_url = repo_obj.remotes.origin.url
     owner_repo = '/'.join(repo_obj_remote_url.rsplit('/', 2)[-2:]).replace('.git', '')
@@ -242,13 +241,11 @@ def main(file, dry_run, default_branch):
         get_rev_variances(file, repos_revs_list)
 
         if len(variance_list) > 0 and not dry_run:
-            # checkout_new_branch(gh)
             owner_repo, active_branch_name = checkout_new_branch()
             update_pre_commit(file, dry_run, variance_list)
             push_commit(file, active_branch_name)
-
-            output = subprocess.Popen(create_pr, owner_repo, active_branch_name, default_branch, variance_list)
-            print(output)
+            # owner_repo = "tagdots-dev/public201"
+            # active_branch_name = 'update_hooks_01JQPMNYGF9K66K4YNCPXAK790'
             # create_pr(owner_repo, active_branch_name, default_branch, variance_list)
             # cleanup(active_branch_name)
 
