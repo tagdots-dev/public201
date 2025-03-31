@@ -5,6 +5,7 @@ Purpose: update .pre-commit-config.yaml and create a PR
 """
 
 import os
+import subprocess
 import sys
 import time
 
@@ -139,12 +140,34 @@ def checkout_new_branch():
     repo_path = os.getcwd()
     branch_suffix = ulid.new()
     repo_obj = git.Repo(repo_path)
-    repo_obj_branch_name = repo_obj.create_head(f'upgrade/hooks_{branch_suffix}')
+    repo_obj_branch_name = repo_obj.create_head(f'update/hooks_{branch_suffix}')
     repo_obj_branch_name.checkout()
     repo_obj_remote_url = repo_obj.remotes.origin.url
     owner_repo = '/'.join(repo_obj_remote_url.rsplit('/', 2)[-2:]).replace('.git', '')
     print('\nCheckout new branch successfully....')
     return owner_repo, repo_obj_branch_name
+
+    # # ''' create a new branch off base branch '''
+    # # ''' step 1 - get local repo name '''
+    # repo_path = os.getcwd()
+    # repo_name = repo_path.rsplit('/', 1)[-1]
+    # print(repo_name)
+    # # ''' step 2 - prepare new remote branch info '''
+    # branch_suffix = ulid.new()
+    # branch_to_create = f"update/hooks_{branch_suffix}"
+    # print(branch_to_create)
+    # # ''' step 3 - get info of base branch '''
+    # repo = gh.get_repo('tagdots-dev/public201')
+    # # base_branch = repo.get_branch(repo.default_branch)
+    # # print(base_branch)
+    # # ''' step 4 - create a new remote branch off base branch '''
+    # # create_new_branch = repo.create_git_ref(ref=f"refs/heads/{branch_to_create}", sha=base_branch.commit.sha)
+    # # print(create_new_branch)
+    # ''' step 5 - get contents of the new remote branch (there is no direct equivalent of git checkout) '''
+    # # default_branch = repo.default_branch
+    # # print(f"Current default branch: {default_branch}")
+    # repo.edit(default_branch='main')
+    # print(f"New default branch: {repo.default_branch}")
 
 
 def push_commit(file, active_branch_name):
@@ -190,13 +213,11 @@ def create_pr(owner_repo, active_branch_name, default_branch, variance_list):
     print(f'Source Branch: {pr_branch}')
     print(f'PR for Branch: {pr_base_branch}')
     time.sleep(20)
-    repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
-    # try:
-    #     # pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
-    #     repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
-    #     print('Pull request created successfully')
-    # except Exception as e:
-    #     print(f"Exception Error to create PR: {e}")
+    try:
+        pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
+        print(f'Pull request created successfully: {pr.html_url}')
+    except Exception as e:
+        print(f"\nException Error to create PR: {e}")
 
 
 def cleanup(active_branch_name):
@@ -221,10 +242,14 @@ def main(file, dry_run, default_branch):
         get_rev_variances(file, repos_revs_list)
 
         if len(variance_list) > 0 and not dry_run:
-            update_pre_commit(file, dry_run, variance_list)
+            # checkout_new_branch(gh)
             owner_repo, active_branch_name = checkout_new_branch()
+            update_pre_commit(file, dry_run, variance_list)
             push_commit(file, active_branch_name)
-            create_pr(owner_repo, active_branch_name, default_branch, variance_list)
+
+            output = subprocess.Popen(create_pr, owner_repo, active_branch_name, default_branch, variance_list)
+            print(output)
+            # create_pr(owner_repo, active_branch_name, default_branch, variance_list)
             # cleanup(active_branch_name)
 
     except Exception:
