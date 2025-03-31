@@ -1,0 +1,11 @@
+---
+# ref: https://github.com/marketplace/actions/yaml-lint
+
+extends: default
+
+rules:
+  line-length:
+    max: 110
+    level: warning
+
+  indentation: disable

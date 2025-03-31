@@ -1,0 +1,9 @@
+{
+  "buy_apple": true,
+  "eat_apple": false,
+  "sell_apple": {
+    "lucky": true,
+    "safeway": false,
+    "wholefood": false
+  }
+}
