@@ -7,3 +7,4 @@ no-color: true
 no-fail: false
 strict-labels: true
 verbose: false
+ignored:

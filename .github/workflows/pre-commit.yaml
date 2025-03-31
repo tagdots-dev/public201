@@ -3,7 +3,6 @@ name: CI-prerequisites
 on:  # yamllint disable-line rule:truthy
   push:
     branches:
-      - main
       - test-*
   pull_request:
     branches:

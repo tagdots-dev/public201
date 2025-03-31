@@ -1,13 +1,6 @@
-checkov==3.2.386
 click==8.1.8
 click-option-group==0.5.6
-docker==7.1.0
-dockerfile-parse==2.0.1
-flake8==7.1.2
-flake8-requirements==2.2.1
 GitPython==3.1.44
-isort==6.0.1
-Jinja2==3.1.6
 pre_commit==4.1.0
 PyGithub==2.6.1
 pytest==8.3.5
@@ -15,4 +8,3 @@ PyYAML==6.0.2
 setuptools==77.0.1
 ulid-py==1.1.0
 virtualenv==20.29.3
-yamllint==1.36.2

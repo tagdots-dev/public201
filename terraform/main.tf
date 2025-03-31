@@ -40,11 +40,11 @@ resource "github_repository" "test" {
 }
 
 resource "github_branch" "test" {
-  repository = github_repository.example.name
+  repository = github_repository.test.name
   branch     = "development"
 }
 
 resource "github_branch_default" "test" {
-  repository = github_repository.example.name
-  branch     = github_branch.development.branch
+  repository = github_repository.test.name
+  branch     = github_branch.test.branch
 }
