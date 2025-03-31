@@ -1,8 +1,6 @@
-## test
-## 120
 repos:
 - repo: https://github.com/python-jsonschema/check-jsonschema
-  rev: 0.31.3
+  rev: 0.32.1
   hooks:
   - name: Check GitHub Actions Workflows
     id: check-github-workflows
@@ -17,7 +15,7 @@ repos:
     - --config
     - .github/config/hadolint-cfg.yaml
 - repo: https://github.com/adrienverge/yamllint
-  rev: v1.36.2
+  rev: v1.37.0
   hooks:
   - name: Check Yaml
     id: yamllint
@@ -60,19 +58,19 @@ repos:
   - name: Python isort
     id: isort
 - repo: https://github.com/pycqa/flake8
-  rev: 7.1.2
+  rev: 7.2.0
   hooks:
   - name: Python flake8
     id: flake8
 - repo: https://github.com/gruntwork-io/pre-commit
-  rev: v0.1.26
+  rev: v0.1.28
   hooks:
   - name: Terraform format
     id: terraform-fmt
   - name: Terraform linter
     id: tflint
 - repo: https://github.com/bridgecrewio/checkov
-  rev: 3.2.386
+  rev: 3.2.394
   hooks:
   - name: Checkov Scan
     id: checkov
