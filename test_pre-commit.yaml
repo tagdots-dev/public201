@@ -44,10 +44,6 @@ repos:
   - name: Fix to trim whitespace from ends of lines
     id: trailing-whitespace
     exclude: ^tests/
-  - name: Detect aws credentials
-    id: detect-aws-credentials
-  - name: Detect private key
-    id: detect-private-key
   - name: Python sort requirements.txt
     id: requirements-txt-fixer
   - name: Python check files parse as valid python
