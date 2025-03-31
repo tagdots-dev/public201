@@ -1,4 +1,4 @@
-name: Run Script on Schedule
+name: Scheduled-Run Tests
 
 on:
   schedule:
@@ -7,21 +7,41 @@ on:
 
 jobs:
   run-script:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout source code
         uses: actions/checkout@v4
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-            python-version: '3.13'
+          python-version: '3.13'
 
-      - name: Install dependencies
+      - name: Install general dependencies
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
+          pip --version
+
+      - name: Install hadolint
+        run: >-
+          curl -L "$(
+          curl -s https://api.github.com/repos/hadolint/hadolint/releases/latest
+          | grep -o -E -m 1 "https://.+?/hadolint-Linux-x86_64"
+          )"
+          > hadolint
+          && chmod +x hadolint && sudo mv hadolint /usr/bin/
+          hadolint --version
+
+      - name: Install terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.11.2"
 
       - name: pre-commit setup
         run: |
