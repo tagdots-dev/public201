@@ -1,5 +1,6 @@
 click
 git
+pre-commit
 PyGithub
 PyYAML
 ulid
