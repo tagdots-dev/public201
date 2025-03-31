@@ -139,7 +139,7 @@ def checkout_new_branch():
     repo_path = os.getcwd()
     branch_suffix = ulid.new()
     repo_obj = git.Repo(repo_path)
-    repo_obj_branch_name = repo_obj.create_head(f'upgrade/hooks_{branch_suffix}')
+    repo_obj_branch_name = repo_obj.create_head(f'update_hooks_{branch_suffix}')
     repo_obj_branch_name.checkout()
     repo_obj_remote_url = repo_obj.remotes.origin.url
     owner_repo = '/'.join(repo_obj_remote_url.rsplit('/', 2)[-2:]).replace('.git', '')
@@ -212,11 +212,14 @@ def create_pr(owner_repo, active_branch_name, default_branch, variance_list):
     print(f'Source Branch: {pr_branch}')
     print(f'PR for Branch: {pr_base_branch}')
     time.sleep(20)
-    try:
-        pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
-        print(f'Pull request created successfully: {pr.html_url}')
-    except Exception as e:
-        print(f"\nException Error to create PR: {e}")
+    # try:
+    pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
+    print(f'{pr.html_url}')
+    # print(f'Pull request created successfully: {pr.html_url}')
+    # except github.GithubException.GithubException as ge:
+    #     print(f'\nException Error to create PR: {ge}')
+    # except Exception as e:
+    #     print(f'Exception Error: {e}')
 
 
 def cleanup(active_branch_name):
@@ -246,7 +249,7 @@ def main(file, dry_run, default_branch):
             push_commit(file, active_branch_name)
             # owner_repo = "tagdots-dev/public201"
             # active_branch_name = 'update_hooks_01JQPMNYGF9K66K4YNCPXAK790'
-            # create_pr(owner_repo, active_branch_name, default_branch, variance_list)
+            create_pr(owner_repo, active_branch_name, default_branch, variance_list)
             # cleanup(active_branch_name)
 
     except Exception:
