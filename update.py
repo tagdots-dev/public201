@@ -252,7 +252,8 @@ def main(file, dry_run, default_branch):
             create_pr(owner_repo, active_branch_name, default_branch, variance_list)
             # cleanup(active_branch_name)
 
-    except Exception:
+    except Exception as e:
+        print({e})
         sys.exit(1)
 
 
