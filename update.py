@@ -138,9 +138,11 @@ def checkout_new_branch():
     """
     repo_path = os.getcwd()
     branch_suffix = ulid.new()
+    print(branch_suffix)
     repo_obj = git.Repo(repo_path)
-    repo_obj_branch_name = repo_obj.create_head(f'update_hooks_{branch_suffix}')
-    repo_obj_branch_name.checkout()
+    repo_obj_branch_name = 'test-01'
+    # repo_obj_branch_name = repo_obj.create_head(f'update_hooks_{branch_suffix}')
+    # repo_obj_branch_name.checkout()
     repo_obj_remote_url = repo_obj.remotes.origin.url
     owner_repo = '/'.join(repo_obj_remote_url.rsplit('/', 2)[-2:]).replace('.git', '')
     print('\nCheckout new branch successfully....')
@@ -199,7 +201,7 @@ def create_pr(owner_repo, active_branch_name, default_branch, variance_list):
     # github_token = os.environ['GH_TOKEN']
     # gh = Github(github_token)
     repo = gh.get_repo(owner_repo)
-    pr_base_branch = 'test-01'
+    pr_base_branch = repo.default_branch
     # pr_body = variance_list
     pr_body = 'test'
     pr_branch = active_branch_name
@@ -212,7 +214,6 @@ def create_pr(owner_repo, active_branch_name, default_branch, variance_list):
     print(f'Source Branch: {pr_branch}')
     print(f'PR for Branch: {pr_base_branch}')
     time.sleep(20)
-
     # try:
     pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
     print(f'{pr.html_url}')
@@ -246,6 +247,9 @@ def main(file, dry_run, default_branch):
 
         if len(variance_list) > 0 and not dry_run:
             owner_repo, active_branch_name = checkout_new_branch()
+            print(f'owner_repo: {owner_repo}')
+            print(f'active_branch_name: {active_branch_name}')
+            print('\n')
             update_pre_commit(file, dry_run, variance_list)
             push_commit(file, active_branch_name)
             create_pr(owner_repo, active_branch_name, default_branch, variance_list)
