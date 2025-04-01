@@ -181,17 +181,18 @@ def create_pr(owner_repo, active_branch_name, default_branch, variance_list):
     print(f'Rev Variances: {pr_body}')
     print(f'Source Branch: {pr_branch}')
     print(f'PR for Branch: {pr_base_branch}')
-    time.sleep(20)
-    try:
-        pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
-        print(f'{pr.html_url}')
-        print(f'Pull request created successfully: {pr.html_url}')
-    except Exception as e:
-        print(f'\nException Error to create PR: {e}')
+    time.sleep(10)
+    repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
+
+    # try:
+    #     pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
+    #     print(f'Pull request created successfully: {pr.html_url}')
+    # except Exception as e:
+    #     print(f'\nException Error to create PR: {e}')
 
 
 @click.command()
-@click.option('--file', required=False, default='./.pre-commit-config.yaml', help='full file path.')
+@click.option('--file', required=False, default='.pre-commit-config.yaml', help='full file path.')
 @click.option('--dry-run', required=True, default=True, help='dry-run=False will update config file')
 @click.option('--default-branch', required=False, default='main', help='main is default branch')
 def main(file, dry_run, default_branch):
