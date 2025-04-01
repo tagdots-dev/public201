@@ -30,18 +30,18 @@ jobs:
 
       - name: Install hadolint
         run: >-
-          curl -L "$(
-          curl -s https://api.github.com/repos/hadolint/hadolint/releases/latest
-          | grep -o -E -m 1 "https://.+?/hadolint-Linux-x86_64"
-          )"
-          > hadolint
-          && chmod +x hadolint && sudo mv hadolint /usr/bin/
-          hadolint --version
+          wget -O /usr/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
+          chmod +x /usr/bin/hadolint
 
       - name: Install terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.11.2"
+
+      - name: Install TFLint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: v0.55.1
 
       - name: pre-commit setup
         run: |
