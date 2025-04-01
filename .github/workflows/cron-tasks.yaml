@@ -66,4 +66,4 @@ jobs:
       - name: Autoupdate pre-commit hooks and create PR
         run: python update.py --dry-run false
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
