@@ -1,28 +1,58 @@
-name: Run Script on Schedule
+name: Scheduled-Run Tests
 
 on:
   schedule:
     - cron: '0 0 * * *'
   workflow_dispatch:
 
+env:
+  HADOLINT_VERSION: 'v2.12.0'
+  PYTHON_VERSION: '3.13.2'
+  TERRAFORM_VERSION: '1.11.2'
+  TFLINT_VERSION: 'v0.55.1'
+
 jobs:
   run-script:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout source code
         uses: actions/checkout@v4
+
+      - name: Echo PATH
+        run: echo $PATH
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-            python-version: '3.13'
-            cache: 'pip'
+          python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: pip install
+      - name: Install general dependencies
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install -r requirements.txt
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip --version
+
+      - name: Install hadolint
+        run: |
+          wget -O hadolint https://github.com/hadolint/hadolint/releases/download/${{ env.HADOLINT_VERSION }}/hadolint-Linux-x86_64
+          chmod +x hadolint
+          sudo mv hadolint /usr/bin/
+          hadolint --version
+
+      - name: Install terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+      - name: Install tflint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: ${{ env.TFLINT_VERSION }}
 
       - name: pre-commit setup
         run: |
@@ -33,8 +63,5 @@ jobs:
         run: |
           pre-commit run -a
 
-      - name: Make Script Executable
-        run: chmod +x update.py
-
-      # - name: Run Script
-      #   run: update.py
+      # - name: Autoupdate pre-commit hooks and create PR
+      #   run: python update.py --dry-run false

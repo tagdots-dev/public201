@@ -1,9 +1,8 @@
 ---
-name: CI-prerequisites
+name: Pre-Commit
 on:  # yamllint disable-line rule:truthy
   push:
     branches:
-      - main
       - test-*
   pull_request:
     branches:
@@ -20,25 +19,31 @@ jobs:
     steps:
     - name: Checkout source code
       uses: actions/checkout@v4
+
     - name: Create Cache plugin dir
       run: mkdir -p ~/.tflint.d/plugins
+
     - name: Cache plugin dir
       uses: actions/cache@v4
       with:
         path: ~/.tflint.d/plugins
         key: ${{ matrix.os }}-tflint
+
     - name: Setup TFLint
       uses: terraform-linters/setup-tflint@v4
       with:
         tflint_version: v0.55.1
+
     - name: Show version
       run: tflint --version
+
     - name: Init TFLint
       run: tflint --init
       env:
         # https://github.com/terraform-linters/tflint/blob/master/docs/user-guide/plugins.md#avoiding-rate-limiting
         # Summary: TFLint calls the GitHub API to get release metadata
         GITHUB_TOKEN: ${{ github.token }}
+
     - name: Run TFLint
       run: tflint --recursive -f sarif
 
@@ -52,11 +57,13 @@ jobs:
     steps:
     - name: Checkout source code
       uses: actions/checkout@v4
+
     - name: yaml-lint
       uses: ibiqlik/action-yamllint@v3
       with:
         no_warnings: true
         config_file: .github/config/yamllint-cfg.yaml
+
     - name: Show version
       run: yamllint --version
 
@@ -70,6 +77,7 @@ jobs:
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
+
       - name: Checkov GitHub Action
         id: checkov
         uses: bridgecrewio/checkov-action@v12

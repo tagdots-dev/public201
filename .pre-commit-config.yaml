@@ -54,19 +54,19 @@ repos:
   - name: Python isort
     id: isort
 - repo: https://github.com/pycqa/flake8
-  rev: 7.2.0
+  rev: 7.1.2
   hooks:
   - name: Python flake8
     id: flake8
-- repo: https://github.com/gruntwork-io/pre-commit
-  rev: v0.1.28
+- repo: https://github.com/antonbabenko/pre-commit-terraform
+  rev: v1.98.0
   hooks:
   - name: Terraform format
-    id: terraform-fmt
+    id: terraform_fmt
   - name: Terraform linter
-    id: tflint
+    id: terraform_tflint
 - repo: https://github.com/bridgecrewio/checkov
-  rev: 3.2.394
+  rev: 3.2.386
   hooks:
   - name: Checkov Scan
     id: checkov

@@ -48,9 +48,7 @@ def get_owner_repo(file):
             current_rev = r['rev']
             each_repo_rev_dict.update(owner_repo=owner_repo, current_rev=current_rev)
             repos_revs_list.append(each_repo_rev_dict)
-
         return repos_revs_list
-
     except FileNotFoundError as f:
         print(f'File Not Found Error: {f}.')
     except yaml.scanner.ScannerError as s:
@@ -77,7 +75,6 @@ def get_rev_variances(file, repos_revs_list):
                 if not current_rev == latest_release.tag_name:
                     print(f'{owner_repo} ({current_rev}) is not using the latest rev ({latest_release.tag_name})')
                     add_variance_to_dict(owner_repo, current_rev, latest_release.tag_name)
-
             except NameError as n:
                 print(f"NameError: {n}")
             except TypeError as t:
@@ -91,14 +88,12 @@ def get_rev_variances(file, repos_revs_list):
                             if not current_rev == tag.name:
                                 print(f'{owner_repo} ({current_rev}) is not using the latest rev ({tag.name})')
                                 add_variance_to_dict(owner_repo, current_rev, tag.name)
-
                         except Exception as e:
                             print(f'Exception Error to get latest tag: {owner_repo} - {e}')
                     else:
                         print(f'Exception Error to get rev variances: {owner_repo} {e}.')
                 else:
                     print(f'Exception Error to get rev variances: {owner_repo} {e}.')
-
     except Exception as e:
         print(f'Exception Error to get rev variances: {owner_repo} {e}.')
 
@@ -140,35 +135,12 @@ def checkout_new_branch():
     branch_suffix = ulid.new()
     print(branch_suffix)
     repo_obj = git.Repo(repo_path)
-    repo_obj_branch_name = 'test-01'
-    # repo_obj_branch_name = repo_obj.create_head(f'update_hooks_{branch_suffix}')
-    # repo_obj_branch_name.checkout()
+    repo_obj_branch_name = repo_obj.create_head(f'update_hooks_{branch_suffix}')
+    repo_obj_branch_name.checkout()
     repo_obj_remote_url = repo_obj.remotes.origin.url
     owner_repo = '/'.join(repo_obj_remote_url.rsplit('/', 2)[-2:]).replace('.git', '')
     print('\nCheckout new branch successfully....')
     return owner_repo, repo_obj_branch_name
-
-    # # ''' create a new branch off base branch '''
-    # # ''' step 1 - get local repo name '''
-    # repo_path = os.getcwd()
-    # repo_name = repo_path.rsplit('/', 1)[-1]
-    # print(repo_name)
-    # # ''' step 2 - prepare new remote branch info '''
-    # branch_suffix = ulid.new()
-    # branch_to_create = f"update/hooks_{branch_suffix}"
-    # print(branch_to_create)
-    # # ''' step 3 - get info of base branch '''
-    # repo = gh.get_repo('tagdots-dev/public201')
-    # # base_branch = repo.get_branch(repo.default_branch)
-    # # print(base_branch)
-    # # ''' step 4 - create a new remote branch off base branch '''
-    # # create_new_branch = repo.create_git_ref(ref=f"refs/heads/{branch_to_create}", sha=base_branch.commit.sha)
-    # # print(create_new_branch)
-    # ''' step 5 - get contents of the new remote branch (there is no direct equivalent of git checkout) '''
-    # # default_branch = repo.default_branch
-    # # print(f"Current default branch: {default_branch}")
-    # repo.edit(default_branch='main')
-    # print(f"New default branch: {repo.default_branch}")
 
 
 def push_commit(file, active_branch_name):
@@ -189,7 +161,6 @@ def push_commit(file, active_branch_name):
         print('\nPush commits successfully:')
         print(f'from local branch: {branch}')
         print(f'with commit hash : {commit.hexsha}')
-
     except Exception as e:
         print(f'\nException Error to push commit: {e}')
 
@@ -198,12 +169,9 @@ def create_pr(owner_repo, active_branch_name, default_branch, variance_list):
     """
     create Pull Request
     """
-    # github_token = os.environ['GH_TOKEN']
-    # gh = Github(github_token)
     repo = gh.get_repo(owner_repo)
     pr_base_branch = repo.default_branch
-    # pr_body = variance_list
-    pr_body = 'test'
+    pr_body = variance_list
     pr_branch = active_branch_name
     pr_title = 'update pre-commit hooks version'
 
@@ -214,21 +182,12 @@ def create_pr(owner_repo, active_branch_name, default_branch, variance_list):
     print(f'Source Branch: {pr_branch}')
     print(f'PR for Branch: {pr_base_branch}')
     time.sleep(20)
-    # try:
-    pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
-    print(f'{pr.html_url}')
-    # print(f'Pull request created successfully: {pr.html_url}')
-    # except github.GithubException.GithubException as ge:
-    #     print(f'\nException Error to create PR: {ge}')
-    # except Exception as e:
-    #     print(f'Exception Error: {e}')
-
-
-def cleanup(active_branch_name):
-    """
-    remove local branch
-    """
-    print('test')
+    try:
+        pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
+        print(f'{pr.html_url}')
+        print(f'Pull request created successfully: {pr.html_url}')
+    except Exception as e:
+        print(f'\nException Error to create PR: {e}')
 
 
 @click.command()
@@ -236,7 +195,7 @@ def cleanup(active_branch_name):
 @click.option('--dry-run', required=True, default=True, help='dry-run=False will update config file')
 @click.option('--default-branch', required=False, default='main', help='main is default branch')
 def main(file, dry_run, default_branch):
-    print(f"Starting autoupdate on {file} (dry-run={dry_run})...\n")
+    print(f"Starting autoupdate on {file} (dry-run {dry_run})...\n")
     try:
         global gh
         global variance_list
@@ -247,134 +206,13 @@ def main(file, dry_run, default_branch):
 
         if len(variance_list) > 0 and not dry_run:
             owner_repo, active_branch_name = checkout_new_branch()
-            print(f'owner_repo: {owner_repo}')
-            print(f'active_branch_name: {active_branch_name}')
-            print('\n')
             update_pre_commit(file, dry_run, variance_list)
             push_commit(file, active_branch_name)
             create_pr(owner_repo, active_branch_name, default_branch, variance_list)
-            # cleanup(active_branch_name)
-
     except Exception as e:
-        print({e})
+        print(f'Exception Error to autoupdate: {e}')
         sys.exit(1)
 
 
 if __name__ == '__main__':
     main()
-
-# import os
-# from github import Github
-# github_token = os.environ['GH_TOKEN']
-# global gh
-# gh = Github(github_token)
-# repo = gh.get_repo("tagdots-dev/public201")
-
-# file = 'test_pre-commit.yaml'
-# contents = repo.get_contents(path=file, ref="test-01")
-# final_contents = contents.decoded_content.decode()
-# stage_change_result = repo.update_file(contents.path, 'update hooks', final_contents, contents.sha)
-
-###########################################################
-# def stage_change(gh, file, repos_revs_list, variance_list):
-#     # try:
-#     repo = gh.get_repo("tagdots-dev/public201")
-#     # stage_file_branch_suffix = ulid.new()
-#     # branch = f'update/pre-commit-hooks-{stage_file_branch_suffix}'
-#     branch_name = "test-01"
-#     # title = f'update pre-commit hooks version at {file}'
-#     message = 'update pre-commit hooks version'
-#     # body = variance_list
-
-#     # https://github.com/PyGithub/PyGithub/blob/main/github/Repository.py#L2374-L2403
-#     contents = repo.get_contents(path=file, ref="test-01")
-#     final_contents = contents.decoded_content.decode()
-
-#     # https://github.com/PyGithub/PyGithub/blob/main/github/Repository.py#L2743-L2801
-#     stage_change_result = repo.update_file(contents.path, message, final_contents, contents.sha, branch=branch_name)
-#     # stage_change_result = repo.update_file(contents.path, message, final_contents, contents.sha)
-#     print(stage_change_result)
-
-#     # except github.GithubException.GithubException as e:
-#     #     print(f'Github Exception: {e}')
-###########################################################
-# def stage_change(gh, file, repos_revs_list, variance_list):
-#     # try:
-#     repo = gh.get_repo("tagdots-dev/public201")
-#     print("1")
-#     # stage_file_branch_suffix = ulid.new()
-#     # branch = f'update/pre-commit-hooks-{stage_file_branch_suffix}'
-#     branch = "test-01"
-#     # title = f'update pre-commit hooks version at {file}'
-#     message = 'update pre-commit hooks version'
-#     # body = variance_list
-
-#     # https://github.com/PyGithub/PyGithub/blob/main/github/Repository.py#L2374-L2403
-#     file_contents = repo.get_contents(path=file, ref="test-01")
-#     print("2")
-#     print(file_contents)
-
-#     with open(file, 'r') as f:
-#         file_contents_read = f.read()
-#     print("3")
-
-#     # https://github.com/PyGithub/PyGithub/blob/main/github/Repository.py#L2743-L2801
-#     stage_change_result = repo.update_file(file, message, file_contents_read, file_contents.sha, branch)
-#     print(stage_change_result)
-
-#     # except Exception:
-#     #     print(f'test')
-
-# def stage_change(gh, file):
-#     print(gh)
-#     # get ref
-#     ref = repo.get_git_ref("heads/test-01")
-#     print(ref)
-
-#     # get the parent commit
-#     parent_commit = repo.get_git_commit(ref.object.sha)
-#     print(parent_commit)
-
-#     # file to create a commit
-#     # file (already part of command argument)
-#     contents = repo.get_contents(path=file)
-#     print(content.path)
-
-#     # create a new tree with the new file content
-#     tree = [
-#         {
-#             "path": file,
-#             "mode": "100644",
-#             "type": "blob",
-#             "content": contents
-#         }
-#     ]
-#     new_tree = repo.create_git_tree([tree], parent_tree=parent_commit.tree)
-#     print(new_tree)
-
-#     # Create a new commit
-#     message = 'update pre-commit hooks version'
-#     commit = repo.create_git_commit(
-#         message, new_tree.sha, [parent_commit]
-#     )
-#     print(commit)
-
-#     # Update the reference to point to the new commit
-#     ref.edit(commit.sha, force=True)
-
-
-# import git
-
-# repo_path = '/path/to/your/repository'
-
-# try:
-#     repo = git.Repo(repo_path)
-#     # 暂存所有修改的文件
-#     repo.git.add(all=True)
-#     commit_message = 'Stage and commit all changes'
-#     commit = repo.index.commit(commit_message)
-#     print(f"成功创建提交，提交哈希: {commit.hexsha}")
-# except git.InvalidGitRepositoryError:
-#     print(f"指定的路径 {repo_path} 不是一个有效的 Git 仓库。")
-# except Exception as e:
-#     print(f"发生错误: {e}")
