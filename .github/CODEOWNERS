@@ -1,1 +1,4 @@
-# CODEOWNERS
+# CODEOWNERS for public201
+# managed by terraform - please do not edit here
+
+*  @tagdots-dev/admins
