@@ -4,6 +4,7 @@
 Purpose: update .pre-commit-config.yaml and create a PR
 """
 
+import logging
 import os
 import sys
 import time
@@ -27,9 +28,9 @@ def get_auth():
         else:
             raise AssertionError
     except KeyError:
-        print('Key Error: Environment variable (GH_TOKEN) is not found')
+        logging.error('Key Error: Environment variable (GH_TOKEN) is not found')
     except AssertionError:
-        print('Assertion Error: Environment variable (GH_TOKEN) is not valid')
+        logging.error('Assertion Error: Environment variable (GH_TOKEN) is not valid')
         sys.exit(1)
 
 
@@ -50,15 +51,15 @@ def get_owner_repo(file):
             repos_revs_list.append(each_repo_rev_dict)
         return repos_revs_list
     except FileNotFoundError as f:
-        print(f'File Not Found Error: {f}.')
+        logging.error(f'File Not Found Error: {f}.')
     except yaml.scanner.ScannerError as s:
-        print(f'Yaml Format Error: {s}.')
+        logging.error(f'Yaml Format Error: {s}.')
     except yaml.parser.ParserError as p:
-        print(f'File Parse Error: {p}.')
+        logging.error(f'File Parse Error: {p}.')
     except KeyError as k:
-        print(f'Missing Key Error: {k}.')
+        logging.error(f'Missing Key Error: {k}.')
     except Exception as e:
-        print(f'Exception Error to get owner/repo: {e}.')
+        logging.error(f'Exception Error to get owner/repo: {e}.')
 
 
 def get_rev_variances(file, repos_revs_list):
@@ -73,12 +74,12 @@ def get_rev_variances(file, repos_revs_list):
                 current_rev = r['current_rev']
                 latest_release = repo.get_latest_release()
                 if not current_rev == latest_release.tag_name:
-                    print(f'{owner_repo} ({current_rev}) is not using the latest rev ({latest_release.tag_name})')
+                    logging.info(f'{owner_repo} ({current_rev}) is not using the latest rev ({latest_release.tag_name})')
                     add_variance_to_dict(owner_repo, current_rev, latest_release.tag_name)
             except NameError as n:
-                print(f"NameError: {n}")
+                logging.error(f"NameError: {n}")
             except TypeError as t:
-                print(f'TypeError: {t}')
+                logging.error(f'TypeError: {t}')
             except Exception as e:
                 if f'{e.status}':
                     """ pre-commit hooks repo uses latest tag instead of github releases """
@@ -86,16 +87,16 @@ def get_rev_variances(file, repos_revs_list):
                         try:
                             tag = next(x for x in repo.get_tags() if ("beta" and "alpha") not in x.name)
                             if not current_rev == tag.name:
-                                print(f'{owner_repo} ({current_rev}) is not using the latest rev ({tag.name})')
+                                logging.info(f'{owner_repo} ({current_rev}) is not using the latest rev ({tag.name})')
                                 add_variance_to_dict(owner_repo, current_rev, tag.name)
                         except Exception as e:
-                            print(f'Exception Error to get latest tag: {owner_repo} - {e}')
+                            logging.error(f'Exception Error to get latest tag: {owner_repo} - {e}')
                     else:
-                        print(f'Exception Error to get rev variances: {owner_repo} {e}.')
+                        logging.error(f'Exception Error to get rev variances: {owner_repo} {e}.')
                 else:
-                    print(f'Exception Error to get rev variances: {owner_repo} {e}.')
+                    logging.error(f'Exception Error to get rev variances: {owner_repo} {e}.')
     except Exception as e:
-        print(f'Exception Error to get rev variances: {owner_repo} {e}.')
+        logging.error(f'Exception Error to get rev variances: {owner_repo} {e}.')
 
 
 def add_variance_to_dict(owner_repo, current_rev, new_rev):
@@ -121,10 +122,10 @@ def update_pre_commit(file, dry_run, variance_list):
 
         with open(file, 'w') as f:
             yaml.dump(data, f, indent=2, sort_keys=False)
-        print(f'\nUpdate to {file} is successfully completed')
+        logging.info(f'\nUpdate to {file} is successfully completed')
 
     except Exception as e:
-        print(f'Exception Error: {e}')
+        logging.error(f'Exception Error: {e}')
 
 
 def checkout_new_branch():
@@ -133,13 +134,12 @@ def checkout_new_branch():
     """
     repo_path = os.getcwd()
     branch_suffix = ulid.new()
-    print(branch_suffix)
     repo_obj = git.Repo(repo_path)
     repo_obj_branch_name = repo_obj.create_head(f'update_hooks_{branch_suffix}')
     repo_obj_branch_name.checkout()
     repo_obj_remote_url = repo_obj.remotes.origin.url
     owner_repo = '/'.join(repo_obj_remote_url.rsplit('/', 2)[-2:]).replace('.git', '')
-    print('\nCheckout new branch successfully....')
+    logging.info('\nCheckout new branch successfully....')
     return owner_repo, repo_obj_branch_name
 
 
@@ -158,11 +158,11 @@ def push_commit(file, active_branch_name):
         repo_obj.index.write()
         commit = repo_obj.index.commit(message)
         repo_obj.git.push("--set-upstream", 'origin', branch)
-        print('\nPush commits successfully:')
-        print(f'from local branch: {branch}')
-        print(f'with commit hash : {commit.hexsha}')
+        logging.info('\nPush commits successfully:')
+        logging.info(f'from local branch: {branch}')
+        logging.info(f'with commit hash : {commit.hexsha}')
     except Exception as e:
-        print(f'\nException Error to push commit: {e}')
+        logging.error(f'\nException Error to push commit: {e}')
 
 
 def create_pr(owner_repo, active_branch_name, default_branch, variance_list):
@@ -175,19 +175,19 @@ def create_pr(owner_repo, active_branch_name, default_branch, variance_list):
     pr_branch = active_branch_name
     pr_title = 'update pre-commit hooks version'
 
-    print('\nCreating a Pull Request as follows:')
-    print(f'Owner/Repo.  : {owner_repo}')
-    print(f'Purpose      : {pr_title}')
-    print(f'Rev Variances: {pr_body}')
-    print(f'Source Branch: {pr_branch}')
-    print(f'PR for Branch: {pr_base_branch}')
+    logging.info('\nCreating a Pull Request as follows:')
+    logging.info(f'Owner/Repo.  : {owner_repo}')
+    logging.info(f'Purpose      : {pr_title}')
+    logging.info(f'Rev Variances: {pr_body}')
+    logging.info(f'Source Branch: {pr_branch}')
+    logging.info(f'PR for Branch: {pr_base_branch}')
     time.sleep(20)
     try:
         pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
-        print(f'{pr.html_url}')
-        print(f'Pull request created successfully: {pr.html_url}')
+        logging.info(f'{pr.html_url}')
+        logging.info(f'Pull request created successfully: {pr.html_url}')
     except Exception as e:
-        print(f'\nException Error to create PR: {e}')
+        logging.error(f'\nException Error to create PR: {e}')
 
 
 @click.command()
@@ -195,7 +195,7 @@ def create_pr(owner_repo, active_branch_name, default_branch, variance_list):
 @click.option('--dry-run', required=True, default=True, help='dry-run=False will update config file')
 @click.option('--default-branch', required=False, default='main', help='main is default branch')
 def main(file, dry_run, default_branch):
-    print(f"Starting autoupdate on {file} (dry-run {dry_run})...\n")
+    logging.info(f"Starting autoupdate on {file} (dry-run {dry_run})...\n")
     try:
         global gh
         global variance_list
@@ -210,7 +210,7 @@ def main(file, dry_run, default_branch):
             push_commit(file, active_branch_name)
             create_pr(owner_repo, active_branch_name, default_branch, variance_list)
     except Exception as e:
-        print(f'Exception Error to autoupdate: {e}')
+        logging.error(f'Exception Error to autoupdate: {e}')
         sys.exit(1)
 
 
