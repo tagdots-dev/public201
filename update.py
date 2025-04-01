@@ -4,6 +4,7 @@
 Purpose: update .pre-commit-config.yaml and create a PR
 """
 
+import json
 import os
 import sys
 import time
@@ -169,10 +170,11 @@ def create_pr(owner_repo, active_branch_name, default_branch, variance_list):
     """
     create Pull Request
     """
+    owner = owner_repo.split('/')[0]
     repo = gh.get_repo(owner_repo)
     pr_base_branch = repo.default_branch
-    pr_body = variance_list
-    pr_branch = active_branch_name
+    pr_body = json.dumps(variance_list)
+    pr_branch = f'{owner}:{active_branch_name}'
     pr_title = 'update pre-commit hooks version'
 
     print('\nCreating a Pull Request as follows:')
@@ -197,22 +199,35 @@ def create_pr(owner_repo, active_branch_name, default_branch, variance_list):
 @click.option('--default-branch', required=False, default='main', help='main is default branch')
 def main(file, dry_run, default_branch):
     print(f"Starting autoupdate on {file} (dry-run {dry_run})...\n")
-    try:
-        global gh
-        global variance_list
-        variance_list = []
-        gh = get_auth()
-        repos_revs_list = get_owner_repo(file)
-        get_rev_variances(file, repos_revs_list)
+    global gh
+    global variance_list
+    variance_list = []
+    gh = get_auth()
+    repos_revs_list = get_owner_repo(file)
+    get_rev_variances(file, repos_revs_list)
 
-        if len(variance_list) > 0 and not dry_run:
-            update_pre_commit(file, dry_run, variance_list)
-            owner_repo, active_branch_name = checkout_new_branch()
-            push_commit(file, active_branch_name)
-            create_pr(owner_repo, active_branch_name, default_branch, variance_list)
-    except Exception as e:
-        print(f'Exception Error to autoupdate: {e}')
-        sys.exit(1)
+    if len(variance_list) > 0 and not dry_run:
+        update_pre_commit(file, dry_run, variance_list)
+        owner_repo, active_branch_name = checkout_new_branch()
+        push_commit(file, active_branch_name)
+        create_pr(owner_repo, active_branch_name, default_branch, variance_list)
+
+    # try:
+    #     global gh
+    #     global variance_list
+    #     variance_list = []
+    #     gh = get_auth()
+    #     repos_revs_list = get_owner_repo(file)
+    #     get_rev_variances(file, repos_revs_list)
+
+    #     if len(variance_list) > 0 and not dry_run:
+    #         update_pre_commit(file, dry_run, variance_list)
+    #         owner_repo, active_branch_name = checkout_new_branch()
+    #         push_commit(file, active_branch_name)
+    #         create_pr(owner_repo, active_branch_name, default_branch, variance_list)
+    # except Exception as e:
+    #     print(f'Exception Error to autoupdate: {e}')
+    #     sys.exit(1)
 
 
 if __name__ == '__main__':

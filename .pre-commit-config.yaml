@@ -1,13 +1,13 @@
 repos:
 - repo: https://github.com/python-jsonschema/check-jsonschema
-  rev: 0.32.0
+  rev: 0.32.1
   hooks:
   - name: Check GitHub Actions Workflows
     id: check-github-workflows
     args:
     - --verbose
 - repo: https://github.com/hadolint/hadolint
-  rev: v2.10.0
+  rev: v2.12.0
   hooks:
   - name: Check Dockerfile
     id: hadolint
@@ -54,7 +54,7 @@ repos:
   - name: Python isort
     id: isort
 - repo: https://github.com/pycqa/flake8
-  rev: 7.1.2
+  rev: 7.2.0
   hooks:
   - name: Python flake8
     id: flake8
