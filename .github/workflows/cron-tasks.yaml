@@ -1,4 +1,4 @@
-name: Scheduled-Run Tests
+name: Cron-update_hooks
 
 on:
   schedule:
@@ -31,7 +31,7 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Install general dependencies
+      - name: Install python dependencies
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
@@ -65,3 +65,5 @@ jobs:
 
       - name: Autoupdate pre-commit hooks and create PR
         run: python update.py --dry-run false
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
