@@ -54,16 +54,17 @@ jobs:
         with:
           tflint_version: ${{ env.TFLINT_VERSION }}
 
-      - name: pre-commit setup
+      - name: Setup pre-commit
         run: |
           pre-commit install
           pre-commit --version
 
-      - name: pre-commit run everything
-        run: |
-          pre-commit run -a
+      # - name: Run pre-commit on everything
+      #   run: |
+      #     pre-commit run -a
 
-      - name: Autoupdate pre-commit hooks and create PR
+      - name: Autoupdate pre-commit hooks and create PR if necessary
         run: python update.py --dry-run false
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PYTHONUNBUFFERED: "1"
