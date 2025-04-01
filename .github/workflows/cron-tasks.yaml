@@ -1,4 +1,4 @@
-name: Scheduled-Run Tests
+name: Cron-update_hooks
 
 on:
   schedule:
@@ -31,7 +31,7 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Install general dependencies
+      - name: Install python dependencies
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
@@ -54,14 +54,17 @@ jobs:
         with:
           tflint_version: ${{ env.TFLINT_VERSION }}
 
-      - name: pre-commit setup
+      - name: Setup pre-commit
         run: |
           pre-commit install
           pre-commit --version
 
-      - name: pre-commit run everything
-        run: |
-          pre-commit run -a
+      # - name: Run pre-commit on everything
+      #   run: |
+      #     pre-commit run -a
 
-      # - name: Autoupdate pre-commit hooks and create PR
-      #   run: python update.py --dry-run false
+      - name: Autoupdate pre-commit hooks and create PR if necessary
+        run: python update.py --dry-run false
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PYTHONUNBUFFERED: "1"

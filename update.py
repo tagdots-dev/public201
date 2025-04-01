@@ -43,11 +43,12 @@ def get_owner_repo(file):
             data = yaml.safe_load(f)
 
         for r in data['repos']:
-            each_repo_rev_dict = {}
-            owner_repo = '/'.join(r['repo'].rsplit('/', 2)[-2:]).replace('.git', '')
-            current_rev = r['rev']
-            each_repo_rev_dict.update(owner_repo=owner_repo, current_rev=current_rev)
-            repos_revs_list.append(each_repo_rev_dict)
+            if 'checkov' not in r['repo']:
+                each_repo_rev_dict = {}
+                owner_repo = '/'.join(r['repo'].rsplit('/', 2)[-2:]).replace('.git', '')
+                current_rev = r['rev']
+                each_repo_rev_dict.update(owner_repo=owner_repo, current_rev=current_rev)
+                repos_revs_list.append(each_repo_rev_dict)
         return repos_revs_list
     except FileNotFoundError as f:
         print(f'File Not Found Error: {f}.')
@@ -133,7 +134,6 @@ def checkout_new_branch():
     """
     repo_path = os.getcwd()
     branch_suffix = ulid.new()
-    print(branch_suffix)
     repo_obj = git.Repo(repo_path)
     repo_obj_branch_name = repo_obj.create_head(f'update_hooks_{branch_suffix}')
     repo_obj_branch_name.checkout()
@@ -205,8 +205,8 @@ def main(file, dry_run, default_branch):
         get_rev_variances(file, repos_revs_list)
 
         if len(variance_list) > 0 and not dry_run:
-            owner_repo, active_branch_name = checkout_new_branch()
             update_pre_commit(file, dry_run, variance_list)
+            owner_repo, active_branch_name = checkout_new_branch()
             push_commit(file, active_branch_name)
             create_pr(owner_repo, active_branch_name, default_branch, variance_list)
     except Exception as e:
