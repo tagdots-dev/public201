@@ -29,7 +29,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: $PYTHON_VERSION
+          python-version: echo $PYTHON_VERSION
 
       - name: Install general dependencies
         run: |
@@ -46,12 +46,12 @@ jobs:
       - name: Install terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: $TERRAFORM_VERSION
+          terraform_version: echo $TERRAFORM_VERSION
 
       - name: Install TFLint
         uses: terraform-linters/setup-tflint@v4
         with:
-          tflint_version: $TFLINT_VERSION
+          tflint_version: echo $TFLINT_VERSION
 
       - name: pre-commit setup
         run: |
