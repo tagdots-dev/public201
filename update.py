@@ -205,8 +205,8 @@ def main(file, dry_run, default_branch):
         get_rev_variances(file, repos_revs_list)
 
         if len(variance_list) > 0 and not dry_run:
-            owner_repo, active_branch_name = checkout_new_branch()
             update_pre_commit(file, dry_run, variance_list)
+            owner_repo, active_branch_name = checkout_new_branch()
             push_commit(file, active_branch_name)
             create_pr(owner_repo, active_branch_name, default_branch, variance_list)
     except Exception as e:
