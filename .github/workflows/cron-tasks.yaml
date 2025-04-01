@@ -42,13 +42,14 @@ jobs:
           wget -O hadolint https://github.com/hadolint/hadolint/releases/download/${{ env.HADOLINT_VERSION }}/hadolint-Linux-x86_64
           chmod +x hadolint
           sudo mv hadolint /usr/bin/
+          hadolint --version
 
       - name: Install terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: ${{ env.TERRAFORM_VERSION }}
 
-      - name: Install TFLint
+      - name: Install tflint
         uses: terraform-linters/setup-tflint@v4
         with:
           tflint_version: ${{ env.TFLINT_VERSION }}
@@ -62,8 +63,5 @@ jobs:
         run: |
           pre-commit run -a
 
-      - name: Make Script Executable
-        run: chmod +x update.py
-
-      # - name: Run Script
-      #   run: update.py
+      # - name: Autoupdate pre-commit hooks and create PR
+      #   run: python update.py --dry-run false
