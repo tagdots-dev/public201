@@ -5,6 +5,12 @@ on:
     - cron: '0 0 * * *'
   workflow_dispatch:
 
+env:
+  HADOLINT_VERSION: v2.12.0
+  PYTHON_VERSION: 3.13
+  TERRAFORM_VERSION: 1.11.2
+  TFLINT_VERSION: v0.55.1
+
 jobs:
   run-script:
     strategy:
@@ -17,13 +23,13 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4
 
-      - name: Install hadolint
+      - name: Echo PATH
         run: echo $PATH
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.13'
+          python-version: $PYTHON_VERSION
 
       - name: Install general dependencies
         run: |
@@ -32,20 +38,20 @@ jobs:
           pip --version
 
       - name: Install hadolint
-        run: >-
-          wget -O hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
+        run: |
+          wget -O hadolint https://github.com/hadolint/hadolint/releases/download/$HADOLINT/hadolint-Linux-x86_64
           chmod +x hadolint
-          sudo mv hadolint /bin/
+          sudo mv hadolint /usr/bin/
 
       - name: Install terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: "1.11.2"
+          terraform_version: $TERRAFORM_VERSION
 
       - name: Install TFLint
         uses: terraform-linters/setup-tflint@v4
         with:
-          tflint_version: v0.55.1
+          tflint_version: $TFLINT_VERSION
 
       - name: pre-commit setup
         run: |
