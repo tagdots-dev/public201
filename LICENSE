@@ -1,6 +1,6 @@
-{{ if eq license_type "MIT" }}MIT{{ else }}All Rights Reserved{{ end }}
+{ if license_type == "MIT" }MIT{ else }All Rights Reserved{ end }
 
-Copyright (c)  {{ .year }} {{ .org_name }}
+Copyright (c)  {{ year }} {{ org_name }}
 
 {{ if eq license_type "MIT" }}
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
