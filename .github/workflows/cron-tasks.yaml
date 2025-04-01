@@ -63,5 +63,5 @@ jobs:
         run: |
           pre-commit run -a
 
-      # - name: Autoupdate pre-commit hooks and create PR
-      #   run: python update.py --dry-run false
+      - name: Autoupdate pre-commit hooks and create PR
+        run: python update.py --dry-run false
