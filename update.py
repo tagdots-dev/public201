@@ -197,19 +197,6 @@ def create_pr(owner_repo, active_branch_name, default_branch, variance_list):
 @click.option('--default-branch', required=False, default='main', help='main is default branch')
 def main(file, dry_run, default_branch):
     print(f"Starting autoupdate on {file} (dry-run {dry_run})...\n")
-    global gh
-    global variance_list
-    variance_list = []
-    gh = get_auth()
-    repos_revs_list = get_owner_repo(file)
-    get_rev_variances(file, repos_revs_list)
-
-    if len(variance_list) > 0 and not dry_run:
-        update_pre_commit(file, dry_run, variance_list)
-        owner_repo, active_branch_name = checkout_new_branch()
-        push_commit(file, active_branch_name)
-        create_pr(owner_repo, active_branch_name, default_branch, variance_list)
-
     try:
         global gh
         global variance_list
