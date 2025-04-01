@@ -6,10 +6,10 @@ on:
   workflow_dispatch:
 
 env:
-  HADOLINT_VERSION: v2.12.0
-  PYTHON_VERSION: 3.13
-  TERRAFORM_VERSION: 1.11.2
-  TFLINT_VERSION: v0.55.1
+  HADOLINT_VERSION: 'v2.12.0'
+  PYTHON_VERSION: '3.13'
+  TERRAFORM_VERSION: '1.11.2'
+  TFLINT_VERSION: 'v0.55.1'
 
 jobs:
   run-script:
