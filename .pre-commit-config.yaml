@@ -40,10 +40,10 @@ repos:
     exclude: .py$
   - name: Fix newline at end of file
     id: end-of-file-fixer
-    exclude: ^tests/
+    exclude: ^tests/|^.gitignore$
   - name: Fix to trim whitespace from ends of lines
     id: trailing-whitespace
-    exclude: ^tests/
+    exclude: ^tests/|^.gitignore$
   - name: Python sort requirements.txt
     id: requirements-txt-fixer
   - name: Python check files parse as valid python

@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 """
-Purpose: update .pre-commit-config.yaml and create a PR
+Purpose: update pre-commit configuration and create a pull request if necessary
+(except that bridgecrewio/checkov version needs to be updated manually)
 """
 
 import json
