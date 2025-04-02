@@ -8,7 +8,6 @@ Purpose: update pre-commit configuration and create a pull request if necessary
 import json
 import os
 import sys
-import time
 
 import click
 import git
@@ -181,10 +180,9 @@ def create_pr(owner_repo, active_branch_name, default_branch, variance_list):
     print('\nCreating a Pull Request as follows:')
     print(f'Owner/Repo.  : {owner_repo}')
     print(f'Purpose      : {pr_title}')
-    print(f'Rev Variances: {pr_body}')
     print(f'Source Branch: {pr_branch}')
     print(f'PR for Branch: {pr_base_branch}')
-    time.sleep(10)
+    print(f'Rev Variances: {pr_body}')
     try:
         pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
         print(f'\nPull request created successfully: {pr.html_url}')
