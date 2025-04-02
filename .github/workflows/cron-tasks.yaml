@@ -6,10 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  HADOLINT_VERSION: 'v2.12.0'
   PYTHON_VERSION: '3.13.2'
-  TERRAFORM_VERSION: '1.11.2'
-  TFLINT_VERSION: 'v0.55.1'
 
 jobs:
   run-script:
@@ -23,9 +20,6 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4
 
-      - name: Echo PATH
-        run: echo $PATH
-
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -36,32 +30,6 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
           pip --version
-
-      - name: Install hadolint
-        run: |
-          wget -O hadolint https://github.com/hadolint/hadolint/releases/download/${{ env.HADOLINT_VERSION }}/hadolint-Linux-x86_64
-          chmod +x hadolint
-          sudo mv hadolint /usr/bin/
-          hadolint --version
-
-      - name: Install terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: ${{ env.TERRAFORM_VERSION }}
-
-      - name: Install tflint
-        uses: terraform-linters/setup-tflint@v4
-        with:
-          tflint_version: ${{ env.TFLINT_VERSION }}
-
-      - name: Install pre-commit
-        run: |
-          pre-commit install
-          pre-commit --version
-
-      - name: Run pre-commit on everything
-        run: |
-          pre-commit run -a
 
       - name: Autoupdate pre-commit hooks and create PR if necessary
         run: python update.py --dry-run false
