@@ -1,7 +1,7 @@
 ---
 ## NOTE: this file is managed through terraform - please do not edit here
 
-name: Pre-Commit
+name: Pre-Commit-Run-All
 on:  # yamllint disable-line rule:truthy
   pull_request:
     branches:
