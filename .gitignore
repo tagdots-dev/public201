@@ -356,3 +356,10 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
+
+
+## --------------- Miscellaneous ------------------- ##
+*.key
+*.pem
+*.tmp
+id_rsa
