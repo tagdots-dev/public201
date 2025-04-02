@@ -211,6 +211,8 @@ def main(file, dry_run, default_branch):
             owner_repo, active_branch_name = checkout_new_branch()
             push_commit(file, active_branch_name)
             create_pr(owner_repo, active_branch_name, default_branch, variance_list)
+        else:
+            print('\nThere is no update to pre-commit hooks.')
     except Exception as e:
         print(f'\nException Error to autoupdate: {e}')
         sys.exit(1)
