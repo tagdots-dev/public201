@@ -1,5 +1,5 @@
-## NOTE: this file is managed through terraform - please do not edit here
-## .gitignore (reference: https://github.com/github/gitignore)
+# NOTE: this file is managed through terraform - please do not edit here
+# .gitignore (reference: https://github.com/github/gitignore)
 
 ## ---------------------- OSX ---------------------- ##
 # General
