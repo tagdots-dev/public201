@@ -1,4 +1,5 @@
 ---
+# NOTE: this file is managed through terraform - please do not edit here
 # https://devtodevops.com/hadolint-dockerfile/
 
 failure-threshold: info  # error, warning, info, style, ignore, none
