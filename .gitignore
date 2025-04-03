@@ -1,7 +1,7 @@
 # NOTE: this file is managed through terraform - please do not edit here
 # .gitignore (reference: https://github.com/github/gitignore)
 
-## ---------------------- OSX ---------------------- ##
+# ---------------------- OSX ---------------------- #
 # General
 .DS_Store
 .AppleDouble
@@ -30,7 +30,7 @@ Temporary Items
 .apdisk
 
 
-## -------------------- Windows -------------------- ##
+# -------------------- Windows -------------------- #
 # Windows thumbnail cache files
 Thumbs.db
 Thumbs.db:encryptable
@@ -57,7 +57,7 @@ $RECYCLE.BIN/
 *.lnk
 
 
-## -------------------- Linux ---------------------- ##
+# -------------------- Linux ---------------------- #
 *~
 
 # temporary files which can be created if a process still has a handle open of a deleted file
@@ -74,7 +74,7 @@ $RECYCLE.BIN/
 
 
 
-## -------------------- Python --------------------- ##
+# -------------------- Python --------------------- #
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -252,7 +252,8 @@ cython_debug/
 
 
 
-## ------------------ Terraform -------------------- ##
+# ------------------ Terraform -------------------- #
+.terraform.lock.hcl
 # Local .terraform directories
 **/.terraform/*
 
@@ -293,7 +294,7 @@ terraform.rc
 
 
 
-## -------------------- Swift ---------------------- ##
+# -------------------- Swift ---------------------- #
 # Xcode
 #
 # gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
@@ -358,7 +359,7 @@ fastlane/screenshots/**/*.png
 fastlane/test_output
 
 
-## --------------- Miscellaneous ------------------- ##
+# --------------- Miscellaneous ------------------- #
 *.key
 *.pem
 *.tmp
