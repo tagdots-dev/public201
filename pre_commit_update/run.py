@@ -84,7 +84,7 @@ def get_rev_variances(file, repos_revs_list):
                     """ pre-commit hooks repo uses latest tag instead of github releases """
                     if f'{e.status}' == "404":
                         try:
-                            tag = next(x for x in repo.get_tags() if ("beta" and "alpha") not in x.name)
+                            tag = next(x for x in repo.get_tags() if ("beta" and "alpha" and "rc") not in x.name)
                             if not current_rev == tag.name:
                                 print(f'{owner_repo} ({current_rev}) is not using the latest rev ({tag.name})')
                                 add_variance_to_dict(owner_repo, current_rev, tag.name)
