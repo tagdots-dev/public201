@@ -31,7 +31,7 @@ jobs:
           pip --version
 
       - name: Autoupdate pre-commit hooks and create PR if necessary
-        run: python pre-commit_update/run.py --dry-run false
+        run: python pre_commit_update/run.py --dry-run false
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PYTHONUNBUFFERED: "1"

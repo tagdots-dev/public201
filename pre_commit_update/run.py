@@ -2,7 +2,6 @@
 
 """
 Purpose: update pre-commit configuration and create a pull request if necessary
-(except that bridgecrewio/checkov version needs to be updated manually)
 """
 
 import json
@@ -44,12 +43,11 @@ def get_owner_repo(file):
             data = yaml.safe_load(f)
 
         for r in data['repos']:
-            if 'checkov' not in r['repo']:
-                each_repo_rev_dict = {}
-                owner_repo = '/'.join(r['repo'].rsplit('/', 2)[-2:]).replace('.git', '')
-                current_rev = r['rev']
-                each_repo_rev_dict.update(owner_repo=owner_repo, current_rev=current_rev)
-                repos_revs_list.append(each_repo_rev_dict)
+            each_repo_rev_dict = {}
+            owner_repo = '/'.join(r['repo'].rsplit('/', 2)[-2:]).replace('.git', '')
+            current_rev = r['rev']
+            each_repo_rev_dict.update(owner_repo=owner_repo, current_rev=current_rev)
+            repos_revs_list.append(each_repo_rev_dict)
         return repos_revs_list
     except FileNotFoundError as f:
         print(f'File Not Found Error: {f}.')
