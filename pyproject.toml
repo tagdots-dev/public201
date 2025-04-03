@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pre-commit-update-hooks"
+version = "0.0.1"
+dependencies = [
+    "click==8.1.8",
+    "click-option-group==0.5.6",
+    "GitPython==3.1.44",
+    "pre_commit==4.2.0",
+    "PyGithub==2.6.1",
+    "pytest==8.3.5",
+    "PyYAML==6.0.2",
+    "setuptools==77.0.1",
+    "ulid-py==1.1.0",
+    "virtualenv==20.29.3",
+]
+authors = [
+    {name = "developers", email = "developers@tagdots.com"}
+]
+license = "MIT"
+readme = "README.md"
+requires-python = ">=3.12.1"
+
+[project.scripts]
+update-hooks = "pre_commit_update.run:main"
+
+[tool.setuptools.packages.find]
+where = ["."]

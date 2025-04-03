@@ -9,7 +9,7 @@ env:
   PYTHON_VERSION: '3.13.2'
 
 jobs:
-  run-script:
+  update-hooks:
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -27,12 +27,11 @@ jobs:
 
       - name: Install python dependencies
         run: |
-          pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -e .
           pip --version
 
       - name: Autoupdate pre-commit hooks and create PR if necessary
-        run: python update.py --dry-run false
+        run: python pre-commit_update/run.py --dry-run false
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PYTHONUNBUFFERED: "1"

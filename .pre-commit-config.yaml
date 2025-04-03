@@ -33,21 +33,12 @@ repos:
     id: check-added-large-files
     args:
     - --maxkb=2000
-  - name: Check executables with shebangs
-    id: check-executables-have-shebangs
-  - name: Check shebangs scripts are executable
-    id: check-shebang-scripts-are-executable
-    exclude: .py$
   - name: Fix newline at end of file
     id: end-of-file-fixer
     exclude: ^tests/|^.gitignore$
   - name: Fix to trim whitespace from ends of lines
     id: trailing-whitespace
     exclude: ^tests/|^.gitignore$
-  - name: Python sort requirements.txt
-    id: requirements-txt-fixer
-  - name: Python check files parse as valid python
-    id: check-ast
 - repo: https://github.com/pycqa/isort
   rev: 6.0.1
   hooks:
@@ -72,27 +63,3 @@ repos:
     args:
     - --args=--recursive
     - --args=--format=sarif
-- repo: https://github.com/bridgecrewio/checkov
-  rev: 3.2.393
-  hooks:
-  - name: Checkov Scan
-    id: checkov
-    files: \.tf$|\.tfvars$|\.json$|\.y(a)?ml$|\.py$|\.sh$|\.md$
-    args:
-    - --skip-results-upload
-    - --enable-secret-scan-all-files
-    - --skip-check
-    - CKV_GIT_1
-    - --skip-check
-    - CKV_GIT_3
-    - --skip-check
-    - CKV_GIT_5
-    - --skip-check
-    - CKV2_GIT_1
-    - --skip-check
-    - CKV2_GHA_1
-    - --skip-check
-    - CKV_DOCKER_2
-    - --skip-check
-    - CKV_DOCKER_3
-    - --quiet
