@@ -152,7 +152,7 @@ def push_commit(file, active_branch_name):
         repo_path = os.getcwd()
         branch = active_branch_name
         message = 'update pre-commit hooks version'
-        files_to_stage = [file, 'update.py']
+        files_to_stage = [file]
 
         repo_obj = git.Repo(repo_path)
         repo_obj.index.add(files_to_stage)  # other option ('*')
@@ -210,7 +210,7 @@ def main(file, dry_run, default_branch):
             push_commit(file, active_branch_name)
             create_pr(owner_repo, active_branch_name, default_branch, variance_list)
         else:
-            print('\nThere is no update to pre-commit hooks.')
+            print('\nUpdate to pre-commit hooks: none')
     except Exception as e:
         print(f'\nException Error to autoupdate: {e}')
         sys.exit(1)
