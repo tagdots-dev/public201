@@ -82,7 +82,7 @@ jobs:
         # CKV_GIT_1    - Ensure GitHub repository is Private
         # CKV_GIT_3    - Ensure GitHub Repository defined in Terraform have vulnerability alerts enabled
         # CKV_GIT_5    - Ensure GitHub pull requests should require at least 2 approvals
-        # CKV_GIT_6    - Ensure GitHub branch protection rules requires signed commits"
+        # CKV_GIT_6    - Ensure GitHub branch protection rules requires signed commits
         # CKV2_GIT_1   - Ensure each Repository has branch protection associated
         # CKV2_GHA_1   - Ensure top-level permissions are not set to write-all
         # CKV_DOCKER_2 - Ensure that HEALTHCHECK instructions have been added to container images
