@@ -71,3 +71,5 @@ repos:
     args:
     - --args=--recursive
     - --args=--format=sarif
+  - name: terraform validate
+    id: terraform_validate
