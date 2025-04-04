@@ -17,7 +17,7 @@ repos:
 - repo: https://github.com/adrienverge/yamllint
   rev: v1.37.0
   hooks:
-  - name: Check Yaml
+  - name: Check Yaml to verify syntax and more
     id: yamllint
     args:
     - --no-warnings
