@@ -1,3 +1,0 @@
-# Honey
-
-Honey is sweet
