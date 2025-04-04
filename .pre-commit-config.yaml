@@ -43,7 +43,7 @@ repos:
     id: check-ast
   - name: Fix newline at end of file
     id: end-of-file-fixer
-    exclude: ^tests/|^.gitignore$
+    exclude: ^tests/|^.gitignore$|^LICENSE$
   - name: Fix to trim whitespace from ends of lines
     id: trailing-whitespace
     exclude: ^tests/|^.gitignore$
