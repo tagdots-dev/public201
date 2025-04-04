@@ -25,18 +25,22 @@ repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v5.0.0
   hooks:
-  - name: Check JSON
-    id: check-json
-    types:
-    - json
-  - name: Check file parse as valid python
-    id: check-ast
-  - name: Check TOML
-    id: check-toml
   - name: Check added large files
     id: check-added-large-files
     args:
     - --maxkb=2000
+  - name: Check file parse as valid python
+    id: check-ast
+  - name: Check TOML to verify syntax
+    id: check-toml
+  - name: Check JSON to verify syntax
+    id: check-json
+    types:
+    - json
+  - name: Check JSON pretty-format
+    id: pretty-format-json
+    args:
+    - --no-sort-keys
   - name: Fix newline at end of file
     id: end-of-file-fixer
     exclude: ^tests/|^.gitignore$
