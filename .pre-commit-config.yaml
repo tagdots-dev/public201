@@ -25,12 +25,6 @@ repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v5.0.0
   hooks:
-  - name: Check added large files
-    id: check-added-large-files
-    args:
-    - --maxkb=2000
-  - name: Check file parse as valid python
-    id: check-ast
   - name: Check TOML to verify syntax
     id: check-toml
   - name: Check JSON to verify syntax
@@ -41,6 +35,12 @@ repos:
     id: pretty-format-json
     args:
     - --no-sort-keys
+  - name: Check added large files
+    id: check-added-large-files
+    args:
+    - --maxkb=2000
+  - name: Check file parse as valid python
+    id: check-ast
   - name: Fix newline at end of file
     id: end-of-file-fixer
     exclude: ^tests/|^.gitignore$
