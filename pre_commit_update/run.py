@@ -104,7 +104,7 @@ def add_variance_to_dict(owner_repo, current_rev, new_rev):
     variance_list.append(variance_dict)
 
 
-def update_pre_commit(file, dry_run, variance_list):
+def update_pre_commit(file, variance_list):
     """
     update pre-commit configuration file
     """
@@ -193,7 +193,7 @@ def create_pr(owner_repo, active_branch_name, default_branch, variance_list):
 @click.option('--dry-run', required=True, default=True, help='dry-run=False will update config file')
 @click.option('--default-branch', required=False, default='main', help='main is default branch')
 def main(file, dry_run, default_branch):
-    print(f"Starting autoupdate on {file} (dry-run {dry_run})...\n")
+    print(f"Starting update-hooks on {file} (dry-run {dry_run})...")
     try:
         global gh
         global variance_list
@@ -203,12 +203,12 @@ def main(file, dry_run, default_branch):
         get_rev_variances(file, repos_revs_list)
 
         if len(variance_list) > 0 and not dry_run:
-            update_pre_commit(file, dry_run, variance_list)
+            update_pre_commit(file, variance_list)
             owner_repo, active_branch_name = checkout_new_branch()
             push_commit(file, active_branch_name)
             create_pr(owner_repo, active_branch_name, default_branch, variance_list)
         else:
-            print('\nUpdate to pre-commit hooks: none')
+            print('Update to pre-commit hooks: None')
     except Exception as e:
         print(f'\nException Error to autoupdate: {e}')
         sys.exit(1)
