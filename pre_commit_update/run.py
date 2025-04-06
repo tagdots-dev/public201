@@ -130,7 +130,7 @@ def push_commit(file, active_branch_name):
     print(f'with commit hash : {commit.hexsha}')
 
 
-def create_pr(gh, owner_repo, active_branch_name, variance_list):
+def create_pr(gh, owner_repo, active_branch_name, variance_list, pr_title_suffix):
     """
     create Pull Request
     """
@@ -139,17 +139,18 @@ def create_pr(gh, owner_repo, active_branch_name, variance_list):
     pr_base_branch = repo.default_branch
     pr_body = json.dumps(variance_list)
     pr_branch = f'{owner}:{active_branch_name}'
-    pr_title = 'update pre-commit hooks version'
+    pr_title = f'update pre-commit hooks version{pr_title_suffix}'
 
     print('Creating a Pull Request as follows:')
     print(f'Owner/Repo.  : {owner_repo}')
-    print(f'Purpose      : {pr_title}')
+    print(f'Title        : {pr_title}{pr_title_suffix}')
     print(f'Source Branch: {pr_branch}')
     print(f'PR for Branch: {pr_base_branch}')
     print(f'Rev Variances: {pr_body}')
     try:
         pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
         print(f'Created pull request #{pr.number} successfully: {pr.html_url}')
+        return pr.number, active_branch_name
     except Exception as e:
         print(f'Exception Error to create PR: {e}')
 
@@ -169,7 +170,7 @@ def main(file, dry_run):
             update_pre_commit(file, variance_list)
             owner_repo, active_branch_name = checkout_new_branch()
             push_commit(file, active_branch_name)
-            create_pr(gh, owner_repo, active_branch_name, variance_list)
+            pr_number, pr_branch = create_pr(gh, owner_repo, active_branch_name, variance_list)
         else:
             print('Update to pre-commit hooks: None')
     except Exception:
