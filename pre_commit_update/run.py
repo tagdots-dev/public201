@@ -155,8 +155,8 @@ def create_pr(gh, owner_repo, active_branch_name, variance_list):
 
 
 @click.command()
-@click.option('--file', required=False, default='.pre-commit-config.yaml', help='full path to pre-commit-config file.')
-@click.option('--dry-run', required=False, default=True, help='dry-run {true, false}.')
+@click.option('--file', required=False, default='.pre-commit-config.yaml', help='file (default: .pre-commit-config.yaml)')
+@click.option('--dry-run', required=False, default=True, help='dry-run [true, false] (default: true).')
 def main(file, dry_run):
     print(f"Starting update-hooks on {file} (dry-run {dry_run})...")
     try:

@@ -160,11 +160,14 @@ class TestCreatePR(unittest.TestCase):
         pr = create_pr(gh, owner_repo, active_branch_name, self.variance_list)
         print(f'Created pull request #{pr.number} successfully.')
 
-        ''' close PR after success above '''
+        ''' clean up after above '''
         repo = gh.get_repo(owner_repo)
         pull = repo.get_pull(pr.number)
+        ref = repo.get_git_ref(f"heads/{active_branch_name}")
         pull.edit(state="closed")
+        ref.delete()
         print(f'Closed pull request #{pr.number} successfully.')
+        print(f'Deleted branch {active_branch_name} successfully.')
 
 
 class TestMain(unittest.TestCase):
