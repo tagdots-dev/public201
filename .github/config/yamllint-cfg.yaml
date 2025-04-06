@@ -4,9 +4,12 @@
 
 extends: default
 
+ignore: |
+  tests/
+
 rules:
   line-length:
-    max: 110
+    max: 125
     level: warning
 
   indentation: disable

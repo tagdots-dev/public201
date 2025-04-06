@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -29,3 +29,15 @@ update-hooks = "pre_commit_update.run:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
+
+[tool.coverage]
+source = ["."]
+
+[tool.coverage.run]
+branch = true
+command_line = "-m unittest discover -s tests/"
+include = ["pre_commit_update/*"]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = false
