@@ -1,0 +1,13 @@
+repos:
+- repo: https://github.com/pycqa/flake8
+  rev: 7.1.2
+  hooks:
+  - name: Check Yaml to verify syntax and more
+    id: yamllint
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.0.0
+  hooks:
+  - name: Check TOML to verify syntax
+    id: check-toml
+  - name: Check JSON to verify syntax
+    id: check-json
