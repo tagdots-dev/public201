@@ -7,6 +7,7 @@ import io
 import os
 import shutil
 import sys
+import time
 import unittest
 from unittest import mock
 
@@ -161,9 +162,11 @@ class TestCreatePR(unittest.TestCase):
         print(f'Created pull request #{pr.number} successfully.')
 
         ''' clean up after above '''
+        ''' ^^ may have error if it takes longer than 90 seconds to get PR ready '''
         repo = gh.get_repo(owner_repo)
         pull = repo.get_pull(pr.number)
         ref = repo.get_git_ref(f"heads/{active_branch_name}")
+        time.sleep(90)
         pull.edit(state="closed")
         ref.delete()
         print(f'Closed pull request #{pr.number} successfully.')
