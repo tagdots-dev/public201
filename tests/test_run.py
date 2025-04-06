@@ -138,39 +138,37 @@ class TestUpdatePreCommit(unittest.TestCase):
 
 class TestCreatePR(unittest.TestCase):
     file_isvalid = 'tests/files/pre-commit-config-isvalid.yaml'
+    pr_title_suffix = ' [CI - Testing]'
     variance_list = [
         {'owner_repo': 'pycqa/flake8', 'current_rev': '7.1.2', 'new_rev': '7.2.0'},
         {'owner_repo': 'pre-commit/pre-commit-hooks', 'current_rev': 'v4.0.0', 'new_rev': 'v5.0.0'}
     ]
 
-    # ''' hold output from source script '''
-    # def setUp(self):
-    #     self.held_output = io.StringIO()
-    #     sys.stdout = self.held_output
-    #     sys.stderr = self.held_output
+    ''' hold output from source script '''
+    def setUp(self):
+        self.held_output = io.StringIO()
+        sys.stdout = self.held_output
+        sys.stderr = self.held_output
 
-    # def tearDown(self):
-    #     sys.stdout = sys.__stdout__
-    #     sys.stderr = sys.__stderr__
+    def tearDown(self):
+        sys.stdout = sys.__stdout__
+        sys.stderr = sys.__stderr__
 
     def test_create_pr_success(self):
         ''' checkout new branch, push commit, create pr '''
         gh = get_auth()
         owner_repo, active_branch_name = checkout_new_branch()
         push_commit(self.file_isvalid, active_branch_name)
-        pr = create_pr(gh, owner_repo, active_branch_name, self.variance_list)
-        print(f'Created pull request #{pr.number} successfully.')
+        pr_number, pr_branch = create_pr(gh, owner_repo, active_branch_name, self.variance_list, self.pr_title_suffix)
 
         ''' clean up after above '''
         ''' ^^ may have error if it takes longer than 90 seconds to get PR ready '''
         repo = gh.get_repo(owner_repo)
-        pull = repo.get_pull(pr.number)
-        ref = repo.get_git_ref(f"heads/{active_branch_name}")
+        pull = repo.get_pull(pr_number)
+        ref = repo.get_git_ref(f"heads/{pr_branch}")
         time.sleep(90)
         pull.edit(state="closed")
         ref.delete()
-        print(f'Closed pull request #{pr.number} successfully.')
-        print(f'Deleted branch {active_branch_name} successfully.')
 
 
 class TestMain(unittest.TestCase):
