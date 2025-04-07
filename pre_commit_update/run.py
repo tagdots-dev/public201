@@ -169,7 +169,7 @@ def main(file, dry_run, cleanup):
         get_rev_variances(gh, variance_list, repos_revs_list)
         msg_suffix = ''
 
-        if os.environ['COVERAGE_RUN']:
+        if 'COVERAGE_RUN' in os.environ:
             msg_suffix = '[CI - Testing]'
 
         if len(variance_list) > 0 and not dry_run:
@@ -178,7 +178,7 @@ def main(file, dry_run, cleanup):
             push_commit(file, active_branch_name, msg_suffix)
             pr_number, pr_branch = create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix)
 
-            if os.environ['COVERAGE_RUN']:
+            if 'COVERAGE_RUN' in os.environ:
                 repo = gh.get_repo(owner_repo)
                 pull = repo.get_pull(pr_number)
                 ref = repo.get_git_ref(f"heads/{pr_branch}")
