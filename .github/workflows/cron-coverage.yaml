@@ -1,4 +1,4 @@
-name: Cron-Coverage
+name: cron-coverage
 
 on:
   schedule:
