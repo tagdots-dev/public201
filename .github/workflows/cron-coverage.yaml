@@ -9,7 +9,7 @@ env:
   PYTHON_VERSION: '3.13.2'
 
 jobs:
-  update-hooks:
+  testing:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,7 +28,9 @@ jobs:
           pip install coverage[toml]
 
       - name: Run Tests with Coverage
-        run: coverage run tests/test_run.py -v
+        run: |
+          coverage run tests/test_run.py -v
+          coverage html
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PYTHONUNBUFFERED: "1"
