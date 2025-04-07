@@ -9,7 +9,7 @@ env:
   PYTHON_VERSION: '3.13.2'
 
 jobs:
-  testing:
+  testings:
     runs-on: ubuntu-latest
 
     steps:
@@ -31,6 +31,7 @@ jobs:
         run: |
           coverage run tests/test_run.py -v
           coverage html
+          coverage report
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PYTHONUNBUFFERED: "1"
