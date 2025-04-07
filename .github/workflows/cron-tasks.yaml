@@ -1,4 +1,4 @@
-name: Cron-update_hooks
+name: cron-update_hooks
 
 on:
   schedule:
