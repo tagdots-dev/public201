@@ -1,7 +1,7 @@
 ---
 # NOTE: this file is managed through terraform
 
-name: Pre-CI
+name: pre-ci
 
 on:  # yamllint disable-line rule:truthy
   push:
