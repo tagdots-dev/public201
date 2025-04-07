@@ -37,7 +37,9 @@ source = ["."]
 branch = true
 command_line = "-m unittest discover -s tests/"
 include = ["pre_commit_update/*"]
+omit = ["tests/*"]
 
 [tool.coverage.report]
 fail_under = 80
 show_missing = false
+include = ["pre_commit_update/*"]
