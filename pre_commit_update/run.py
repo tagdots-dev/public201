@@ -7,6 +7,7 @@ Purpose: update pre-commit configuration and create a pull request if necessary
 import json
 import os
 import sys
+import time
 
 import click
 import git
@@ -98,7 +99,7 @@ def update_pre_commit(file, variance_list):
 
 def checkout_new_branch():
     """
-    create a git object to 1) create a new branch name 2) checkout this new branch
+    create a git object to 1) create a new branch name 2) checkout a new branch
     """
     repo_path = os.getcwd()
     branch_suffix = ulid.new()
@@ -111,13 +112,13 @@ def checkout_new_branch():
     return owner_repo, repo_obj_branch_name
 
 
-def push_commit(file, active_branch_name):
+def push_commit(file, active_branch_name, msg_suffix):
     """
     push commits to remote
     """
     repo_path = os.getcwd()
     branch = active_branch_name
-    message = 'update pre-commit hooks version'
+    message = f'update pre-commit hooks version {msg_suffix}'
     files_to_stage = [file]
 
     repo_obj = git.Repo(repo_path)
@@ -130,7 +131,7 @@ def push_commit(file, active_branch_name):
     print(f'with commit hash : {commit.hexsha}')
 
 
-def create_pr(gh, owner_repo, active_branch_name, variance_list, pr_title_suffix):
+def create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix):
     """
     create Pull Request
     """
@@ -139,11 +140,11 @@ def create_pr(gh, owner_repo, active_branch_name, variance_list, pr_title_suffix
     pr_base_branch = repo.default_branch
     pr_body = json.dumps(variance_list)
     pr_branch = f'{owner}:{active_branch_name}'
-    pr_title = f'update pre-commit hooks version{pr_title_suffix}'
+    pr_title = f'update pre-commit hooks version {msg_suffix}'
 
     print('Creating a Pull Request as follows:')
     print(f'Owner/Repo.  : {owner_repo}')
-    print(f'Title        : {pr_title}{pr_title_suffix}')
+    print(f'Title        : {pr_title}{msg_suffix}')
     print(f'Source Branch: {pr_branch}')
     print(f'PR for Branch: {pr_base_branch}')
     print(f'Rev Variances: {pr_body}')
@@ -156,21 +157,34 @@ def create_pr(gh, owner_repo, active_branch_name, variance_list, pr_title_suffix
 
 
 @click.command()
-@click.option('--file', required=False, default='.pre-commit-config.yaml', help='file (default: .pre-commit-config.yaml)')
-@click.option('--dry-run', required=False, default=True, help='dry-run [true, false] (default: true).')
-def main(file, dry_run):
+@click.option('--file', required=False, default='.pre-commit-config.yaml', help='<file> (default: .pre-commit-config.yaml)')
+@click.option('--dry-run', required=False, default=True, help='<true, false> (default: true).')
+@click.option('--cleanup', required=False, default=60, help='seconds after PR (default: 60).')
+def main(file, dry_run, cleanup):
     print(f"Starting update-hooks on {file} (dry-run {dry_run})...")
     try:
         variance_list = []
         gh = get_auth()
         repos_revs_list = get_owner_repo(file)
         get_rev_variances(gh, variance_list, repos_revs_list)
+        msg_suffix = ''
+
+        if os.environ['COVERAGE_RUN']:
+            msg_suffix = '[CI - Testing]'
 
         if len(variance_list) > 0 and not dry_run:
             update_pre_commit(file, variance_list)
             owner_repo, active_branch_name = checkout_new_branch()
-            push_commit(file, active_branch_name)
-            pr_number, pr_branch = create_pr(gh, owner_repo, active_branch_name, variance_list)
+            push_commit(file, active_branch_name, msg_suffix)
+            pr_number, pr_branch = create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix)
+
+            if os.environ['COVERAGE_RUN']:
+                repo = gh.get_repo(owner_repo)
+                pull = repo.get_pull(pr_number)
+                ref = repo.get_git_ref(f"heads/{pr_branch}")
+                time.sleep(cleanup)
+                pull.edit(state="closed")
+                ref.delete()
         else:
             print('Update to pre-commit hooks: None')
     except Exception:

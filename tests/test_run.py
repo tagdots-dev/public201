@@ -136,9 +136,10 @@ class TestUpdatePreCommit(unittest.TestCase):
         os.remove(self.file_isvalid_dst)
 
 
-class TestCreatePR(unittest.TestCase):
+class TestWritePR(unittest.TestCase):
+    cleanup = 60
     file_isvalid = 'tests/files/pre-commit-config-isvalid.yaml'
-    pr_title_suffix = ' [CI - Testing]'
+    msg_suffix = '[CI - Testing]'
     variance_list = [
         {'owner_repo': 'pycqa/flake8', 'current_rev': '7.1.2', 'new_rev': '7.2.0'},
         {'owner_repo': 'pre-commit/pre-commit-hooks', 'current_rev': 'v4.0.0', 'new_rev': 'v5.0.0'}
@@ -155,42 +156,68 @@ class TestCreatePR(unittest.TestCase):
         sys.stderr = sys.__stderr__
 
     def test_create_pr_success(self):
-        ''' checkout new branch, push commit, create pr '''
         gh = get_auth()
         owner_repo, active_branch_name = checkout_new_branch()
-        push_commit(self.file_isvalid, active_branch_name)
-        pr_number, pr_branch = create_pr(gh, owner_repo, active_branch_name, self.variance_list, self.pr_title_suffix)
+        push_commit(self.file_isvalid, active_branch_name, self.msg_suffix)
+        pr_number, pr_branch = create_pr(gh, owner_repo, active_branch_name, self.variance_list, self.msg_suffix)
+        self.assertIsInstance(pr_number, int)
 
         ''' clean up after above '''
-        ''' ^^ may have error if it takes longer than 90 seconds to get PR ready '''
+        ''' ^^ may have error if it takes more than the time.sleep seconds to get PR ready '''
         repo = gh.get_repo(owner_repo)
         pull = repo.get_pull(pr_number)
         ref = repo.get_git_ref(f"heads/{pr_branch}")
-        time.sleep(90)
+        time.sleep(self.cleanup)
         pull.edit(state="closed")
         ref.delete()
 
 
-class TestMain(unittest.TestCase):
-    valid_file = 'tests/files/pre-commit-config-valid.yaml'
+class TestZMain(unittest.TestCase):
+    valid_file = 'tests/files/pre-commit-config-isvalid.yaml'
 
-    ''' assert non-zero exit code with dry-run option typo '''
+    def setUp(self):
+        self.runner = CliRunner()
+
+    ''' assert zero exit code with dry-run true with a valid file '''
+    def test_main_dry_run_true_failure(self):
+        result = self.runner.invoke(main, ['--file', self.valid_file])
+        self.assertEqual(result.exit_code, 0)
+
+    ''' assert zero exit code with dry-run true '''
+    def test_main_dry_run_true_success(self):
+        result = self.runner.invoke(main, ['--dry-run', 'True'])
+        self.assertEqual(result.exit_code, 0)
+
+    ''' assert non-zero exit code with dry-run typo '''
     def test_main_dry_run_typo_failure(self):
-        runner = CliRunner()
-        result = runner.invoke(main, ['--dry-run', 'Typo'])
+        result = self.runner.invoke(main, ['--dry-run', 'Typo'])
+        self.assertNotEqual(result.exit_code, 0)
+
+    ''' assert non-zero exit code with non-existent file '''
+    def test_main_file_not_exist_failure(self):
+        result = self.runner.invoke(main, ['--file', 'file-not-exist.yaml'])
         self.assertNotEqual(result.exit_code, 0)
 
     ''' assert non-zero exit code with an invalid option '''
     def test_main_invalid_option_failure(self):
-        runner = CliRunner()
-        result = runner.invoke(main, ['--hello', 'world'])
+        result = self.runner.invoke(main, ['--hello', 'world'])
         self.assertNotEqual(result.exit_code, 0)
 
-    ''' assert non-zero exit code with non-existent file option '''
-    def test_main_file_not_exist_failure(self):
-        runner = CliRunner()
-        result = runner.invoke(main, ['--file', 'file-not-exist.yaml'])
+    ''' assert zero exit code with cleanup option success '''
+    def test_main_cleanup_option_success(self):
+        result = self.runner.invoke(main, ['--cleanup', 45])
+        self.assertEqual(result.exit_code, 0)
+
+    ''' assert zero exit code with cleanup option failure '''
+    def test_main_cleanup_option_failure(self):
+        result = self.runner.invoke(main, ['--cleanup', 'hello'])
         self.assertNotEqual(result.exit_code, 0)
+
+    ''' assert zero exit code with dry-run false '''
+    def test_main_dry_run_false_success(self):
+        result = self.runner.invoke(main, ['--dry-run', 'False'])
+        # print(result.stdout)
+        self.assertEqual(result.exit_code, 0)
 
 
 if __name__ == '__main__':

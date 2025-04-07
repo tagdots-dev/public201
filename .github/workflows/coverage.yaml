@@ -1,4 +1,4 @@
-name: Cron-update_hooks
+name: Cron-Coverage
 
 on:
   schedule:
@@ -25,9 +25,10 @@ jobs:
         run: |
           pip install -e .
           pip --version
+          pip install coverage[toml]
 
-      - name: Autoupdate pre-commit hooks and create PR if necessary
-        run: python pre_commit_update/run.py --dry-run false
+      - name: Run Tests with Coverage
+        run: coverage run tests/test_run.py -v
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PYTHONUNBUFFERED: "1"
