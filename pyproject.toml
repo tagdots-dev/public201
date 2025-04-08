@@ -1,57 +1,60 @@
 [build-system]
-requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
+requires = [ "setuptools>=77.0.1", "wheel" ]
+
 [project]
-name = "pre-commit-update-hooks"
-dynamic = ["version"]
-dependencies = [
-    "click==8.1.8",
-    "click-option-group==0.5.6",
-    "GitPython==3.1.44",
-    "pre_commit==4.2.0",
-    "PyGithub==2.6.1",
-    "pytest==8.3.5",
-    "PyYAML==6.0.2",
-    "setuptools==77.0.1",
-    "ulid-py==1.1.0",
-    "virtualenv==20.29.3",
-]
-authors = [
-    {name = "developers", email = "developers@tagdots.com"}
-]
-license = {file = "LICENSE"}
+name = "pre-commit-update"
 readme = "README.md"
+license = { file = "LICENSE" }
+authors = [
+  { name = "developers", email = "developers@tagdots.com" },
+]
 requires-python = ">=3.12.1"
 
-[project.scripts]
-update-hooks = "pre_commit_update.run:main"
+classifiers = [
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+]
+dynamic = [ "version" ]
+dependencies = [
+  "click==8.1.8",
+  "click-option-group==0.5.6",
+  "gitpython==3.1.44",
+  "pre-commit==4.2",
+  "pygithub==2.6.1",
+  "pytest==8.3.5",
+  "pyyaml==6.0.2",
+  "setuptools==77.0.1",
+  "ulid-py==1.1",
+  "virtualenv==20.29.3",
+]
+optional-dependencies.dev = [ "build", "coverage", "isort", "twine" ]
+urls.Homepage = "https://github.com/tagdots/pre-commit-update-hooks"
+scripts.update-hooks = "pre_commit_update.run:main"
 
-[project.optional-dependencies]
-dev = [
-    "coverage==7.8.0"
+[dependency-groups]
+test = [
+  "coverage[toml]",
 ]
 
-
 [tool.setuptools.packages.find]
-where = ["."]
+where = [ "." ]
 
 [tool.setuptools.dynamic]
-version = {attr = "pre_commit_update.__version__"}
-
-[tool.setuptools_scm]
-version_file = "pre_commit_update/__init__.py"
+version = { attr = "pre_commit_update.__version__" }
 
 [tool.coverage]
-source = ["."]
+source = [ "." ]
 
 [tool.coverage.run]
 branch = true
 command_line = "-m unittest discover -s tests/"
-include = ["pre_commit_update/*"]
-omit = ["tests/*"]
+include = [ "pre_commit_update/*" ]
+omit = [ "tests/*" ]
 
 [tool.coverage.report]
 fail_under = 80
 show_missing = false
-include = ["pre_commit_update/*"]
+include = [ "pre_commit_update/*" ]

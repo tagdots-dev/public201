@@ -7,7 +7,7 @@ repos:
     args:
     - --verbose
 - repo: https://github.com/hadolint/hadolint
-  rev: v2.11.0
+  rev: v2.12.0
   hooks:
   - name: Check Dockerfile
     id: hadolint
@@ -47,6 +47,16 @@ repos:
   - name: Fix to trim whitespace from ends of lines
     id: trailing-whitespace
     exclude: ^tests/|^.gitignore$
+- repo: https://github.com/asottile/setup-cfg-fmt
+  rev: v2.8.0
+  hooks:
+  - name: Python format setup.cfg
+    id: setup-cfg-fmt
+- repo: https://github.com/tox-dev/pyproject-fmt
+  rev: v2.5.1
+  hooks:
+  - name: Python format pyproject.toml
+    id: pyproject-fmt
 - repo: https://github.com/pycqa/isort
   rev: 6.0.1
   hooks:
