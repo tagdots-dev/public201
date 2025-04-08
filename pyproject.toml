@@ -30,7 +30,7 @@ dependencies = [
   "ulid-py==1.1",
   "virtualenv==20.29.3",
 ]
-optional-dependencies.dev = [ "build", "coverage", "isort", "twine" ]
+optional-dependencies.dev = [ "build", "commitizen", "coverage", "isort", "twine" ]
 urls.Homepage = "https://github.com/tagdots/pre-commit-update-hooks"
 scripts.update-hooks = "pre_commit_update.run:main"
 
@@ -58,3 +58,14 @@ omit = [ "tests/*" ]
 fail_under = 80
 show_missing = false
 include = [ "pre_commit_update/*" ]
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "$version"
+version_scheme = "pep440"
+version_provider = "pep621"
+version_files = [
+  "pre_commit_update/__init__.py",
+]
+update_changelog_on_bump = true
+major_version_zero = true
