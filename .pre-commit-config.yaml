@@ -47,11 +47,6 @@ repos:
   - name: Fix to trim whitespace from ends of lines
     id: trailing-whitespace
     exclude: ^tests/|^.gitignore$
-- repo: https://github.com/asottile/setup-cfg-fmt
-  rev: v2.7.0
-  hooks:
-  - name: Python format setup.cfg
-    id: setup-cfg-fmt
 - repo: https://github.com/tox-dev/pyproject-fmt
   rev: v2.5.1
   hooks:
