@@ -18,11 +18,11 @@ env:
   HADOLINT_VERSION: 'v2.12.0'
   PRE_COMMMIT_VERSION: '4.2.0'
   PYTHON_VERSION: '3.13.2'
-  TERRAFORM_VERSION: '1.11.2'
+  TERRAFORM_VERSION: '1.11.3'
   TFLINT_VERSION: 'v0.55.1'
 
 jobs:
-  default-run-all:
+  default-run:
     runs-on: ubuntu-latest
 
     steps:

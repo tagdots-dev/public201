@@ -163,7 +163,6 @@ def create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix):
 @click.option('--dry-run', required=False, default=True, help='<true, false> (default: true).')
 @click.option('--cleanup', required=False, default=60, help='Cleanup after CI Test PRs created (default: 60).')
 @click.version_option(version=__version__)
-@click.pass_context
 def main(file, dry_run, cleanup):
     print(f"Starting update-hooks on {file} (dry-run {dry_run})...")
     try:
