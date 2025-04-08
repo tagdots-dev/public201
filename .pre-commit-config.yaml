@@ -48,7 +48,7 @@ repos:
     id: trailing-whitespace
     exclude: ^tests/|^.gitignore$
 - repo: https://github.com/asottile/setup-cfg-fmt
-  rev: v2.8.0
+  rev: v2.7.0
   hooks:
   - name: Python format setup.cfg
     id: setup-cfg-fmt
