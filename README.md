@@ -3,7 +3,7 @@
 # Pre-Commit-Update-Hooks
 
 ## 😎 Purpose
-If you have multiple repositories in your organization, you want to improve code quality and flag problems before commits enter your repositories.  **Pre-Commit-Update-Hooks** allows you to update **pre-commit hooks** in your organization repositories.
+If you want to improve code quality and flag problems before commits enter your repositories, a good start is to use **pre-commit**.  If you have more than a handful of repositories in your organization, **Pre-Commit-Update-Hooks** allows you to manage pre-commit hooks update efficiently.
 
 
 #### Prerequisites
@@ -39,7 +39,6 @@ update-hooks, version 1.0.0
 
 <br>
 
-
 Shows command line options
 ```
 $ update-hooks --help
@@ -56,7 +55,7 @@ Options:
 
 <br>
 
-With dry-run being true, update-hooks reads __.pre-commit-config.yaml__ and produces a list of pre-commit hooks to upgrade.
+With dry-run being true, update-hooks reads **.pre-commit-config.yaml** and produces a list of pre-commit hooks to update.
 ```
 $ update-hooks --dry-run true
 
@@ -71,7 +70,7 @@ Update to pre-commit hooks: None
 
 <br>
 
-With dry-run being true, update-hooks reads __.pre-commit-config.yaml__ and produces a list of pre-commit hooks to upgrade., update .pre-commit-config.yaml, and create a pull request.
+With dry-run being true, update-hooks reads **.pre-commit-config.yaml** and produces a list of pre-commit hooks to update, updates **.pre-commit-config.yaml**, and creates a pull request.
 ```
 $ update-hooks --dry-run false
 
@@ -104,7 +103,6 @@ Created pull request #101 successfully:  https://github.com/tagdots/pre-commit-u
 
 - Fork this repository and create pull requests.
 - Create an issue
-
 
 <br>
 

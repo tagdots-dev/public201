@@ -5,6 +5,8 @@ requires = [ "setuptools>=77.0.1", "wheel" ]
 
 [project]
 name = "pre-commit-update"
+version = "0.8.0"
+
 readme = "README.md"
 license = { file = "LICENSE" }
 authors = [
@@ -17,7 +19,7 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
 ]
-dynamic = [ "version" ]
+
 dependencies = [
   "click==8.1.8",
   "click-option-group==0.5.6",
@@ -30,7 +32,7 @@ dependencies = [
   "ulid-py==1.1",
   "virtualenv==20.29.3",
 ]
-optional-dependencies.dev = [ "build", "coverage", "isort", "twine" ]
+optional-dependencies.test = [ "build", "commitizen", "coverage", "flake8", "isort", "twine" ]
 urls.Homepage = "https://github.com/tagdots/pre-commit-update-hooks"
 scripts.update-hooks = "pre_commit_update.run:main"
 
@@ -43,7 +45,7 @@ test = [
 where = [ "." ]
 
 [tool.setuptools.dynamic]
-version = { attr = "pre_commit_update.__version__" }
+version = { attr = "pre_commit_update.__init__" }
 
 [tool.coverage]
 source = [ "." ]
@@ -58,3 +60,14 @@ omit = [ "tests/*" ]
 fail_under = 80
 show_missing = false
 include = [ "pre_commit_update/*" ]
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+major_version_zero = false
+tag_format = "$version"
+update_changelog_on_bump = true
+version_files = [
+  "pre_commit_update/__init__.py:__version__",
+]
+version_provider = "pep621"
+version_scheme = "pep440"
