@@ -2,8 +2,8 @@
 
 # Pre-Commit-Update-Hooks
 
-## 😎 Purpose
-**pre-commit** helps you improve code quality and flag problems before commits enter your repositories.  If you have more than a handful of repositories in your organization, **Pre-Commit-Update-Hooks** helps you manage pre-commit hooks update efficiently.
+## 😎 Why should you care?
+**pre-commit** helps you improve code quality and flag problems before commit enters your repository.  If you have more than a handful of repositories in your organization, **Pre-Commit-Update-Hooks** helps you manage pre-commit hooks update efficiently.
 
 
 #### Prerequisites
