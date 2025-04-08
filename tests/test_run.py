@@ -178,6 +178,22 @@ class TestZMain(unittest.TestCase):
     def setUp(self):
         self.runner = CliRunner()
 
+    ''' assert zero exit code with cleanup option success '''
+    def test_main_cleanup_option_success(self):
+        result = self.runner.invoke(main, ['--cleanup', 45])
+        self.assertEqual(result.exit_code, 0)
+
+    ''' assert zero exit code with cleanup option failure '''
+    def test_main_cleanup_option_failure(self):
+        result = self.runner.invoke(main, ['--cleanup', 'hello'])
+        self.assertNotEqual(result.exit_code, 0)
+
+    ''' assert zero exit code with dry-run false '''
+    def test_main_dry_run_false_success(self):
+        result = self.runner.invoke(main, ['--dry-run', 'False'])
+        # print(result.stdout)
+        self.assertEqual(result.exit_code, 0)
+
     ''' assert zero exit code with dry-run true with a valid file '''
     def test_main_dry_run_true_failure(self):
         result = self.runner.invoke(main, ['--file', self.valid_file])
@@ -202,22 +218,6 @@ class TestZMain(unittest.TestCase):
     def test_main_invalid_option_failure(self):
         result = self.runner.invoke(main, ['--hello', 'world'])
         self.assertNotEqual(result.exit_code, 0)
-
-    ''' assert zero exit code with cleanup option success '''
-    def test_main_cleanup_option_success(self):
-        result = self.runner.invoke(main, ['--cleanup', 45])
-        self.assertEqual(result.exit_code, 0)
-
-    ''' assert zero exit code with cleanup option failure '''
-    def test_main_cleanup_option_failure(self):
-        result = self.runner.invoke(main, ['--cleanup', 'hello'])
-        self.assertNotEqual(result.exit_code, 0)
-
-    ''' assert zero exit code with dry-run false '''
-    def test_main_dry_run_false_success(self):
-        result = self.runner.invoke(main, ['--dry-run', 'False'])
-        # print(result.stdout)
-        self.assertEqual(result.exit_code, 0)
 
 
 if __name__ == '__main__':
