@@ -82,7 +82,6 @@ def update_pre_commit(file, variance_list):
     """
     update pre-commit configuration file
     """
-    # try:
     with open(file, 'r') as f:
         data = yaml.safe_load(f)
 
@@ -161,7 +160,7 @@ def create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix):
 @click.command()
 @click.option('--file', required=False, default='.pre-commit-config.yaml', help='<file> (default: .pre-commit-config.yaml)')
 @click.option('--dry-run', required=False, default=True, help='<true, false> (default: true).')
-@click.option('--cleanup', required=False, default=60, help='Cleanup after CI Test PRs created (default: 60).')
+@click.option('--cleanup', required=False, default=90, help='Cleanup after CI Test PRs created (default: 90).')
 @click.version_option(version=__version__)
 def main(file, dry_run, cleanup):
     print(f"Starting update-hooks on {file} (dry-run {dry_run})...\n")
