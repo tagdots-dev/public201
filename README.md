@@ -70,7 +70,7 @@ Update to pre-commit hooks: None
 
 <br>
 
-With dry-run being true, **update-hooks** reads **.pre-commit-config.yaml**, produces a list of pre-commit hooks to update, updates revs in **.pre-commit-config.yaml**, creates a pull request, and merge it.
+With dry-run being true, **update-hooks** reads **.pre-commit-config.yaml**, produces a list of pre-commit hooks to update, updates revs in **.pre-commit-config.yaml**, and creates a pull request.
 ```
 $ update-hooks --dry-run false
 
