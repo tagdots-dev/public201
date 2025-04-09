@@ -80,7 +80,7 @@ class TestGetOwnerRepo(unittest.TestCase):
         function_output_should_be_list = get_owner_repo(self.file_isvalid)
         self.assertIsInstance(function_output_should_be_list, list)
 
-    # ''' assert output is NOT a list from an invalid file '''
+    ''' assert output is NOT a list from an invalid file '''
     def test_get_owner_repo_return_list_failure(self):
         function_output_should_be_list = get_owner_repo(self.file_invalid)
         self.assertNotIsInstance(function_output_should_be_list, list)

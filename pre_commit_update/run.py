@@ -133,7 +133,7 @@ def push_commit(file, active_branch_name, msg_suffix):
     print(f'with commit hash : {commit.hexsha}\n')
 
 
-def create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix, cleanup):
+def create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix):
     """
     create Pull Request
     """
@@ -153,8 +153,7 @@ def create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix, cle
     try:
         pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
         print(f'Created pull request #{pr.number} successfully: {pr.html_url}\n')
-
-        return pr.number, active_branch_name
+        return pr.number
     except Exception as e:
         print(f'Exception Error to create PR: {e}')
 
