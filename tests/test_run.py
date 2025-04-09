@@ -16,7 +16,7 @@ from github import Github
 
 from pre_commit_update.run import (
     checkout_new_branch,
-    create_n_merge_pr,
+    create_pr,
     get_auth,
     get_owner_repo,
     get_rev_variances,
@@ -155,11 +155,11 @@ class TestWritePR(unittest.TestCase):
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
 
-    def test_create_n_merge_pr_success(self):
+    def test_create_pr_success(self):
         gh = get_auth()
         owner_repo, active_branch_name = checkout_new_branch()
         push_commit(self.file_isvalid, active_branch_name, self.msg_suffix)
-        pr_number = create_n_merge_pr(gh, owner_repo, active_branch_name, self.variance_list, self.msg_suffix, self.cleanup)
+        pr_number = create_pr(gh, owner_repo, active_branch_name, self.variance_list, self.msg_suffix)
         self.assertIsInstance(pr_number, int)
 
         ''' clean up after above '''

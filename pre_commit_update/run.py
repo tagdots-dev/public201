@@ -133,9 +133,9 @@ def push_commit(file, active_branch_name, msg_suffix):
     print(f'with commit hash : {commit.hexsha}\n')
 
 
-def create_n_merge_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix, cleanup):
+def create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix, cleanup):
     """
-    create (and merge) Pull Request
+    create Pull Request
     """
     owner = owner_repo.split('/')[0]
     repo = gh.get_repo(owner_repo)
@@ -153,11 +153,6 @@ def create_n_merge_pr(gh, owner_repo, active_branch_name, variance_list, msg_suf
     try:
         pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
         print(f'Created pull request #{pr.number} successfully: {pr.html_url}\n')
-
-        if 'COVERAGE_RUN' not in os.environ:  # pragma: no cover
-            time.sleep(cleanup)
-            pr.merge(commit_message="Merged by bot")
-            print(f"Merged pull request #{pr.number} for branch: {active_branch_name} successfully.")
 
         return pr.number, active_branch_name
     except Exception as e:
@@ -185,7 +180,7 @@ def main(file, dry_run, cleanup):
             update_pre_commit(file, variance_list)
             owner_repo, active_branch_name = checkout_new_branch()
             push_commit(file, active_branch_name, msg_suffix)
-            pr_number = create_n_merge_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix, cleanup)
+            pr_number = create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix)
 
             if 'COVERAGE_RUN' in os.environ:
                 repo = gh.get_repo(owner_repo)
