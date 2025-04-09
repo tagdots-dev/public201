@@ -70,7 +70,7 @@ Update to pre-commit hooks: None
 
 <br>
 
-With dry-run being true, **update-hooks** reads **.pre-commit-config.yaml**, produces a list of pre-commit hooks to update, updates revs in **.pre-commit-config.yaml**, and creates a pull request.
+With dry-run being true, **update-hooks** reads **.pre-commit-config.yaml**, produces a list of pre-commit hooks to update, updates revs in **.pre-commit-config.yaml**, creates a pull request, and merge it.
 ```
 $ update-hooks --dry-run false
 
@@ -93,7 +93,6 @@ Purpose      : update pre-commit hooks version
 Source Branch: tagdots:update_hooks_01JR6JB1NENDM6FKJ5TZMFVMBE
 PR for Branch: main
 Rev Variances: [{"owner_repo": "hadolint/hadolint", "current_rev": "v2.11.0", "new_rev": "v2.12.0"}, {"owner_repo": "pycqa/flake8", "current_rev": "7.1.2", "new_rev": "7.2.0"}, {"owner_repo": "antonbabenko/pre-commit-terraform", "current_rev": "v1.98.0", "new_rev": "v1.98.1"}]
-
 Created pull request #101 successfully:  https://github.com/tagdots/pre-commit-update-hooks/pull/101
 ```
 

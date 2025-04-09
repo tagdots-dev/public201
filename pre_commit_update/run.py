@@ -96,7 +96,7 @@ def update_pre_commit(file, variance_list):
     with open(file, 'w') as f:
         yaml.dump(data, f, indent=2, sort_keys=False)
 
-    print(f'Update to {file} is successfully completed')
+    print(f'Update to {file} is successfully completed\n')
 
 
 def checkout_new_branch():
@@ -110,7 +110,7 @@ def checkout_new_branch():
     repo_obj_branch_name.checkout()
     repo_obj_remote_url = repo_obj.remotes.origin.url
     owner_repo = '/'.join(repo_obj_remote_url.rsplit('/', 2)[-2:]).replace('.git', '')
-    print('Checkout new branch successfully....')
+    print('Checkout new branch successfully....\n')
     return owner_repo, repo_obj_branch_name
 
 
@@ -130,12 +130,12 @@ def push_commit(file, active_branch_name, msg_suffix):
     repo_obj.git.push("--set-upstream", 'origin', branch)
     print('Push commits successfully:')
     print(f'from local branch: {branch}')
-    print(f'with commit hash : {commit.hexsha}')
+    print(f'with commit hash : {commit.hexsha}\n')
 
 
-def create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix):
+def create_and_merge_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix):
     """
-    create Pull Request
+    create (and merge) Pull Request
     """
     owner = owner_repo.split('/')[0]
     repo = gh.get_repo(owner_repo)
@@ -152,7 +152,12 @@ def create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix):
     print(f'Rev Variances: {pr_body}')
     try:
         pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
-        print(f'Created pull request #{pr.number} successfully: {pr.html_url}')
+        print(f'Created pull request #{pr.number} successfully: {pr.html_url}\n')
+
+        if 'COVERAGE_RUN' not in os.environ:  # pragma: no cover
+            pr.merge(commit_message="Merged by bot")
+            print(f"Merged pull request #{pr.number} for branch: {active_branch_name} successfully.")
+
         return pr.number, active_branch_name
     except Exception as e:
         print(f'Exception Error to create PR: {e}')
@@ -164,7 +169,7 @@ def create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix):
 @click.option('--cleanup', required=False, default=60, help='Cleanup after CI Test PRs created (default: 60).')
 @click.version_option(version=__version__)
 def main(file, dry_run, cleanup):
-    print(f"Starting update-hooks on {file} (dry-run {dry_run})...")
+    print(f"Starting update-hooks on {file} (dry-run {dry_run})...\n")
     try:
         variance_list = []
         gh = get_auth()
@@ -179,7 +184,7 @@ def main(file, dry_run, cleanup):
             update_pre_commit(file, variance_list)
             owner_repo, active_branch_name = checkout_new_branch()
             push_commit(file, active_branch_name, msg_suffix)
-            pr_number, pr_branch = create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix)
+            pr_number, pr_branch = create_and_merge_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix)
 
             if 'COVERAGE_RUN' in os.environ:
                 repo = gh.get_repo(owner_repo)
@@ -189,7 +194,7 @@ def main(file, dry_run, cleanup):
                 pull.edit(state="closed")
                 ref.delete()
         else:
-            print('Update to pre-commit hooks: None')
+            print('Update to pre-commit hooks: None\n')
     except Exception:
         sys.exit(1)
 
