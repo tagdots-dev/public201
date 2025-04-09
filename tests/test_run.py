@@ -16,7 +16,7 @@ from github import Github
 
 from pre_commit_update.run import (
     checkout_new_branch,
-    create_and_merge_pr,
+    create_n_merge_pr,
     get_auth,
     get_owner_repo,
     get_rev_variances,
@@ -155,18 +155,18 @@ class TestWritePR(unittest.TestCase):
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
 
-    def test_create_pr_success(self):
+    def test_create_n_merge_pr_success(self):
         gh = get_auth()
         owner_repo, active_branch_name = checkout_new_branch()
         push_commit(self.file_isvalid, active_branch_name, self.msg_suffix)
-        pr_number, pr_branch = create_and_merge_pr(gh, owner_repo, active_branch_name, self.variance_list, self.msg_suffix)
+        pr_number = create_n_merge_pr(gh, owner_repo, active_branch_name, self.variance_list, self.msg_suffix, self.cleanup)
         self.assertIsInstance(pr_number, int)
 
         ''' clean up after above '''
         ''' ^^ may have error if it takes more than the time.sleep seconds to get PR ready '''
         repo = gh.get_repo(owner_repo)
         pull = repo.get_pull(pr_number)
-        ref = repo.get_git_ref(f"heads/{pr_branch}")
+        ref = repo.get_git_ref(f"heads/{active_branch_name}")
         time.sleep(self.cleanup)
         pull.edit(state="closed")
         ref.delete()
