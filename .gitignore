@@ -256,7 +256,8 @@ cython_debug/
 
 
 # ------------------ Terraform -------------------- #
-.terraform.lock.hcl
+**/plans/*
+**/secrets/*
 # Local .terraform directories
 **/.terraform/*
 
