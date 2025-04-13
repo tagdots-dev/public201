@@ -17,6 +17,7 @@ on:  # yamllint disable-line rule:truthy
 env:
   HADOLINT_VERSION: 'v2.12.0'
   PRE_COMMMIT_VERSION: '4.2.0'
+  PYSCAN_RS_VERSION: '0.1.7'
   PYTHON_VERSION: '3.13.2'
   TERRAFORM_VERSION: '1.11.3'
   TFLINT_VERSION: 'v0.55.1'
@@ -38,7 +39,12 @@ jobs:
     - name: Install python dependencies
       run: |
         pip install --upgrade pip
-        pip install pre_commit==${{ env.PRE_COMMMIT_VERSION }}
+        pip install pre_commit==${{ env.PRE_COMMMIT_VERSION }} pyscan-rs==${{ env.PYSCAN_RS_VERSION }}
+
+    - name: Pyscan vulnerabilities on python dependencies
+      run: |
+        # pyscan on python dependencies
+        [[ ! -f "requirements.txt" && ! -f "pyproject.toml" ]] || pyscan -d .
 
     - name: Install hadolint
       run: |
@@ -58,7 +64,7 @@ jobs:
         tflint_version: ${{ env.TFLINT_VERSION }}
 
     - name: Run pre-commit on everything
-      run: pre-commit run -a
+      run: pre-commit run -a -v
 
   add-on-checkov:
     runs-on: ubuntu-latest
