@@ -1,4 +1,4 @@
-name: cron-update-hooks
+name: cron-update-pre-commit
 
 on:
   schedule:
@@ -31,8 +31,8 @@ jobs:
           pip install -e .
           pip --version
 
-      - name: Autoupdate pre-commit hooks and create PR if necessary
-        run: python pre_commit_update/run.py --dry-run false
+      - name: Update pre-commit hooks and create PR
+        run: python update_pre_commit/run.py --dry-run false
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PYTHONUNBUFFERED: "1"

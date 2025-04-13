@@ -14,7 +14,7 @@ from unittest import mock
 from click.testing import CliRunner
 from github import Github
 
-from pre_commit_update.run import (
+from update_pre_commit.run import (
     checkout_new_branch,
     create_pr,
     get_auth,
@@ -22,7 +22,7 @@ from pre_commit_update.run import (
     get_rev_variances,
     main,
     push_commit,
-    update_pre_commit,
+    update_pre_commit_config,
 )
 
 
@@ -130,7 +130,7 @@ class TestUpdatePreCommit(unittest.TestCase):
     ''' assert output is a list after update_pre_commit '''
     def test_update_pre_commit_return_list_success(self):
         shutil.copyfile(self.file_isvalid_src, self.file_isvalid_dst)
-        update_pre_commit(self.file_isvalid_dst, self.variance_list)
+        update_pre_commit_config(self.file_isvalid_dst, self.variance_list)
         function_output_should_be_list = get_owner_repo(self.file_isvalid_dst)
         self.assertIsInstance(function_output_should_be_list, list)
         os.remove(self.file_isvalid_dst)

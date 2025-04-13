@@ -4,8 +4,10 @@ build-backend = "setuptools.build_meta"
 requires = [ "setuptools>=77.0.1", "wheel" ]
 
 [project]
-name = "pre-commit-update"
+name = "update-pre-commit"
 version = "0.8.3"
+
+description = "Update pre-commit hooks rev on '.pre-commit-config.yaml' and create a pull request on GitHub"
 
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -32,8 +34,12 @@ dependencies = [
   "virtualenv==20.29.3",
 ]
 optional-dependencies.test = [ "build", "commitizen", "coverage", "flake8", "isort", "pyscan-rs", "twine" ]
-urls.Homepage = "https://github.com/tagdots/pre-commit-update-hooks"
-scripts.update-hooks = "pre_commit_update.run:main"
+urls.Changelog = "https://github.com/tagdots/update-pre-commit/blob/main/CHANGELOG.md"
+urls.Documentation = "https://github.com/tagdots/update-pre-commit/blob/main/README.md"
+urls.Homepage = "https://tagdots.com"
+urls.Issues = "https://github.com/tagdots/update-pre-commit/issues"
+urls.Repository = "https://github.com/tagdots/update-pre-commit"
+scripts.update-pre-commit = "update_pre_commit.run:main"
 
 [dependency-groups]
 test = [
@@ -44,7 +50,7 @@ test = [
 where = [ "." ]
 
 [tool.setuptools.dynamic]
-version = { attr = "pre_commit_update.__init__" }
+version = { attr = "update_pre_commit.__init__" }
 
 [tool.coverage]
 source = [ "." ]
@@ -52,13 +58,13 @@ source = [ "." ]
 [tool.coverage.run]
 branch = true
 command_line = "-m unittest discover -s tests/"
-include = [ "pre_commit_update/*" ]
+include = [ "update_pre_commit/*" ]
 omit = [ "tests/*" ]
 
 [tool.coverage.report]
 fail_under = 80
 show_missing = false
-include = [ "pre_commit_update/*" ]
+include = [ "update_pre_commit/*" ]
 
 [tool.commitizen]
 name = "cz_conventional_commits"
@@ -66,7 +72,7 @@ major_version_zero = false
 tag_format = "$version"
 update_changelog_on_bump = true
 version_files = [
-  "pre_commit_update/__init__.py:__version__",
+  "update_pre_commit/__init__.py:__version__",
 ]
 version_provider = "pep621"
 version_scheme = "pep440"
