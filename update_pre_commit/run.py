@@ -15,7 +15,7 @@ import ulid
 import yaml
 from github import Github
 
-from pre_commit_update import __version__
+from update_pre_commit import __version__
 
 
 def get_auth():
@@ -78,7 +78,7 @@ def add_variance_to_dict(owner_repo, current_rev, new_rev, variance_list):
     variance_list.append(variance_dict)
 
 
-def update_pre_commit(file, variance_list):
+def update_pre_commit_config(file, variance_list):
     """
     update pre-commit configuration file
     """
@@ -95,7 +95,7 @@ def update_pre_commit(file, variance_list):
     with open(file, 'w') as f:
         yaml.dump(data, f, indent=2, sort_keys=False)
 
-    print(f'Update to {file} is successfully completed\n')
+    print(f'Update {file} successfully\n')
 
 
 def checkout_new_branch():
@@ -163,7 +163,7 @@ def create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix):
 @click.option('--cleanup', required=False, default=90, help='Cleanup after CI Test PRs created (default: 90).')
 @click.version_option(version=__version__)
 def main(file, dry_run, cleanup):
-    print(f"Starting update-hooks on {file} (dry-run {dry_run})...\n")
+    print(f"Starting update-pre-commit on {file} (dry-run {dry_run})...\n")
     try:
         variance_list = []
         gh = get_auth()
@@ -175,7 +175,7 @@ def main(file, dry_run, cleanup):
             msg_suffix = '[CI - Testing]'
 
         if len(variance_list) > 0 and not dry_run:
-            update_pre_commit(file, variance_list)
+            update_pre_commit_config(file, variance_list)
             owner_repo, active_branch_name = checkout_new_branch()
             push_commit(file, active_branch_name, msg_suffix)
             pr_number = create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix)
