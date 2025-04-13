@@ -26,13 +26,12 @@ dependencies = [
   "gitpython==3.1.44",
   "pre-commit==4.2",
   "pygithub==2.6.1",
-  "pytest==8.3.5",
   "pyyaml==6.0.2",
   "setuptools==77.0.1",
   "ulid-py==1.1",
   "virtualenv==20.29.3",
 ]
-optional-dependencies.test = [ "build", "commitizen", "coverage", "flake8", "isort", "twine" ]
+optional-dependencies.test = [ "build", "commitizen", "coverage", "flake8", "isort", "pyscan-rs", "twine" ]
 urls.Homepage = "https://github.com/tagdots/pre-commit-update-hooks"
 scripts.update-hooks = "pre_commit_update.run:main"
 
