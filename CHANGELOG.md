@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 0.8.3 (2025-04-12)
+
+### Feat
+
+- add permissions to github workflow and update pyproject.toml
+
+### Fix
+
+- change cron-coverage schedule
+
 ## 0.8.2 (2025-04-09)
 
 ### Feat
