@@ -22,6 +22,9 @@ env:
   TERRAFORM_VERSION: '1.11.3'
   TFLINT_VERSION: 'v0.55.1'
 
+permissions:
+  contents: read
+
 jobs:
   default-run:
     runs-on: ubuntu-latest
