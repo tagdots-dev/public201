@@ -5,7 +5,7 @@ requires = [ "setuptools>=77.0.1", "wheel" ]
 
 [project]
 name = "update-pre-commit"
-version = "0.8.3"
+version = "0.8.6"
 
 description = "Update pre-commit hooks rev on '.pre-commit-config.yaml' and create a pull request on GitHub"
 
