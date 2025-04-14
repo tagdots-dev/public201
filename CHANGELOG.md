@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.8.6 (2025-04-13)
+
+### Fix
+
+- add permissions to gh workflow and extend cleanup time
+
 ## 0.8.3 (2025-04-12)
 
 ### Feat
