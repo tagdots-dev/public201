@@ -137,7 +137,7 @@ class TestUpdatePreCommit(unittest.TestCase):
 
 
 class TestWritePR(unittest.TestCase):
-    cleanup = 90
+    cleanup = 120
     file_isvalid = 'tests/files/pre-commit-config-isvalid.yaml'
     msg_suffix = '[CI - Testing]'
     variance_list = [
