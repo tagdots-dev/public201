@@ -116,7 +116,7 @@ jobs:
         # set release branch info
         GITHUB_HEAD_REF=${{ github.head_ref }}
         GITHUB_SPEC_VER=${GITHUB_HEAD_REF#release/}
-        # get release branch info
+        # set release branch info to job output
         echo "GITHUB_HEAD_REF=${{ github.head_ref }}"      >> "$GITHUB_OUTPUT"
         echo "GITHUB_SPEC_VER=${GITHUB_HEAD_REF#release/}" >> "$GITHUB_OUTPUT"
 
