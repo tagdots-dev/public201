@@ -35,6 +35,7 @@ jobs:
 
     - name: Install python dependencies
       run: |
+        # install package
         pip install --upgrade pip
         pip install pre_commit==${{ env.PRE_COMMMIT_VERSION }} pyscan-rs==${{ env.PYSCAN_RS_VERSION }}
 
