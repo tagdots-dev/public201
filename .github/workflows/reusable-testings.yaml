@@ -53,8 +53,7 @@ jobs:
 
     - name: Get Build Version
       id: get-build-version
-      run: |
-        echo "Build Version: ${{ steps.set-build-version.outputs.BUILD_VERSION }}"
+      run: echo "Build Version: ${{ steps.set-build-version.outputs.BUILD_VERSION }}"
 
     - name: Upload distributions
       id: artifact-upload
