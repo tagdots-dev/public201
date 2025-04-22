@@ -5,6 +5,7 @@ usage:
 	@echo "Usage:"
 	@echo "\tmake build"
 	@echo "\tmake test"
+	@echo "\tmake test-install"
 
 build:
 	@echo "***************************************************************************"
@@ -36,4 +37,10 @@ test:
 	@echo "## Report coverage statistics on modules"
 	coverage report -m
 
-.PHONY: help build test
+test-install:
+	@echo "***************************************************************************"
+	@echo "****** Install test dependencies into current active Python env.  *********"
+	@echo "***************************************************************************"
+	python -m pip install -e .[test]
+
+.PHONY: help build test test-install
