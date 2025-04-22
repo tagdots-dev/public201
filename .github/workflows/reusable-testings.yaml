@@ -1,0 +1,136 @@
+---
+# NOTE: this file is managed by terraform
+
+name: testings
+
+on:  # yamllint disable-line rule:truthy
+  workflow_call:
+    outputs:
+
+      RELEASE_BRANCH_HEAD_REF:
+        value: ${{ jobs.validate-release-version.outputs.RELEASE_BRANCH_HEAD_REF }}
+
+      RELEASE_BRANCH_SPEC_VER:
+        value: ${{ jobs.validate-release-version.outputs.RELEASE_BRANCH_SPEC_VER }}
+
+      BUILD_VERSION:
+        value: ${{ jobs.build.outputs.BUILD_VERSION }}
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: [3.12]
+
+    runs-on: ubuntu-latest
+
+    outputs:
+      BUILD_VERSION: ${{ steps.set-build-version.outputs.BUILD_VERSION }}
+
+    steps:
+
+    - name: Checkout source code
+      uses: actions/checkout@v4
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Make build
+      run: make build
+
+    - name: Set Build Version
+      id: set-build-version
+      run: echo "BUILD_VERSION=$(python src/**/run.py --version | awk '{print $3}')" >> "$GITHUB_OUTPUT"
+
+    - name: Get Build Version
+      id: get-build-version
+      run: |
+        echo "Build Version: ${{ steps.set-build-version.outputs.BUILD_VERSION }}"
+
+    - name: Upload distributions
+      id: artifact-upload
+      uses: actions/upload-artifact@v4
+      with:
+        path: dist/
+        if-no-files-found: error
+        retention-days: 3
+        overwrite: true
+        compression-level: 6
+
+  test:
+    needs: build
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: [3.12]
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout source code
+      uses: actions/checkout@v4
+
+    - name: Setup Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install test dependencies
+      run: make test-install
+
+    - name: Make Test
+      run: make test
+
+  validate-release-version:
+    if: ${{ startsWith(github.head_ref, 'release/') }}
+
+    needs: [build, test]
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: [3.12]
+
+    runs-on: ubuntu-latest
+
+    outputs:
+      RELEASE_BRANCH_HEAD_REF: ${{ steps.set-release-branch.outputs.GITHUB_HEAD_REF }}
+      RELEASE_BRANCH_SPEC_VER: ${{ steps.set-release-branch.outputs.GITHUB_SPEC_VER }}
+
+    steps:
+
+    - name: Get Release Branch Name and Spec-Version
+      # checkov:skip=CKV_GHA_2:Ensure run commands are not vulnerable to shell injection
+      id: set-release-branch
+      run: |
+        # set release branch info
+        GITHUB_HEAD_REF=${{ github.head_ref }}
+        GITHUB_SPEC_VER=${GITHUB_HEAD_REF#release/}
+        # get release branch info
+        echo "GITHUB_HEAD_REF=${{ github.head_ref }}"      >> "$GITHUB_OUTPUT"
+        echo "GITHUB_SPEC_VER=${GITHUB_HEAD_REF#release/}" >> "$GITHUB_OUTPUT"
+
+    - name: Get output variables from various jobs
+      run: |
+        # get output variables
+        echo "Release Branch Name        : ${{ steps.set-release-branch.outputs.GITHUB_HEAD_REF }}"
+        echo "Release Branch Spec Version: ${{ steps.set-release-branch.outputs.GITHUB_SPEC_VER }}"
+        echo "Software Build Version     : ${{ needs.build.outputs.BUILD_VERSION }}"
+
+    - name: Compare between release branch specified version and software build version
+      if: ${{ needs.build.outputs.BUILD_VERSION != steps.set-release-branch.outputs.GITHUB_SPEC_VER }}
+      run: |
+        # compare release branch and software build version
+        echo "Issues: Release Branch Specified Version is different from Build Version."
+        exit 1
