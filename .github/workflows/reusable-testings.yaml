@@ -18,17 +18,18 @@ on:  # yamllint disable-line rule:truthy
 
   workflow_dispatch:
 
+env:
+  PYTHON_VERSION: '3.12.10'
+
 permissions:
   contents: read
 
 jobs:
 
-  build:
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        python-version: [3.12]
+  pre-ci:
+    uses: ./.github/workflows/reusable-pre-commit.yaml
 
+  build:
     runs-on: ubuntu-latest
 
     outputs:
@@ -39,10 +40,10 @@ jobs:
     - name: Checkout source code
       uses: actions/checkout@v4
 
-    - name: Setup Python
+    - name: Setup Python ${{ env.PYTHON_VERSION }}
       uses: actions/setup-python@v5
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: ${{ env.PYTHON_VERSION }}
 
     - name: Make build
       run: make build
@@ -50,7 +51,7 @@ jobs:
     - name: Set Build Version
       id: set-build-version
       run: |
-        echo "BUILD_VERSION=$(python src/**/run.py --version | awk '{print $3}')" >> "$GITHUB_OUTPUT"
+        echo "BUILD_VERSION=$(python src/*/run.py --version | awk '{print $3}')" >> "$GITHUB_OUTPUT"
 
     - name: Get Build Version
       id: get-build-version
@@ -70,11 +71,6 @@ jobs:
   test:
     needs: build
 
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        python-version: [3.12]
-
     runs-on: ubuntu-latest
 
     steps:
@@ -82,10 +78,10 @@ jobs:
     - name: Checkout source code
       uses: actions/checkout@v4
 
-    - name: Setup Python ${{ matrix.python-version }}
+    - name: Setup Python ${{ env.PYTHON_VERSION }}
       uses: actions/setup-python@v5
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: ${{ env.PYTHON_VERSION }}
 
     - name: Install test dependencies
       run: make test-install
@@ -93,15 +89,10 @@ jobs:
     - name: Make Test
       run: make test
 
-  validate-release-version:
+  validate-release:
     if: ${{ startsWith(github.head_ref, 'release/') }}
 
-    needs: [build, test]
-
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        python-version: [3.12]
+    needs: [build, test, pre-ci]
 
     runs-on: ubuntu-latest
 
@@ -111,9 +102,12 @@ jobs:
 
     steps:
 
-    - name: Get Release Branch Name and Spec-Version
+    - name: Checkout source code
+      uses: actions/checkout@v4
+
+    - id: set-release-branch
       # checkov:skip=CKV_GHA_2:Ensure run commands are not vulnerable to shell injection
-      id: set-release-branch
+      shell: bash
       run: |
         # set release branch info
         GITHUB_HEAD_REF=${{ github.head_ref }}
@@ -122,16 +116,26 @@ jobs:
         echo "GITHUB_HEAD_REF=${{ github.head_ref }}"      >> "$GITHUB_OUTPUT"
         echo "GITHUB_SPEC_VER=${GITHUB_HEAD_REF#release/}" >> "$GITHUB_OUTPUT"
 
-    - name: Get output variables from various jobs
+    - shell: bash
       run: |
         # get output variables
         echo "Release Branch Name        : ${{ steps.set-release-branch.outputs.GITHUB_HEAD_REF }}"
         echo "Release Branch Spec Version: ${{ steps.set-release-branch.outputs.GITHUB_SPEC_VER }}"
         echo "Software Build Version     : ${{ needs.build.outputs.BUILD_VERSION }}"
 
-    - name: Compare between release branch specified version and software build version
-      if: ${{ needs.build.outputs.BUILD_VERSION != steps.set-release-branch.outputs.GITHUB_SPEC_VER }}
+    - shell: bash
       run: |
         # compare release branch and software build version
-        echo "Issues: Release Branch Specified Version is different from Build Version."
-        exit 1
+        if [ "${{ needs.build.outputs.BUILD_VERSION}}" != "${{steps.set-release-branch.outputs.GITHUB_SPEC_VER}}" ]; then
+          echo "Error: Release Branch Specified Version is different from Build Version."
+          exit 1
+        fi
+
+    - shell: bash
+      run: |
+        # check duplicate tag
+        TAG_EXIST="$(git ls-remote origin refs/tags/${{ needs.build.outputs.BUILD_VERSION }} | awk '{print $2}' | sed 's/refs\/tags\///g')"
+        if [ -n "$TAG_EXIST" ]; then
+          echo "Error: Tag ($TAG_EXIST) exists already at remote origin"
+          exit 1
+        fi
