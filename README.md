@@ -100,7 +100,7 @@ Created pull request #101 successfully:  https://github.com/tagdots/update-pre-c
 ### 🙏  Contributing
 
 - Fork this repository and create pull requests.
-- Create an [issue](https://github.com/tagdots/update-pre-commit/issues)
+- Create an [issue](https://github.com/tagdots/update-pre-commit/issues).
 
 <br>
 
