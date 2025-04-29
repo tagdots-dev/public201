@@ -1,4 +1,6 @@
 ---
+# NOTE: this file is managed by terraform
+
 name: Request A Feature or Change
 about: Request A Feature or Change
 title: ''
