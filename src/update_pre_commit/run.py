@@ -158,7 +158,7 @@ def create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix):
 @click.command()
 @click.option('--file', required=False, default='.pre-commit-config.yaml', help='<file> (default: .pre-commit-config.yaml)')
 @click.option('--dry-run', required=False, default=True, help='<true, false> (default: true).')
-@click.option('--cleanup', required=False, default=100, help='Cleanup after CI Test PRs created (default: 100).')
+@click.option('--cleanup', required=False, default=30, help='Cleanup after CI Test PRs created (default: 30).')
 @click.version_option(version=__version__)
 def main(file, dry_run, cleanup):
     print(f"Starting update-pre-commit on {file} (dry-run {dry_run})...\n")
