@@ -12,7 +12,7 @@ env:
   HADOLINT_VERSION: 'v2.12.0'
   PRE_COMMMIT_VERSION: '4.2.0'
   PYSCAN_RS_VERSION: '0.1.7'
-  PYTHON_VERSION: '3.12.10'
+  PYTHON_VERSION: '3.12.x'
   TERRAFORM_VERSION: '1.11.3'
   TFLINT_VERSION: 'v0.55.1'
 
@@ -20,7 +20,7 @@ permissions:
   contents: read
 
 jobs:
-  pre-ci-default:
+  default-run:
     runs-on: ubuntu-latest
 
     steps:
@@ -65,7 +65,7 @@ jobs:
     - name: Run pre-commit on everything
       run: pre-commit run -a -v
 
-  pre-ci-checkov:
+  add-on-checkov:
     runs-on: ubuntu-latest
 
     steps:
