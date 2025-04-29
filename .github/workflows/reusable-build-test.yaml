@@ -21,6 +21,10 @@ on:  # yamllint disable-line rule:truthy
 env:
   PYTHON_VERSION: '3.12.x'
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
 
   build:
