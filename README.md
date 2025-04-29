@@ -46,7 +46,7 @@ $ update-pre-commit --help
 Usage: update-pre-commit [OPTIONS]
 
 Options:
-  --file TEXT        <file> (default: .pre-commit-config.yaml)
+  --file TEXT        <file> (default: .pre-commit-config.yaml).
   --dry-run BOOLEAN  <true, false> (default: true).
   --cleanup INTEGER  Cleanup after CI Test PRs created (default: 90).
   --version          Show the version and exit.
