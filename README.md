@@ -97,13 +97,6 @@ Created pull request #101 successfully:  https://github.com/tagdots/update-pre-c
 
 <br>
 
-### 📣  Coming up next....
-
-- publish to PyPI
-- publish to GitHub Action Marketplace
-
-<br>
-
 ### 🙏  Contributing
 
 - Fork this repository and create pull requests.
