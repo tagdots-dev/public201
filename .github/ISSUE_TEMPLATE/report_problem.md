@@ -1,4 +1,6 @@
 ---
+# NOTE: this file is managed by terraform
+
 name: Report An Issue
 about: Report An Issue
 title: ''
