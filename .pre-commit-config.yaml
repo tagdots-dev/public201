@@ -63,7 +63,7 @@ repos:
   - name: Python flake8
     id: flake8
 - repo: https://github.com/antonbabenko/pre-commit-terraform
-  rev: v1.98.1
+  rev: v1.99.0
   hooks:
   - name: Terraform format
     id: terraform_fmt
