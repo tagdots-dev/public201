@@ -149,12 +149,10 @@ def create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix):
     print(f'Source Branch: {pr_branch}')
     print(f'PR for Branch: {pr_base_branch}')
     print(f'Rev Variances: {pr_body}')
-    try:
-        pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
-        print(f'Created pull request #{pr.number} successfully: {pr.html_url}\n')
-        return pr.number
-    except Exception as e:
-        print(f'Exception Error to create PR: {e}')
+
+    pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
+    print(f'Created pull request #{pr.number} successfully: {pr.html_url}\n')
+    return pr.number
 
 
 @click.command()
@@ -193,5 +191,5 @@ def main(file, dry_run, cleanup):
         sys.exit(1)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     main()

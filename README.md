@@ -46,7 +46,7 @@ $ update-pre-commit --help
 Usage: update-pre-commit [OPTIONS]
 
 Options:
-  --file TEXT        <file> (default: .pre-commit-config.yaml)
+  --file TEXT        <file> (default: .pre-commit-config.yaml).
   --dry-run BOOLEAN  <true, false> (default: true).
   --cleanup INTEGER  Cleanup after CI Test PRs created (default: 90).
   --version          Show the version and exit.
@@ -97,16 +97,9 @@ Created pull request #101 successfully:  https://github.com/tagdots/update-pre-c
 
 <br>
 
-### 📣  Coming up next....
-
-- publish to PyPI
-- publish to GitHub Action Marketplace
-
-<br>
-
 ### 🙏  Contributing
 
-- Fork this repository and create pull requests.
+- Fork this repository and create pull requests
 - Create an [issue](https://github.com/tagdots/update-pre-commit/issues)
 
 <br>

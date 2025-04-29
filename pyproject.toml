@@ -7,19 +7,19 @@ requires = [ "setuptools>=77.0.1", "wheel" ]
 name = "update-pre-commit"
 version = "0.8.6"
 
-description = "Update pre-commit hooks rev on '.pre-commit-config.yaml' and create a pull request on GitHub"
-
 readme = "README.md"
-license = { file = "LICENSE" }
+license-files = [ "LICENSE" ]
 authors = [
   { name = "developers", email = "developers@tagdots.com" },
 ]
 requires-python = ">=3.12.1"
 
 classifiers = [
+  "Intended Audience :: Developers",
   "Programming Language :: Python :: 3 :: Only",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Topic :: Software Development :: Build Tools",
 ]
 
 dependencies = [
@@ -34,11 +34,13 @@ dependencies = [
   "virtualenv==20.29.3",
 ]
 optional-dependencies.test = [ "build", "commitizen", "coverage", "flake8", "isort", "pyscan-rs", "twine" ]
+
 urls.Changelog = "https://github.com/tagdots/update-pre-commit/blob/main/CHANGELOG.md"
 urls.Documentation = "https://github.com/tagdots/update-pre-commit/blob/main/README.md"
 urls.Homepage = "https://tagdots.com"
 urls.Issues = "https://github.com/tagdots/update-pre-commit/issues"
 urls.Repository = "https://github.com/tagdots/update-pre-commit"
+
 scripts.update-pre-commit = "update_pre_commit.run:main"
 
 [dependency-groups]
@@ -47,10 +49,10 @@ test = [
 ]
 
 [tool.setuptools.packages.find]
-where = [ "." ]
+where = [ "src" ]
 
 [tool.setuptools.dynamic]
-version = { attr = "update_pre_commit.__init__" }
+version = { attr = "src.update_pre_commit.__init__" }
 
 [tool.coverage]
 source = [ "." ]
@@ -58,13 +60,13 @@ source = [ "." ]
 [tool.coverage.run]
 branch = true
 command_line = "-m unittest discover -s tests/"
-include = [ "update_pre_commit/*" ]
+include = [ "src/update_pre_commit/*" ]
 omit = [ "tests/*" ]
 
 [tool.coverage.report]
 fail_under = 80
 show_missing = false
-include = [ "update_pre_commit/*" ]
+include = [ "src/update_pre_commit/*" ]
 
 [tool.commitizen]
 name = "cz_conventional_commits"
@@ -72,7 +74,7 @@ major_version_zero = false
 tag_format = "$version"
 update_changelog_on_bump = true
 version_files = [
-  "update_pre_commit/__init__.py:__version__",
+  "src/update_pre_commit/__init__.py:__version__",
 ]
 version_provider = "pep621"
 version_scheme = "pep440"
