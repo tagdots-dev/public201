@@ -11,6 +11,7 @@ build:
 	@echo "***************************************************************************"
 	@echo "******************* Upgrade to the latest python build ********************"
 	@echo "***************************************************************************"
+	python -m pip install -U pip
 	python -m pip install -U build
 
 	@echo "\n"
@@ -43,6 +44,7 @@ test-install:
 	@echo "***************************************************************************"
 	@echo "****** Install test dependencies into current active Python env.  *********"
 	@echo "***************************************************************************"
+	python -m pip install -U pip
 	python -m pip install -e .[test]
 
 .PHONY: help build test test-install
