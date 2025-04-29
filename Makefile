@@ -37,7 +37,7 @@ test:
 
 	@echo "\n"
 	@echo "## Report coverage statistics on modules"
-	coverage report -m
+	coverage report
 
 test-install:
 	@echo "***************************************************************************"
