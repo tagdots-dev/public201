@@ -1,4 +1,3 @@
-# NOTE: this file is managed by terraform
 # .gitignore (reference: https://github.com/github/gitignore)
 
 # ---------------------- OSX ---------------------- #
@@ -261,3 +260,5 @@ cython_debug/
 *.pem
 *.tmp
 id_rsa
+
+# NOTE: this file is managed by terraform
