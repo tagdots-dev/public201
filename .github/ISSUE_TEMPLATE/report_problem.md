@@ -1,4 +1,6 @@
 ---
+# NOTE: this file is managed by terraform
+
 name: Report An Issue
 about: Report An Issue
 title: ''
@@ -15,5 +17,3 @@ A screenshot of the issue.
 
 **Additional context**
 Additional context about the issue.
-
-# NOTE: this file is managed by terraform
