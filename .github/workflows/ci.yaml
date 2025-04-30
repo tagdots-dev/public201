@@ -1,6 +1,4 @@
 ---
-# NOTE: this file is managed by terraform
-
 name: CI
 
 on:  # yamllint disable-line rule:truthy
@@ -106,3 +104,5 @@ jobs:
           exit 1
         fi
     # --- release validation ends here --- #
+
+# NOTE: this file is managed by terraform
