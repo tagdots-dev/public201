@@ -1,4 +1,6 @@
 ---
+# NOTE: this file is managed by terraform
+
 name: build-test
 
 on:  # yamllint disable-line rule:truthy
@@ -112,5 +114,3 @@ jobs:
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         PYTHONUNBUFFERED: "1"
-
-# NOTE: this file is managed by terraform
