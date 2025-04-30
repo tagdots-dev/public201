@@ -1,5 +1,4 @@
 # Makefile
-# NOTE: this file is managed by terraform
 
 usage:
 	@echo "Usage:"
@@ -48,3 +47,5 @@ test-install:
 	python -m pip install -e .[test]
 
 .PHONY: help build test test-install
+
+# NOTE: this file is managed by terraform
