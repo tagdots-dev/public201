@@ -1,4 +1,6 @@
 ---
+# NOTE: this file is managed by terraform
+
 name: Request A Feature or Change
 about: Request A Feature or Change
 title: ''
@@ -12,5 +14,3 @@ A clear and concise description of feature or change.
 
 **Additional context**
 Additional context about the feature or change.
-
-# NOTE: this file is managed by terraform
