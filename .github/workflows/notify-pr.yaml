@@ -1,0 +1,38 @@
+---
+
+name: notify-pr
+
+on:  # yamllint disable-line rule:truthy
+
+  pull_request:
+    types:
+      - edited
+      - opened
+      - reopened
+      - synchronize
+
+    branches:
+      - main
+
+jobs:
+
+  notify-slack:
+    runs-on: ubuntu-latest
+    steps:
+
+    # - shell: bash
+    #   # checkov:skip=CKV_GHA_2:Ensure run commands are not vulnerable to shell injection
+    #   run: |
+    #     echo "A PR has been (re)opened or updated"
+    #     echo "Repository name           : ${{ github.repository }}"
+    #     echo "Branch name (head_branch) : ${{ github.event.pull_request.head.ref }}"
+    #     echo "Pull Request URL          : ${{ github.event.pull_request.html_url }}"
+
+    - name: Post message to Slack
+      uses: slackapi/slack-github-action@v2.0.0
+      with:
+        method: chat.postMessage
+        token: "${{ secrets.SECRET_SLACK_APP_GITHUB_BOT }}"
+        payload: |
+          channel: "${{ secrets.SECRET_SLACK_CHANNEL_PR }}"
+          text: ":fire: *Pull Request (re)opened or updated.*\n\n```Repository name           : ${{ github.repository }}\nBranch name (head_branch) : ${{ github.event.pull_request.head.ref }}\nPull Request URL          : ${{ github.event.pull_request.html_url }}```"
