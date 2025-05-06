@@ -15,9 +15,9 @@ on:  # yamllint disable-line rule:truthy
 jobs:
 
   on-success:
-    runs-on: ubuntu-latest
-
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    runs-on: ubuntu-latest
 
     steps:
 
@@ -40,9 +40,9 @@ jobs:
           text: ":white_check_mark: *${{ github.event.workflow_run.name }} Workflow Passed*\n\n```Repository name           : ${{ github.repository }}\nBranch name (head_branch) : ${{ github.event.workflow_run.head_branch }}\nWorkflow URL              : ${{ github.event.workflow_run.html_url }}```"
 
   on-failure:
-    runs-on: ubuntu-latest
-
     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+
+    runs-on: ubuntu-latest
 
     steps:
 
