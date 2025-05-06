@@ -1,0 +1,106 @@
+name: cron-stale
+
+on:
+  schedule:
+    - cron: '30 22 * * *'
+
+  workflow_dispatch:
+
+jobs:
+  # https://github.com/Mattraks/delete-workflow-runs
+  stale-workflows:
+    runs-on: ubuntu-latest
+
+    outputs:
+      JB_NAME: ${{ steps.set-step.outputs.JB_NAME }}
+      OUTCOME: ${{ steps.set-step.outputs.OUTCOME }}
+
+    steps:
+    - id: stale-workflows
+      uses: Mattraks/delete-workflow-runs@v2
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        repository: ${{ github.repository }}
+        retain_days: 7
+        keep_minimum_runs: 6
+
+    - shell: bash
+      id: set-step
+      # checkov:skip=CKV_GHA_2:Ensure run commands are not vulnerable to shell injection
+      run: |
+        echo "JB_NAME=stale-workflow"                       >> "$GITHUB_OUTPUT"
+        echo "OUTCOME=${{ steps.stale-workflows.outcome }}" >> "$GITHUB_OUTPUT"
+
+  # https://github.com/actions/stale
+  stale-issues-prs:
+    runs-on: ubuntu-latest
+
+    outputs:
+      JB_NAME: ${{ steps.set-step.outputs.JB_NAME }}
+      OUTCOME: ${{ steps.set-step.outputs.OUTCOME }}
+
+    steps:
+    - id: stale-issues-prs
+      uses: actions/stale@v9
+      with:
+        stale-issue-message: 'This issue is stale because it has been open 14 days with no activity. Remove stale label or comment or this will be closed in 5 days.'
+        days-before-stale: 10
+        days-before-close: 5
+
+    - shell: bash
+      # checkov:skip=CKV_GHA_2:Ensure run commands are not vulnerable to shell injection
+      id: set-step
+      run: |
+        echo "JB_NAME=stale-issue-pr"                        >> "$GITHUB_OUTPUT"
+        echo "OUTCOME=${{ steps.stale-issues-prs.outcome }}" >> "$GITHUB_OUTPUT"
+
+  # https://github.com/crs-k/stale-branches
+  stale-branches:
+    runs-on: ubuntu-latest
+
+    outputs:
+      JB_NAME: ${{ steps.set-step.outputs.JB_NAME }}
+      OUTCOME: ${{ steps.set-step.outputs.OUTCOME }}
+
+    steps:
+    - id: stale-branches
+      uses: crs-k/stale-branches@v7.0.1
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        days-before-stale: 10
+        days-before-delete: 14
+        pr-check: true
+
+    - shell: bash
+      # checkov:skip=CKV_GHA_2:Ensure run commands are not vulnerable to shell injection
+      id: set-step
+      run: |
+        echo "JB_NAME=stale-branch"                                >> "$GITHUB_OUTPUT"
+        echo "OUTCOME=${{ toJson(steps.stale-branches.outcome) }}" >> "$GITHUB_OUTPUT"
+
+  notify-slack:
+    if: always()
+    needs: [stale-workflows, stale-issues-prs, stale-branches]
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Post message to Slack
+      uses: slackapi/slack-github-action@v2
+      with:
+        method: chat.postMessage
+        token: "${{ secrets.SECRET_SLACK_APP_GITHUB_BOT }}"
+        payload: |
+          channel: "${{ secrets.SECRET_SLACK_CHANNEL_CRON_TASKS }}"
+          text: "
+              *:wastebasket: workflow: ${{ github.workflow }}*
+              ```
+              URL     : https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\n
+              Job     : ${{ needs.stale-workflows.outputs.JB_NAME }}\n
+              Result  : ${{ needs.stale-workflows.outputs.OUTCOME }}\n
+              Job     : ${{ needs.stale-issues-prs.outputs.JB_NAME }}\n
+              Result  : ${{ needs.stale-issues-prs.outputs.OUTCOME }}\n
+              Job     : ${{ needs.stale-branches.outputs.JB_NAME }}\n
+              Result  : ${{ needs.stale-branches.outputs.OUTCOME }}\n
+              ```"
