@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 
 """
-Purpose: update pre-commit configuration and create a pull request if necessary
+Purpose: update pre-commit configuration and create a pull request
 """
 
 import json
 import os
 import sys
+import threading
 import time
 
 import click
@@ -50,26 +51,36 @@ def get_owner_repo(file):
         print(f'Exception Error to get owner/repo: {e}.')
 
 
-def get_rev_variances(gh, variance_list, repos_revs_list):
+def get_rev_variances(gh, variance_list, owner_repo, current_rev):
     """
     capture differences between current rev and latest rev for each repo
     """
-    for r in repos_revs_list:
-        try:
-            repo = gh.get_repo(r['owner_repo'])
-            owner_repo = r['owner_repo']
-            current_rev = r['current_rev']
-            latest_release = repo.get_latest_release()
-            if not current_rev == latest_release.tag_name:
-                print(f'{owner_repo} ({current_rev}) is not using the latest release rev ({latest_release.tag_name})')
-                add_variance_to_dict(owner_repo, current_rev, latest_release.tag_name, variance_list)
+    try:
+        repo = gh.get_repo(owner_repo)
+        latest_release = repo.get_latest_release()
 
-        except Exception as e:
-            if f'{e.status}' == "404":
-                tag = next(x for x in repo.get_tags() if ("beta" and "alpha" and "rc") not in x.name)
-                if not current_rev == tag.name:
-                    print(f'{owner_repo} ({current_rev}) is not using the latest release tag ({tag.name})')
-                    add_variance_to_dict(owner_repo, current_rev, tag.name, variance_list)
+        if not current_rev == latest_release.tag_name:
+            print(f'{owner_repo} ({current_rev}) is not using the latest release rev ({latest_release.tag_name})')
+            add_variance_to_dict(owner_repo, current_rev, latest_release.tag_name, variance_list)
+
+        print(f'{repo} - {latest_release}')
+    except Exception as e:
+        if f'{e.status}' == "404":
+            tag = next(x for x in repo.get_tags() if ("beta" and "alpha" and "rc") not in x.name)
+            if not current_rev == tag.name:
+                print(f'{owner_repo} ({current_rev}) is not using the latest release tag ({tag.name})')
+                add_variance_to_dict(owner_repo, current_rev, tag.name, variance_list)
+
+
+def init_thread(gh, variance_list, repos_revs_list):  # pragma: no cover
+    threads = []
+    for r in repos_revs_list:
+        thread = threading.Thread(target=get_rev_variances, args=(gh, variance_list, r['owner_repo'], r['current_rev'],))
+        threads.append(thread)
+        thread.start()
+
+    for thread in threads:
+        thread.join()
 
 
 def add_variance_to_dict(owner_repo, current_rev, new_rev, variance_list):
@@ -166,7 +177,7 @@ def main(file, dry_run, cleanup):
         variance_list = []
         gh = get_auth()
         repos_revs_list = get_owner_repo(file)
-        get_rev_variances(gh, variance_list, repos_revs_list)
+        init_thread(gh, variance_list, repos_revs_list)
         msg_suffix = ''
 
         if 'COVERAGE_RUN' in os.environ:
@@ -186,7 +197,7 @@ def main(file, dry_run, cleanup):
                 pull.edit(state="closed")
                 ref.delete()
         else:
-            print('Update to pre-commit hooks: None\n')
+            print('\nUpdate to pre-commit hooks: None\n')
     except Exception:
         sys.exit(1)
 
