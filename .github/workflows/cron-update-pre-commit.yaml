@@ -18,7 +18,8 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      RUN: ${{ steps.run-update-pre-commit.outputs.RUN }}
+      OUTCOME: ${{ steps.run-update-pre-commit.outcome }}
+      OUTPUTS: ${{ steps.run-update-pre-commit.outputs }}
 
     steps:
     - name: Checkout source code
@@ -57,10 +58,10 @@ jobs:
         payload: |
           channel: "${{ secrets.SECRET_SLACK_CHANNEL_CRON_TASKS }}"
           text: "
-              *Workflow : ${{ github.workflow }}*
-              ```
-              Repository         : ${{ github.repository }}
-              Workflow URL       : https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\n
-              Run Output         : ${{ toJson(needs.update-hooks.outputs) }}\n
-              Run Result         : ${{ toJson(needs.update-hooks.result) }}
-              ```"
+            *Workflow   : ${{ github.workflow }}*\n
+            *Repository : ${{ github.repository }}*
+            ```
+            Run Output         : ${{ needs.update-hooks.outputs.OUTPUTS }}\n
+            Run Result         : ${{ needs.update-hooks.outputs.OUTCOME }}\n
+            Workflow URL       : https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            ```"
