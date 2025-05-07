@@ -25,10 +25,10 @@ jobs:
     #   # checkov:skip=CKV_GHA_2:Ensure run commands are not vulnerable to shell injection
     #   run: |
     #     echo "The triggering workflow passed"
-    #     echo "Repository name           : ${{ github.repository }}"
-    #     echo "Branch name (head_branch) : ${{ github.event.workflow_run.head_branch }}"
-    #     echo "Source Workflow Run name  : ${{ github.event.workflow_run.name }}"
-    #     echo "Workflow URL              : ${{ github.event.workflow_run.html_url }}"
+    #     echo "Repo Name   : ${{ github.repository }}"
+    #     echo "Branch Name : ${{ github.event.workflow_run.head_branch }}"
+    #     echo "Workflow    : ${{ github.event.workflow_run.name }}"
+    #     echo "Workflow URL: ${{ github.event.workflow_run.html_url }}"
 
     - name: Post message to Slack
       uses: slackapi/slack-github-action@v2.0.0
@@ -37,7 +37,12 @@ jobs:
         token: "${{ secrets.SECRET_SLACK_APP_GITHUB_BOT }}"
         payload: |
           channel: "${{ secrets.SECRET_SLACK_CHANNEL_CICD }}"
-          text: ":white_check_mark: *${{ github.event.workflow_run.name }} Workflow Passed*\n\n```Repository name           : ${{ github.repository }}\nBranch name (head_branch) : ${{ github.event.workflow_run.head_branch }}\nWorkflow URL              : ${{ github.event.workflow_run.html_url }}```"
+          text: ":white_check_mark: *${{ github.event.workflow_run.name }} Workflow Passed*\n\n
+            ```
+            Repo Name   : ${{ github.repository }}\n
+            Branch Name : ${{ github.event.workflow_run.head_branch }}\n
+            Workflow URL: ${{ github.event.workflow_run.html_url }}
+            ```"
 
   on-failure:
     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
@@ -50,10 +55,10 @@ jobs:
     #   # checkov:skip=CKV_GHA_2:Ensure run commands are not vulnerable to shell injection
     #   run: |
     #     echo "The triggering workflow failed"
-    #     echo "Repository name           : ${{ github.repository }}"
-    #     echo "Branch name (head_branch) : ${{ github.event.workflow_run.head_branch }}"
-    #     echo "Source Workflow Run name  : ${{ github.event.workflow_run.name }}"
-    #     echo "Workflow URL              : ${{ github.event.workflow_run.html_url }}"
+    #     echo "Repo Name   : ${{ github.repository }}"
+    #     echo "Branch Name : ${{ github.event.workflow_run.head_branch }}"
+    #     echo "Workflow    : ${{ github.event.workflow_run.name }}"
+    #     echo "Workflow URL: ${{ github.event.workflow_run.html_url }}"
 
     - name: Post message to Slack
       uses: slackapi/slack-github-action@v2.0.0
@@ -62,4 +67,9 @@ jobs:
         token: "${{ secrets.SECRET_SLACK_APP_GITHUB_BOT }}"
         payload: |
           channel: "${{ secrets.SECRET_SLACK_CHANNEL_CICD }}"
-          text: ":no_entry: *${{ github.event.workflow_run.name }} Workflow Failed*\n\n```Repository name           : ${{ github.repository }}\nBranch name (head_branch) : ${{ github.event.workflow_run.head_branch }}\nWorkflow URL              : ${{ github.event.workflow_run.html_url }}```"
+          text: ":no_entry: *${{ github.event.workflow_run.name }} Workflow Failed*\n\n
+            ```
+            Repo Name   : ${{ github.repository }}\n
+            Branch Name : ${{ github.event.workflow_run.head_branch }}\n
+            Workflow URL: ${{ github.event.workflow_run.html_url }}
+            ```"
