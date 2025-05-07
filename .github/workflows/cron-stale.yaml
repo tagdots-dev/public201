@@ -94,7 +94,7 @@ jobs:
         payload: |
           channel: "${{ secrets.SECRET_SLACK_CHANNEL_CRON_TASKS }}"
           text: "
-              *:waste: workflow: ${{ github.workflow }}*\n
+              *:wastebasket: workflow: ${{ github.workflow }}*\n
               *:house: repo      : ${{ github.repository }}*
               ```
               URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\n
