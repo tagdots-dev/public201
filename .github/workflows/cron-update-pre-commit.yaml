@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  PYTHON_VERSION: '3.13.2'
+  PYTHON_VERSION: '3.12.x'
 
 permissions:
   contents: write
@@ -17,23 +17,50 @@ jobs:
   update-hooks:
     runs-on: ubuntu-latest
 
+    outputs:
+      RUN: ${{ steps.run-update-pre-commit.outputs.RUN }}
+
     steps:
-      - name: Checkout source code
-        uses: actions/checkout@v4
+    - name: Checkout source code
+      uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Install python dependencies
-        run: |
-          python -m pip install -U pip
-          python -m pip install -e .
-          python -m pip --version
+    - name: Install python dependencies
+      run: |
+        python -m pip install -U pip
+        python -m pip install -e .
+        python -m pip --version
 
-      - name: Update pre-commit hooks and create PR
-        run: python src/update_pre_commit/run.py --dry-run false
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PYTHONUNBUFFERED: "1"
+    - id: run-update-pre-commit
+      run: python src/update_pre_commit/run.py --dry-run false
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PYTHONUNBUFFERED: "1"
+
+  notify-slack:
+    if: always()
+    needs: [update-hooks]
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Post message to Slack
+      uses: slackapi/slack-github-action@v2
+      with:
+        method: chat.postMessage
+        token: "${{ secrets.SECRET_SLACK_APP_GITHUB_BOT }}"
+        payload: |
+          channel: "${{ secrets.SECRET_SLACK_CHANNEL_CRON_TASKS }}"
+          text: "
+              *Workflow : ${{ github.workflow }}*
+              ```
+              Repository         : ${{ github.repository }}
+              Workflow URL       : https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\n
+              Run Output         : ${{ toJson(needs.update-hooks.outputs) }}\n
+              Run Result         : ${{ toJson(needs.update-hooks.result) }}
+              ```"
