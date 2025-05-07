@@ -18,25 +18,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source code
-        uses: actions/checkout@v4
+    - name: Checkout source code
+      uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Install python dependencies
-        run: |
-          pip install -e .
-          pip --version
-          pip install coverage[toml]
+    - name: Install python dependencies
+      run: |
+        pip install -e .
+        pip --version
+        pip install coverage[toml]
 
-      - name: Run Tests with Coverage
-        run: |
-          coverage run tests/test_run.py -v
-          coverage html
-          coverage report
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PYTHONUNBUFFERED: "1"
+    - name: Run Tests with Coverage
+      run: |
+        coverage run tests/test_run.py -v
+        coverage html
+        coverage report
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PYTHONUNBUFFERED: "1"

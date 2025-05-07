@@ -15,25 +15,27 @@ permissions:
 
 jobs:
   update-hooks:
+
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source code
-        uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
+    - name: Checkout source code
+      uses: actions/checkout@v4
 
-      - name: Install python dependencies
-        run: |
-          python -m pip install -U pip
-          python -m pip install -e .
-          python -m pip --version
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Update pre-commit hooks and create PR
-        run: python src/update_pre_commit/run.py --dry-run false
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PYTHONUNBUFFERED: "1"
+    - name: Install python dependencies
+      run: |
+        python -m pip install -U pip
+        python -m pip install -e .
+        python -m pip --version
+
+    - name: Update pre-commit hooks and create PR
+      run: python src/update_pre_commit/run.py --dry-run false
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PYTHONUNBUFFERED: "1"
