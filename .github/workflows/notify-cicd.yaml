@@ -67,7 +67,7 @@ jobs:
         token: "${{ secrets.SECRET_SLACK_APP_GITHUB_BOT }}"
         payload: |
           channel: "${{ secrets.SECRET_SLACK_CHANNEL_CICD }}"
-          text: ":no_entry: *${{ github.event.workflow_run.name }} Workflow Failed*\n\n
+          text: ":no_entry: *${{ github.event.workflow_run.name }} Workflow Failed*
             ```
             Repo Name   : ${{ github.repository }}\n
             Branch Name : ${{ github.event.workflow_run.head_branch }}\n
