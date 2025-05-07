@@ -105,7 +105,8 @@ class TestGetRevVariances(unittest.TestCase):
 
     def test_get_rev_variances_to_dict(self):
         variance_list = []
-        result = get_rev_variances(get_auth(), variance_list, self.repos_rev_list)
+        for r in self.repos_rev_list:
+            result = get_rev_variances(get_auth(), variance_list, r['owner_repo'], r['current_rev'])
         assert type(result) is not None
 
 
