@@ -28,11 +28,12 @@ jobs:
 
       - name: Install python dependencies
         run: |
-          pip install -e .
-          pip --version
+          python -m pip install -U pip
+          python -m pip install -e .
+          python -m pip --version
 
       - name: Update pre-commit hooks and create PR
-        run: python update_pre_commit/run.py --dry-run false
+        run: python src/update_pre_commit/run.py --dry-run false
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PYTHONUNBUFFERED: "1"

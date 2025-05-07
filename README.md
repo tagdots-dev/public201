@@ -1,4 +1,4 @@
-[![coverage](https://github.com/tagdots/update-pre-commit/actions/workflows/cron-coverage.yaml/badge.svg)](https://github.com/tagdots/update-pre-commit/actions/workflows/cron-coverage.yaml) [![update-pre-commit](https://github.com/tagdots/update-pre-commit/actions/workflows/cron-update-pre-commit.yaml/badge.svg)](https://github.com/tagdots/update-pre-commit/actions/workflows/cron-update-pre-commit.yaml)
+[![coverage](https://github.com/tagdots-dev/public201/actions/workflows/cron-coverage.yaml/badge.svg)](https://github.com/tagdots-dev/public201/actions/workflows/cron-coverage.yaml) [![update-pre-commit](https://github.com/tagdots-dev/public201/actions/workflows/cron-update-pre-commit.yaml/badge.svg)](https://github.com/tagdots-dev/public201/actions/workflows/cron-update-pre-commit.yaml)
 
 # Update-Pre-Commit
 
