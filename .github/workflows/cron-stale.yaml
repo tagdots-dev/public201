@@ -12,6 +12,7 @@ on:
 jobs:
   # https://github.com/Mattraks/delete-workflow-runs
   stale-workflows:
+
     runs-on: ubuntu-latest
 
     outputs:
@@ -19,6 +20,7 @@ jobs:
       OUTCOME: ${{ steps.set-step.outputs.OUTCOME }}
 
     steps:
+
     - id: stale-workflows
       uses: Mattraks/delete-workflow-runs@v2
       with:
@@ -36,6 +38,7 @@ jobs:
 
   # https://github.com/actions/stale
   stale-issues-prs:
+
     runs-on: ubuntu-latest
 
     outputs:
@@ -43,6 +46,7 @@ jobs:
       OUTCOME: ${{ steps.set-step.outputs.OUTCOME }}
 
     steps:
+
     - id: stale-issues-prs
       uses: actions/stale@v9
       with:
@@ -59,6 +63,7 @@ jobs:
 
   # https://github.com/crs-k/stale-branches
   stale-branches:
+
     runs-on: ubuntu-latest
 
     outputs:
@@ -66,6 +71,7 @@ jobs:
       OUTCOME: ${{ steps.set-step.outputs.OUTCOME }}
 
     steps:
+
     - id: stale-branches
       uses: crs-k/stale-branches@v7.0.1
       with:
