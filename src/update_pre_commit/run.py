@@ -63,7 +63,6 @@ def get_rev_variances(gh, variance_list, owner_repo, current_rev):
             print(f'{owner_repo} ({current_rev}) is not using the latest release rev ({latest_release.tag_name})')
             add_variance_to_dict(owner_repo, current_rev, latest_release.tag_name, variance_list)
 
-        print(f'{repo} - {latest_release}')
     except Exception as e:
         if f'{e.status}' == "404":
             tag = next(x for x in repo.get_tags() if ("beta" and "alpha" and "rc") not in x.name)
