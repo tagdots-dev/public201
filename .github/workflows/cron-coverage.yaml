@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  PYTHON_VERSION: '3.12.10'
+  PYTHON_VERSION: '3.12.x'
 
 permissions:
   contents: write
@@ -17,26 +17,64 @@ jobs:
   coverage-test:
     runs-on: ubuntu-latest
 
+    outputs:
+      COV_PER: ${{ steps.get-coverage-results.outputs.COV_PER }}
+      COV_RUN: ${{ steps.get-coverage-results.outputs.COV_RUN }}
+
     steps:
-      - name: Checkout source code
-        uses: actions/checkout@v4
+    - name: Checkout source code
+      uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Install python dependencies
-        run: |
-          pip install -e .
-          pip --version
-          pip install coverage[toml]
+    - name: Install python dependencies
+      run: |
+        pip install -e .
+        pip --version
+        pip install coverage[toml]
 
-      - name: Run Tests with Coverage
-        run: |
-          coverage run tests/test_run.py -v
-          coverage html
-          coverage report
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PYTHONUNBUFFERED: "1"
+    - id: run-coverage-tests
+      run: |
+        coverage run tests/test_run.py -v
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PYTHONUNBUFFERED: "1"
+
+    - id: export-coverage
+      run: |
+        coverage html
+        coverage report
+      env:
+        PYTHONUNBUFFERED: "1"
+
+    - id: get-coverage-results
+      run: |
+        echo "COV_RUN=${{ steps.run-coverage-tests.outcome }}"            >> "$GITHUB_OUTPUT"
+        echo "COV_PER=$(coverage report | grep TOTAL | awk '{print $6}')" >> "$GITHUB_OUTPUT"
+
+  notify-slack:
+    if: always()
+    needs: [coverage-test]
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Post message to Slack
+      uses: slackapi/slack-github-action@v2
+      with:
+        method: chat.postMessage
+        token: "${{ secrets.SECRET_SLACK_APP_GITHUB_BOT }}"
+        payload: |
+          channel: "${{ secrets.SECRET_SLACK_CHANNEL_CRON_TASKS }}"
+          text: "
+              *Workflow : ${{ github.workflow }}*
+              ```
+              Repository         : ${{ github.repository }}
+              Workflow URL       : https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\n
+              Coverage Tests     : ${{ needs.coverage-test.outputs.COV_RUN }}\n
+              Coverage Percentage: ${{ needs.coverage-test.outputs.COV_PER }}
+              ```"
