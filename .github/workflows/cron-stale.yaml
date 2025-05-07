@@ -93,7 +93,7 @@ jobs:
         token: "${{ secrets.SECRET_SLACK_APP_GITHUB_BOT }}"
         payload: |
           channel: "${{ secrets.SECRET_SLACK_CHANNEL_CRON_TASKS }}"
-          text: ":wastebasket: *workflow  : ${{ github.workflow }}\n:house: repository: ${{ github.repository }}*
+          text: ":wastebasket: *workflow*  : ${{ github.workflow }}\n:house: *repository*: ${{ github.repository }}
               ```
               URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\n
               Job: ${{ needs.stale-workflows.outputs.JB_NAME }} (${{ needs.stale-workflows.outputs.OUTCOME }})\n
