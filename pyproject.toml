@@ -1,7 +1,7 @@
 [build-system]
 build-backend = "setuptools.build_meta"
 
-requires = [ "setuptools>=77.0.1", "wheel" ]
+requires = [ "setuptools", "wheel" ]
 
 [project]
 name = "update-pre-commit"
@@ -12,7 +12,7 @@ license-files = [ "LICENSE" ]
 authors = [
   { name = "developers", email = "developers@tagdots.com" },
 ]
-requires-python = ">=3.12.1"
+requires-python = ">=3.12.10"
 
 classifiers = [
   "Intended Audience :: Developers",
@@ -24,20 +24,19 @@ classifiers = [
 
 dependencies = [
   "click==8.1.8",
-  "click-option-group==0.5.6",
+  "click-option-group==0.5.7",
   "gitpython==3.1.44",
-  "pre-commit==4.2",
   "pygithub==2.6.1",
   "pyyaml==6.0.2",
-  "setuptools==77.0.1",
+  "setuptools==78.1",
   "ulid-py==1.1",
-  "virtualenv==20.29.3",
+  "virtualenv==20.31.1",
 ]
-optional-dependencies.test = [ "build", "commitizen", "coverage", "flake8", "isort", "pyscan-rs", "twine" ]
+optional-dependencies.test = [ "commitizen", "coverage", "flake8", "isort", "pre-commit" ]
 
 urls.Changelog = "https://github.com/tagdots/update-pre-commit/blob/main/CHANGELOG.md"
 urls.Documentation = "https://github.com/tagdots/update-pre-commit/blob/main/README.md"
-urls.Homepage = "https://tagdots.com"
+urls.Homepage = "https://github.com/tagdots"
 urls.Issues = "https://github.com/tagdots/update-pre-commit/issues"
 urls.Repository = "https://github.com/tagdots/update-pre-commit"
 
