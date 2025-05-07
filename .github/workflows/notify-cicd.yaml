@@ -37,11 +37,11 @@ jobs:
         token: "${{ secrets.SECRET_SLACK_APP_GITHUB_BOT }}"
         payload: |
           channel: "${{ secrets.SECRET_SLACK_CHANNEL_CICD }}"
-          text: ":white_check_mark: *${{ github.event.workflow_run.name }} Workflow Passed*\n\n
+          text: ":white_check_mark: *${{ github.event.workflow_run.name }} Workflow Passed*
             ```
-            Repo Name   : ${{ github.repository }}\n
-            Branch Name : ${{ github.event.workflow_run.head_branch }}\n
-            Workflow URL: ${{ github.event.workflow_run.html_url }}
+            Repo    : ${{ github.repository }}\n
+            Branch  : ${{ github.event.workflow_run.head_branch }}\n
+            Workflow: ${{ github.event.workflow_run.html_url }}
             ```"
 
   on-failure:
@@ -69,7 +69,7 @@ jobs:
           channel: "${{ secrets.SECRET_SLACK_CHANNEL_CICD }}"
           text: ":no_entry: *${{ github.event.workflow_run.name }} Workflow Failed*
             ```
-            Repo Name   : ${{ github.repository }}\n
-            Branch Name : ${{ github.event.workflow_run.head_branch }}\n
-            Workflow URL: ${{ github.event.workflow_run.html_url }}
+            Repo    : ${{ github.repository }}\n
+            Branch  : ${{ github.event.workflow_run.head_branch }}\n
+            Workflow: ${{ github.event.workflow_run.html_url }}
             ```"
