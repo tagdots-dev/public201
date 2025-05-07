@@ -35,7 +35,7 @@ jobs:
         token: "${{ secrets.SECRET_SLACK_APP_GITHUB_BOT }}"
         payload: |
           channel: "${{ secrets.SECRET_SLACK_CHANNEL_PR }}"
-          text: ":fire: *Pull Request (re)opened or updated.*\n\n
+          text: ":fire: *Pull Request (re)opened or updated.*
           ```
           Repo Name  : ${{ github.repository }}\n
           Branch Name: ${{ github.event.pull_request.head.ref }}\n
