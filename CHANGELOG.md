@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.9.0 (2025-05-07)
+
+### Perf
+
+- improve update speed
+
 ## 0.8.6 (2025-04-13)
 
 ### Fix
