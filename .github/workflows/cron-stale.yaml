@@ -103,8 +103,8 @@ jobs:
         payload: |
           channel: "${{ secrets.SECRET_SLACK_CHANNEL_CRON_TASKS }}"
           text: "
-              *Workflow   : ${{ github.workflow }}*\n
-              *Repository : ${{ github.repository }}*
+              *Repository : ${{ github.repository }}*\n
+              *Workflow   : ${{ github.workflow }}*
               ```
               URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\n
               Job: ${{ needs.stale-workflows.outputs.JB_NAME }} (${{ needs.stale-workflows.outputs.OUTCOME }})\n
