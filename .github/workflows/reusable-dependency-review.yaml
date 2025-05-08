@@ -19,7 +19,7 @@ jobs:
     - name: Checkout source code
       uses: actions/checkout@v4
 
-    - name: Dependency Review
+    - name: Dependency Review on PR
       uses: actions/dependency-review-action@v4
       with:
         license-check: true
