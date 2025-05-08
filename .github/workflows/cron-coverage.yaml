@@ -71,8 +71,8 @@ jobs:
         payload: |
           channel: "${{ secrets.SECRET_SLACK_CHANNEL_CRON_TASKS }}"
           text: "
-            *Workflow   : ${{ github.workflow }}*\n
-            *Repository : ${{ github.repository }}*
+            *Repository : ${{ github.repository }}*\n
+            *Workflow   : ${{ github.workflow }}*
             ```
             Coverage Tests     : ${{ needs.coverage-test.outputs.COV_RUN }}\n
             Coverage Percentage: ${{ needs.coverage-test.outputs.COV_PER }}\n
