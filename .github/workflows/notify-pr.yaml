@@ -18,7 +18,10 @@ on:  # yamllint disable-line rule:truthy
 jobs:
 
   notify-slack:
+    if: ${{ startsWith(github.actor, 'dependabot')  != true }}
+
     runs-on: ubuntu-latest
+
     steps:
 
     # - shell: bash
@@ -30,7 +33,7 @@ jobs:
     #     echo "PR URL     : ${{ github.event.pull_request.html_url }}"
 
     - name: Post message to Slack
-      uses: slackapi/slack-github-action@v2.0.0
+      uses: slackapi/slack-github-action@v2.1.0
       with:
         method: chat.postMessage
         token: "${{ secrets.SECRET_SLACK_APP_GITHUB_BOT }}"
