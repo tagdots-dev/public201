@@ -1,0 +1,47 @@
+---
+# NOTE: this file is managed by terraform
+
+name: notify-pr-dependabot
+
+on:  # yamllint disable-line rule:truthy
+
+  pull_request_target:
+    types:
+      - edited
+      - opened
+      - reopened
+      - synchronize
+
+    branches:
+      - main
+
+jobs:
+
+  notify-slack:
+    if: ${{ startsWith(github.actor, 'dependabot') == true }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    # - shell: bash
+    #   # checkov:skip=CKV_GHA_2:Ensure run commands are not vulnerable to shell injection
+    #   run: |
+    #     echo "A PR has been (re)opened or updated"
+    #     echo "Repo Name  : ${{ github.repository }}"
+    #     echo "Branch Name: ${{ github.event.pull_request.head.ref }}"
+    #     echo "PR URL     : ${{ github.event.pull_request.html_url }}"
+
+    - name: Post message to Slack
+      uses: slackapi/slack-github-action@v2.1.0
+      with:
+        method: chat.postMessage
+        token: "${{ secrets.SECRET_SLACK_APP_GITHUB_BOT }}"
+        payload: |
+          channel: "${{ secrets.SECRET_SLACK_CHANNEL_PR }}"
+          text: ":fire: *Pull Request (re)opened or updated.*
+          ```
+          Repo  : ${{ github.repository }}\n
+          Branch: ${{ github.event.pull_request.head.ref }}\n
+          PR URL: ${{ github.event.pull_request.html_url }}
+          ```"
