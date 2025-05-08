@@ -28,9 +28,9 @@ dependencies = [
   "gitpython==3.1.44",
   "pygithub==2.6.1",
   "pyyaml==6.0.2",
-  "setuptools==78.1",
+  "setuptools==80.3.1",
   "ulid-py==1.1",
-  "virtualenv==20.31.1",
+  "virtualenv==20.31.2",
 ]
 optional-dependencies.test = [ "commitizen", "coverage", "flake8", "isort", "pre-commit" ]
 
