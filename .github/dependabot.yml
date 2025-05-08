@@ -40,3 +40,4 @@ updates:
       - dependency-type: "indirect"
 
 
+# NOTE: this file is managed by terraform
