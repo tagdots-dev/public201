@@ -32,16 +32,17 @@ jobs:
   build-test:
     uses: ./.github/workflows/reusable-build-test.yaml
 
-  # need to remove dependency on private repos
+  %{ if repo_visibility == "public" }
   dependency:
+    if: github.event_name == 'pull_request' || github.event_name.workflow_run.event == 'pull_request'
     uses: ./.github/workflows/reusable-dependency-review.yaml
+  %{ endif }
 
   validate-release:
     if: ${{ startsWith(github.head_ref, 'release/') }}
 
-    # need to remove dependency on private repos
-    needs: [pre-commit, build-test, dependency]
-
+    needs: [pre-commit, build-test, %{ if repo_visibility == "public" }dependency%{ endif }]
+    
     runs-on: ubuntu-latest
 
     steps:
