@@ -19,7 +19,6 @@ jobs:
 
     outputs:
       OUTCOME: ${{ steps.run-update-pre-commit.outcome }}
-      OUTPUTS: ${{ steps.run-update-pre-commit.outputs }}
 
     steps:
     - name: Checkout source code
@@ -61,7 +60,6 @@ jobs:
             *Workflow   : ${{ github.workflow }}*\n
             *Repository : ${{ github.repository }}*
             ```
-            Run Output         : ${{ needs.update-hooks.outputs.OUTPUTS }}\n
             Run Result         : ${{ needs.update-hooks.outputs.OUTCOME }}\n
             Workflow URL       : https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
             ```"
