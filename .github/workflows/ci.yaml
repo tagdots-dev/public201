@@ -32,16 +32,10 @@ jobs:
   build-test:
     uses: ./.github/workflows/reusable-build-test.yaml
 
-  %{ if repo_visibility == "public" }
-  dependency:
-    if: github.event_name == 'pull_request' || github.event_name.workflow_run.event == 'pull_request'
-    uses: ./.github/workflows/reusable-dependency-review.yaml
-  %{ endif }
-
   validate-release:
-    if: ${{ startsWith(github.head_ref, 'release/') }}
+    if: ${{ startsWith(github.head_ref, "release/") }}
 
-    needs: [pre-commit, build-test, %{ if repo_visibility == "public" }dependency%{ endif }]
+    needs: [pre-commit, build-test]
     
     runs-on: ubuntu-latest
 
