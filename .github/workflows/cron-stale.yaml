@@ -96,7 +96,7 @@ jobs:
     steps:
 
     - name: Post message to Slack
-      uses: slackapi/slack-github-action@v2
+      uses: slackapi/slack-github-action@v2.1.0
       with:
         method: chat.postMessage
         token: "${{ secrets.SECRET_SLACK_APP_GITHUB_BOT }}"
