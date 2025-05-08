@@ -70,9 +70,7 @@ jobs:
         token: "${{ secrets.SECRET_SLACK_APP_GITHUB_BOT }}"
         payload: |
           channel: "${{ secrets.SECRET_SLACK_CHANNEL_CRON_TASKS }}"
-          text: "
-            *Repository : ${{ github.repository }}*\n
-            *Workflow   : ${{ github.workflow }}*
+          text: "*Repository : ${{ github.repository }}*\n*Workflow   : ${{ github.workflow }}*
             ```
             Coverage Tests     : ${{ needs.coverage-test.outputs.COV_RUN }}\n
             Coverage Percentage: ${{ needs.coverage-test.outputs.COV_PER }}\n
