@@ -56,10 +56,8 @@ jobs:
         token: "${{ secrets.SECRET_SLACK_APP_GITHUB_BOT }}"
         payload: |
           channel: "${{ secrets.SECRET_SLACK_CHANNEL_CRON_TASKS }}"
-          text: "
-            *Repository : ${{ github.repository }}*\n
-            *Workflow   : ${{ github.workflow }}*
+          text: "*Repository : ${{ github.repository }}*\n*Workflow   : ${{ github.workflow }}*
             ```
-            Run Result         : ${{ needs.update-hooks.outputs.OUTCOME }}\n
-            Workflow URL       : https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            Run Result  : ${{ needs.update-hooks.outputs.OUTCOME }}\n
+            Workflow URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
             ```"
