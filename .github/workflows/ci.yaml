@@ -40,7 +40,7 @@ jobs:
     if: ${{ startsWith(github.head_ref, 'release/') }}
 
     needs: [pre-commit, build-test, dependency]
-    
+
     runs-on: ubuntu-latest
 
     steps:
