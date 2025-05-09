@@ -5,7 +5,7 @@ name: cron-stale
 
 on:
   schedule:
-    - cron: '30 22 * * *'
+    - cron: '30 22 * * 6'
 
   workflow_dispatch:
 
