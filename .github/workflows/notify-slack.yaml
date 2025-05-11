@@ -74,7 +74,6 @@ jobs:
 
   on-pr:
     if: ${{ github.event.pull_request.head.ref != '' && github.event_name == 'pull_request' }}
-    # if: ${{ github.event_name == 'pull_request' || github.event.workflow_run.event == 'pull_request' }}
     runs-on: ubuntu-latest
 
     steps:
