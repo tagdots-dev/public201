@@ -1,0 +1,95 @@
+---
+# NOTE: this file is managed by terraform
+
+name: notify-slack
+
+on:  # yamllint disable-line rule:truthy
+
+  workflow_run:
+    workflows:
+      - ci
+      - cd
+
+    types:
+      - completed
+
+  pull_request:
+    types:
+      - edited
+      - opened
+      - reopened
+      - synchronize
+
+    branches:
+      - main
+
+  pull_request_target:
+    types:
+      - edited
+      - opened
+      - reopened
+      - synchronize
+
+    branches:
+      - main
+
+jobs:
+
+  on-workflow-run:
+    if: ${{ github.event.workflow_run.conclusion != '' }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Slack message on workflow run success
+      uses: slackapi/slack-github-action@v2.1.0
+      if: ${{ github.event.workflow_run.conclusion == 'success' }}
+      with:
+        method: chat.postMessage
+        token: "${{ secrets.SECRET_SLACK_APP_GITHUB_BOT }}"
+        payload: |
+          channel: "${{ secrets.SECRET_SLACK_CHANNEL_CICD }}"
+          text: ":white_check_mark: *${{ github.event.workflow_run.name }} Workflow Passed*
+            ```
+            Repo    : ${{ github.repository }}\n
+            Branch  : ${{ github.event.workflow_run.head_branch }}\n
+            Workflow: ${{ github.event.workflow_run.html_url }}
+            ```"
+
+    - name: Slack message on workflow run failure
+      uses: slackapi/slack-github-action@v2.1.0
+      if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+      with:
+        method: chat.postMessage
+        token: "${{ secrets.SECRET_SLACK_APP_GITHUB_BOT }}"
+        payload: |
+          channel: "${{ secrets.SECRET_SLACK_CHANNEL_CICD }}"
+          text: ":no_entry: *${{ github.event.workflow_run.name }} Workflow Failed*
+            ```
+            Repo    : ${{ github.repository }}\n
+            Branch  : ${{ github.event.workflow_run.head_branch }}\n
+            Workflow: ${{ github.event.workflow_run.html_url }}
+            ```"
+
+  on-pr:
+    if: ${{ github.event.pull_request.head.ref != '' && github.event_name == 'pull_request' }}
+    # if: ${{ github.event_name == 'pull_request' || github.event.workflow_run.event == 'pull_request' }}
+    runs-on: ubuntu-latest
+
+    steps:
+    - run: echo "${{ toJson(github) }}"
+
+    - name: Slack message on PR activities
+      uses: slackapi/slack-github-action@v2.1.0
+      with:
+        method: chat.postMessage
+        token: "${{ secrets.SECRET_SLACK_APP_GITHUB_BOT }}"
+        payload: |
+          channel: "${{ secrets.SECRET_SLACK_CHANNEL_PR }}"
+          text: ":fire: *Pull Request (re)opened or updated.*
+          ```
+          Repo  : ${{ github.repository }}\n
+          Branch: ${{ github.event.pull_request.head.ref }}\n
+          PR URL: ${{ github.event.pull_request.html_url }}
+          ```"
