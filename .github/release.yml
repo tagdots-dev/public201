@@ -8,7 +8,7 @@ changelog:
       - tagdots-dev-terraform-github
       - tagdots-terraform-github
   categories:
-    - title: "🎉 New features"
+    - title: "🚀 New features"
       labels:
         - feature
     - title: "🎉 Change features"
