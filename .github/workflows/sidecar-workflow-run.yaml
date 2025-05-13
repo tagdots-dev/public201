@@ -2,7 +2,7 @@
 # NOTE: this file is managed by terraform
 
 # trigger job run on event workflow_run
-name: siderun-workflow-run
+name: sidecar-workflow-run
 
 on:  # yamllint disable-line rule:truthy
 
