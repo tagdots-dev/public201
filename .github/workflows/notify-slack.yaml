@@ -13,15 +13,6 @@ on:  # yamllint disable-line rule:truthy
     types:
       - completed
 
-  pull_request:
-    types:
-      - opened
-      - reopened
-      - synchronize
-
-    branches:
-      - main
-
 jobs:
 
   on-workflow-run:
@@ -62,25 +53,3 @@ jobs:
             Branch  : ${{ github.event.workflow_run.head_branch }}\n
             Workflow: ${{ github.event.workflow_run.html_url }}
             ```"
-
-  on-pr:
-    if: ${{ github.event.pull_request.head.ref != '' && github.event_name == 'pull_request' }}
-    runs-on: ubuntu-latest
-
-    steps:
-    # - name: debug only
-    #   run: echo "${{ toJson(github) }}"
-
-    - name: Slack message on PR activities
-      uses: slackapi/slack-github-action@v2.1.0
-      with:
-        method: chat.postMessage
-        token: "${{ secrets.SECRET_SLACK_APP_GITHUB_BOT }}"
-        payload: |
-          channel: "${{ secrets.SECRET_SLACK_CHANNEL_PR }}"
-          text: ":fire: *Pull Request (re)opened or updated.*
-          ```
-          Repo  : ${{ github.repository }}\n
-          Branch: ${{ github.event.pull_request.head.ref }}\n
-          PR URL: ${{ github.event.pull_request.html_url }}
-          ```"
