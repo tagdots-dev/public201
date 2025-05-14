@@ -20,6 +20,7 @@ jobs:
     outputs:
       COV_PER: ${{ steps.get-coverage-results.outputs.COV_PER }}
       COV_RUN: ${{ steps.get-coverage-results.outputs.COV_RUN }}
+      COV_REP: ${{ steps.get-coverage-reports.outputs.COV_REP }}
 
     steps:
     - name: Checkout source code
@@ -54,6 +55,7 @@ jobs:
       run: |
         echo "COV_RUN=${{ steps.run-coverage-tests.outcome }}"            >> "$GITHUB_OUTPUT"
         echo "COV_PER=$(coverage report | grep TOTAL | awk '{print $6}')" >> "$GITHUB_OUTPUT"
+        echo "COV_REP=$(cat htmlcov/index.html)"                          >> "$GITHUB_OUTPUT"
 
   notify-slack:
     if: always()
@@ -63,7 +65,7 @@ jobs:
 
     steps:
 
-    - name: Post message to Slack
+    - name: Post coverage result to Slack
       uses: slackapi/slack-github-action@v2
       with:
         method: chat.postMessage
@@ -76,3 +78,12 @@ jobs:
             Coverage Percentage: ${{ needs.coverage-test.outputs.COV_PER }}\n
             Workflow URL       : https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
             ```"
+
+    - name: Post coverage report to Slack
+      uses: slackapi/slack-github-action@v2
+      with:
+        method: chat.postMessage
+        token: "${{ secrets.SECRET_SLACK_APP_GITHUB_BOT }}"
+        payload: |
+          channel: "${{ secrets.SECRET_SLACK_CHANNEL_CRON_TASKS }}"
+          attachments: "${{ needs.coverage-test.outputs.COV_REP }}"
