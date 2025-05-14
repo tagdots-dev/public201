@@ -20,7 +20,7 @@ jobs:
     outputs:
       COV_PER: ${{ steps.get-coverage-results.outputs.COV_PER }}
       COV_RUN: ${{ steps.get-coverage-results.outputs.COV_RUN }}
-      COV_REP: ${{ steps.get-coverage-results.outputs.COV_REP }}
+      COV_REP: ${{ steps.get-coverage-reports.outputs.HTML_CONTENT }}
 
     steps:
     - name: Checkout source code
@@ -57,7 +57,13 @@ jobs:
         ls -l htmlcov/
         echo "COV_RUN=${{ steps.run-coverage-tests.outcome }}"            >> "$GITHUB_OUTPUT"
         echo "COV_PER=$(coverage report | grep TOTAL | awk '{print $6}')" >> "$GITHUB_OUTPUT"
-        echo "COV_REP=$(cat htmlcov/index.html)"                          >> "$GITHUB_OUTPUT"
+
+    - id: get-coverage-reports
+      run: |
+        # get coverage reports
+        cat htmlcov/index.html > temp_file.txt
+        HTML_CONTENT=$(cat temp_file.txt)
+        echo "HTML_CONTENT=$HTML_CONTENT" >> "$GITHUB_OUTPUT"
 
   notify-slack:
     if: always()
@@ -89,4 +95,8 @@ jobs:
         token: "${{ secrets.SECRET_SLACK_APP_GITHUB_BOT }}"
         payload: |
           channel: "${{ secrets.SECRET_SLACK_CHANNEL_CRON_TASKS }}"
-          attachments: "${{ needs.coverage-test.outputs.COV_REP }}"
+          attachments: json.dumps([
+            {
+              ${{ needs.coverage-test.outputs.COV_REP }}"
+            }
+          ])
