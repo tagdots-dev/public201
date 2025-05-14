@@ -63,7 +63,7 @@ jobs:
         # get coverage reports
         cat htmlcov/index.html > temp_file.txt
         HTML_CONTENT=$(cat temp_file.txt)
-        echo "HTML_CONTENT=$HTML_CONTENT" >> "$GITHUB_OUTPUT"
+        echo -n "HTML_CONTENT=$HTML_CONTENT" >> "$GITHUB_OUTPUT"
 
   notify-slack:
     if: always()
@@ -82,7 +82,7 @@ jobs:
           channel: "${{ secrets.SECRET_SLACK_CHANNEL_CRON_TASKS }}"
           text: "*Repository : ${{ github.repository }}*\n*Workflow   : ${{ github.workflow }}*
             ```
-            Coverage-Test-Job  : ${{ needs.coverage-test.outcome }}\n
+            Coverage-Test-Job  : ${{ needs.coverage-test.jobs.conclusion }}\n
             Coverage Tests     : ${{ needs.coverage-test.outputs.COV_RUN }}\n
             Coverage Percentage: ${{ needs.coverage-test.outputs.COV_PER }}\n
             Workflow URL       : https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
