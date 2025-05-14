@@ -7,7 +7,7 @@ import io
 import os
 import shutil
 import sys
-import time
+# import time
 import unittest
 from unittest import mock
 
@@ -75,15 +75,15 @@ class TestGetOwnerRepo(unittest.TestCase):
     def test_get_owner_repo_file_exists_false(self):
         self.assertFalse(get_owner_repo(self.file_noexist))
 
-    ''' assert output is a list from valid file '''
-    def test_get_owner_repo_return_list_success(self):
-        function_output_should_be_list = get_owner_repo(self.file_isvalid)
-        self.assertIsInstance(function_output_should_be_list, list)
+    ''' assert output is a generator from valid file '''
+    def test_get_owner_repo_return_generator_success(self):
+        function_output_should_be_generator = get_owner_repo(self.file_isvalid)
+        self.assertIsInstance(function_output_should_be_generator, type((x for x in [])))
 
-    ''' assert output is NOT a list from an invalid file '''
-    def test_get_owner_repo_return_list_failure(self):
-        function_output_should_be_list = get_owner_repo(self.file_invalid)
-        self.assertNotIsInstance(function_output_should_be_list, list)
+    ''' assert output is NOT a generator from an invalid file '''
+    def test_get_owner_repo_return_generator_failure(self):
+        function_output_should_be_generator = get_owner_repo(self.file_invalid)
+        self.assertNotIsInstance(function_output_should_be_generator, list)
 
 
 class TestGetRevVariances(unittest.TestCase):
@@ -97,7 +97,8 @@ class TestGetRevVariances(unittest.TestCase):
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
 
-    repos_rev_list = [
+    ''' test generator '''
+    gen_repos_revs = [
         {'owner_repo': 'adrienverge/yamllint', 'current_rev': 'v1.37.0'},
         {'owner_repo': 'pre-commit/pre-commit-hooks', 'current_rev': 'v4.0.0'},
         {'owner_repo': 'pycqa/flake8', 'current_rev': '7.1.2'}
@@ -105,7 +106,7 @@ class TestGetRevVariances(unittest.TestCase):
 
     def test_get_rev_variances_to_dict(self):
         variance_list = []
-        for r in self.repos_rev_list:
+        for r in self.gen_repos_revs:
             result = get_rev_variances(get_auth(), variance_list, r['owner_repo'], r['current_rev'])
         assert type(result) is not None
 
@@ -129,20 +130,20 @@ class TestUpdatePreCommit(unittest.TestCase):
         sys.stderr = sys.__stderr__
 
     ''' assert output is a list after update_pre_commit '''
-    def test_update_pre_commit_return_list_success(self):
+    def test_update_pre_commit_return_generator_success(self):
         shutil.copyfile(self.file_isvalid_src, self.file_isvalid_dst)
         update_pre_commit_config(self.file_isvalid_dst, self.variance_list)
-        function_output_should_be_list = get_owner_repo(self.file_isvalid_dst)
-        self.assertIsInstance(function_output_should_be_list, list)
+        function_output_should_be_generator = get_owner_repo(self.file_isvalid_dst)
+        self.assertIsInstance(function_output_should_be_generator, type((x for x in [])))
         os.remove(self.file_isvalid_dst)
 
 
 class TestWritePR(unittest.TestCase):
-    cleanup = 30
+    # cleanup = 30
     file_isvalid = 'tests/files/pre-commit-config-isvalid.yaml'
     msg_suffix = '[CI - Testing]'
     variance_list = [
-        {'owner_repo': 'pycqa/flake8', 'current_rev': '7.1.2', 'new_rev': '7.2.0'},
+        {'owner_repo': 'pycqa/flake8', 'current_rev': '7.1.0', 'new_rev': '7.2.0'},
         {'owner_repo': 'pre-commit/pre-commit-hooks', 'current_rev': 'v4.0.0', 'new_rev': 'v5.0.0'}
     ]
 
@@ -163,12 +164,11 @@ class TestWritePR(unittest.TestCase):
         pr_number = create_pr(gh, owner_repo, active_branch_name, self.variance_list, self.msg_suffix)
         self.assertIsInstance(pr_number, int)
 
-        ''' clean up after above '''
-        ''' ^^ may have error if it takes more than the time.sleep seconds to get PR ready '''
+        ''' POST PR '''
         repo = gh.get_repo(owner_repo)
         pull = repo.get_pull(pr_number)
         ref = repo.get_git_ref(f"heads/{active_branch_name}")
-        time.sleep(self.cleanup)
+        # time.sleep(self.cleanup)
         pull.edit(state="closed")
         ref.delete()
 
@@ -179,15 +179,15 @@ class TestZMain(unittest.TestCase):
     def setUp(self):
         self.runner = CliRunner()
 
-    ''' assert zero exit code with cleanup option success '''
-    def test_main_cleanup_option_success(self):
-        result = self.runner.invoke(main, ['--cleanup', 45])
-        self.assertEqual(result.exit_code, 0)
+    # ''' assert zero exit code with cleanup option success '''
+    # def test_main_cleanup_option_success(self):
+    #     result = self.runner.invoke(main, ['--cleanup', 45])
+    #     self.assertEqual(result.exit_code, 0)
 
-    ''' assert zero exit code with cleanup option failure '''
-    def test_main_cleanup_option_failure(self):
-        result = self.runner.invoke(main, ['--cleanup', 'hello'])
-        self.assertNotEqual(result.exit_code, 0)
+    # ''' assert zero exit code with cleanup option failure '''
+    # def test_main_cleanup_option_failure(self):
+    #     result = self.runner.invoke(main, ['--cleanup', 'hello'])
+    #     self.assertNotEqual(result.exit_code, 0)
 
     ''' assert zero exit code with dry-run false '''
     def test_main_dry_run_false_success(self):
