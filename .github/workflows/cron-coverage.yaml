@@ -20,7 +20,7 @@ jobs:
     outputs:
       COV_PER: ${{ steps.get-coverage-results.outputs.COV_PER }}
       COV_RUN: ${{ steps.get-coverage-results.outputs.COV_RUN }}
-      COV_REP: ${{ steps.get-coverage-reports.outputs.COV_REP }}
+      COV_REP: ${{ steps.get-coverage-results.outputs.COV_REP }}
 
     steps:
     - name: Checkout source code
