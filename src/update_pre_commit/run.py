@@ -8,7 +8,6 @@ import json
 import os
 import sys
 import threading
-import time
 
 import click
 import git
@@ -21,7 +20,9 @@ from update_pre_commit import __version__
 
 def get_auth():
     """
-    github token required or GitHub API rate limit can kick in
+    Creates an instance of the Github class to interact with GitHub API
+
+    Parameter: None
     """
     try:
         return Github(os.environ['GH_TOKEN'])
@@ -31,29 +32,53 @@ def get_auth():
 
 def get_owner_repo(file):
     """
-    create a repos_revs_list that captures all <owner/repo> and <rev>
+    Create generator to capture owner_repo and current_rev from {file}
+
+    Parameter:
+    file: .pre-commit-config.yaml (default)
     """
-    repos_revs_list = []
     try:
         with open(f'{file}', 'r') as f:
             data = yaml.safe_load(f)
+            gen_repos_revs = ({'owner_repo': '/'.join(r['repo'].rsplit('/', 2)[-2:]).replace('.git', ''),
+                              'current_rev': r['rev']} for r in data['repos'])
+            return gen_repos_revs
 
-            for r in data['repos']:
-                each_repo_rev_dict = {}
-                owner_repo = '/'.join(r['repo'].rsplit('/', 2)[-2:]).replace('.git', '')
-                current_rev = r['rev']
-                each_repo_rev_dict.update(owner_repo=owner_repo, current_rev=current_rev)
-                repos_revs_list.append(each_repo_rev_dict)
-            return repos_revs_list
     except yaml.parser.ParserError as e:
         print(f'Invalid YAML file - {e}')
     except Exception as e:
         print(f'Exception Error to get owner/repo: {e}.')
 
 
+def start_thread(gh, variance_list, gen_repos_revs):  # pragma: no cover
+    """
+    Create threads to enable concurrent execution within a single process
+
+    Parameter:
+    gh            : github class object from get_auth()
+    variance_list : empty list
+    gen_repos_revs: class generator to iterate
+    """
+    threads = []
+    for r in gen_repos_revs:
+        thread = threading.Thread(target=get_rev_variances, args=(gh, variance_list, r['owner_repo'], r['current_rev'],))
+        threads.append(thread)
+        thread.start()
+
+    for thread in threads:
+        thread.join()
+
+
 def get_rev_variances(gh, variance_list, owner_repo, current_rev):
     """
-    capture differences between current rev and latest rev for each repo
+    Create Repository object and use get_latest_release or get_tags methods to obtain the latest rev or tag.
+    Call add_variance_to_dict function to build variance_list
+
+    Parameters:
+    gh           : github class object from get_auth()
+    variance_list: empty list
+    owner_repo   : current github_owner/repository from {file}
+    current_rev  : current version on {file}
     """
     try:
         repo = gh.get_repo(owner_repo)
@@ -65,24 +90,21 @@ def get_rev_variances(gh, variance_list, owner_repo, current_rev):
 
     except Exception as e:
         if f'{e.status}' == "404":
-            tag = next(x for x in repo.get_tags() if ("beta" and "alpha" and "rc") not in x.name)
+            tag = next(x for x in repo.get_tags() if ("alpha" and "beta" and "prerelease" and "rc") not in x.name)
             if not current_rev == tag.name:
                 print(f'{owner_repo} ({current_rev}) is not using the latest release tag ({tag.name})')
                 add_variance_to_dict(owner_repo, current_rev, tag.name, variance_list)
 
 
-def init_thread(gh, variance_list, repos_revs_list):  # pragma: no cover
-    threads = []
-    for r in repos_revs_list:
-        thread = threading.Thread(target=get_rev_variances, args=(gh, variance_list, r['owner_repo'], r['current_rev'],))
-        threads.append(thread)
-        thread.start()
-
-    for thread in threads:
-        thread.join()
-
-
 def add_variance_to_dict(owner_repo, current_rev, new_rev, variance_list):
+    """
+    Append rev variances to variance_list
+
+    Parameters:
+    owner_repo : current github_owner/repository from {file}
+    current_rev: current version on {file}
+    new_rev    : new rev from get_rev_variances
+    """
     variance_dict = {}
     variance_dict.update(owner_repo=owner_repo, current_rev=current_rev, new_rev=new_rev)
     variance_list.append(variance_dict)
@@ -90,32 +112,36 @@ def add_variance_to_dict(owner_repo, current_rev, new_rev, variance_list):
 
 def update_pre_commit_config(file, variance_list):
     """
-    update pre-commit configuration file
+    Load a Python object from {file}
+    Update Python object
+    Dump Python object into {file}
+
+    Parameter:
+    file         : .pre-commit-config.yaml (default)
+    variance_list: e.g. [{owner_repo: owner_repo, current_rev: current_rev, new_rev: new_rev }]
     """
     with open(file, 'r') as f:
         data = yaml.safe_load(f)
 
     x = len(data['repos'])
-    for i in range(x):
-        for variance_dict in variance_list:
-            if variance_dict['owner_repo'] in data['repos'][i]['repo'] and \
-                    variance_dict['current_rev'] in data['repos'][i]['rev']:
-                data['repos'][i]['rev'] = variance_dict['new_rev']
+    for i, v in ((i, v) for i in range(x) for v in variance_list):
+        if v['owner_repo'] in data['repos'][i]['repo'] and v['current_rev'] in data['repos'][i]['rev']:
+            data['repos'][i]['rev'] = v['new_rev']
 
     with open(file, 'w') as f:
         yaml.dump(data, f, indent=2, sort_keys=False)
 
-    print(f'Update {file} successfully\n')
+    print(f'\nUpdate revs in {file}: Success\n')
 
 
 def checkout_new_branch():
     """
-    create a git object to checkout a new branch
+    Create a git object to checkout a new branch
     """
     repo_path = os.getcwd()
     branch_suffix = ulid.new()
     repo_obj = git.Repo(repo_path)
-    repo_obj_branch_name = repo_obj.create_head(f'update_hooks_{branch_suffix}')
+    repo_obj_branch_name = repo_obj.create_head(f'update_pre_commit_{branch_suffix}')
     repo_obj_branch_name.checkout()
     repo_obj_remote_url = repo_obj.remotes.origin.url
     owner_repo = '/'.join(repo_obj_remote_url.rsplit('/', 2)[-2:]).replace('.git', '')
@@ -125,11 +151,16 @@ def checkout_new_branch():
 
 def push_commit(file, active_branch_name, msg_suffix):
     """
-    push commits to remote
+    Push commits to remote
+
+    Parameter:
+    file              : .pre-commit-config.yaml (default)
+    active_branch_name: from checkout_new_branch
+    msg_suffix        : from main (this is used to differentiate commit made by CI testing)
     """
     repo_path = os.getcwd()
     branch = active_branch_name
-    message = f'update pre-commit hooks version {msg_suffix}'
+    message = f'Update pre-commit-config {msg_suffix}'
     files_to_stage = [file]
 
     repo_obj = git.Repo(repo_path)
@@ -144,14 +175,21 @@ def push_commit(file, active_branch_name, msg_suffix):
 
 def create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix):
     """
-    create Pull Request
+    Create Pull Request
+
+    Parameter:
+    gh                : github class object from get_auth()
+    owner_repo        : current github_owner/repository from {file}
+    active_branch_name: from checkout_new_branch
+    variance_list     : e.g. [{owner_repo: owner_repo, current_rev: current_rev, new_rev: new_rev }]
+    msg_suffix        : from main (this is used to differentiate commit made by CI testing)
     """
     owner = owner_repo.split('/')[0]
     repo = gh.get_repo(owner_repo)
     pr_base_branch = repo.default_branch
     pr_body = json.dumps(variance_list)
     pr_branch = f'{owner}:{active_branch_name}'
-    pr_title = f'update pre-commit hooks version {msg_suffix}'
+    pr_title = f'Update pre-commit-config {msg_suffix}'
 
     print('Creating a Pull Request as follows:')
     print(f'Owner/Repo.  : {owner_repo}')
@@ -168,35 +206,40 @@ def create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix):
 @click.command()
 @click.option('--file', required=False, default='.pre-commit-config.yaml', help='<file> (default: .pre-commit-config.yaml)')
 @click.option('--dry-run', required=False, default=True, help='<true, false> (default: true).')
-@click.option('--cleanup', required=False, default=30, help='Cleanup after CI Test PRs created (default: 30).')
+# @click.option('--cleanup', required=False, default=10, help='Cleanup after CI Test PRs created (default: 10).')
 @click.version_option(version=__version__)
-def main(file, dry_run, cleanup):
+# def main(file, dry_run, cleanup):
+def main(file, dry_run):
     print(f"Starting update-pre-commit on {file} (dry-run {dry_run})...\n")
     try:
         variance_list = []
         gh = get_auth()
-        repos_revs_list = get_owner_repo(file)
-        init_thread(gh, variance_list, repos_revs_list)
+        gen_repos_revs = get_owner_repo(file)
+        start_thread(gh, variance_list, gen_repos_revs)
         msg_suffix = ''
 
-        if 'COVERAGE_RUN' in os.environ:
-            msg_suffix = '[CI - Testing]'
+        # if 'COVERAGE_RUN' in os.environ:
+        #     msg_suffix = '[CI - Testing]'
 
         if len(variance_list) > 0 and not dry_run:
             update_pre_commit_config(file, variance_list)
             owner_repo, active_branch_name = checkout_new_branch()
             push_commit(file, active_branch_name, msg_suffix)
-            pr_number = create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix)
+            create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix)
 
-            if 'COVERAGE_RUN' in os.environ:
-                repo = gh.get_repo(owner_repo)
-                pull = repo.get_pull(pr_number)
-                ref = repo.get_git_ref(f"heads/{active_branch_name}")
-                time.sleep(cleanup)
-                pull.edit(state="closed")
-                ref.delete()
+            # if 'COVERAGE_RUN' in os.environ:
+            #     """
+            #     Cleanup is an arbitrary value.  During the CI-Testing process, the time.sleep allows
+            #     other status checks activities to complete before closing the Coverage Test PR.
+            #     """
+            #     repo = gh.get_repo(owner_repo)
+            #     pull = repo.get_pull(pr_number)
+            #     ref = repo.get_git_ref(f"heads/{active_branch_name}")
+            #     time.sleep(cleanup)
+            #     pull.edit(state="closed")
+            #     ref.delete()
         else:
-            print('\nUpdate to pre-commit hooks: None\n')
+            print(f'\nUpdate revs in {file}: None\n')
     except Exception:
         sys.exit(1)
 
