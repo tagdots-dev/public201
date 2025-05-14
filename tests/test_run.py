@@ -7,7 +7,7 @@ import io
 import os
 import shutil
 import sys
-# import time
+import time
 import unittest
 from unittest import mock
 
@@ -139,7 +139,7 @@ class TestUpdatePreCommit(unittest.TestCase):
 
 
 class TestWritePR(unittest.TestCase):
-    # cleanup = 30
+    cleanup = 10
     file_isvalid = 'tests/files/pre-commit-config-isvalid.yaml'
     msg_suffix = '[CI - Testing]'
     variance_list = [
@@ -168,7 +168,7 @@ class TestWritePR(unittest.TestCase):
         repo = gh.get_repo(owner_repo)
         pull = repo.get_pull(pr_number)
         ref = repo.get_git_ref(f"heads/{active_branch_name}")
-        # time.sleep(self.cleanup)
+        time.sleep(self.cleanup)
         pull.edit(state="closed")
         ref.delete()
 
@@ -178,16 +178,6 @@ class TestZMain(unittest.TestCase):
 
     def setUp(self):
         self.runner = CliRunner()
-
-    # ''' assert zero exit code with cleanup option success '''
-    # def test_main_cleanup_option_success(self):
-    #     result = self.runner.invoke(main, ['--cleanup', 45])
-    #     self.assertEqual(result.exit_code, 0)
-
-    # ''' assert zero exit code with cleanup option failure '''
-    # def test_main_cleanup_option_failure(self):
-    #     result = self.runner.invoke(main, ['--cleanup', 'hello'])
-    #     self.assertNotEqual(result.exit_code, 0)
 
     ''' assert zero exit code with dry-run false '''
     def test_main_dry_run_false_success(self):
