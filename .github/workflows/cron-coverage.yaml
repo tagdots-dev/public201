@@ -97,6 +97,6 @@ jobs:
           channel: "${{ secrets.SECRET_SLACK_CHANNEL_CRON_TASKS }}"
           attachments: json.dumps([
             {
-              ${{ needs.coverage-test.outputs.COV_REP }}"
+              "${{ needs.coverage-test.outputs.COV_REP }}"
             }
           ])
