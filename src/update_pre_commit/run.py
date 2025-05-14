@@ -8,6 +8,7 @@ import json
 import os
 import sys
 import threading
+import time
 
 import click
 import git
@@ -206,38 +207,36 @@ def create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix):
 @click.command()
 @click.option('--file', required=False, default='.pre-commit-config.yaml', help='<file> (default: .pre-commit-config.yaml)')
 @click.option('--dry-run', required=False, default=True, help='<true, false> (default: true).')
-# @click.option('--cleanup', required=False, default=10, help='Cleanup after CI Test PRs created (default: 10).')
 @click.version_option(version=__version__)
-# def main(file, dry_run, cleanup):
 def main(file, dry_run):
     print(f"Starting update-pre-commit on {file} (dry-run {dry_run})...\n")
     try:
+        cleanup = 10
         variance_list = []
         gh = get_auth()
         gen_repos_revs = get_owner_repo(file)
         start_thread(gh, variance_list, gen_repos_revs)
         msg_suffix = ''
 
-        # if 'COVERAGE_RUN' in os.environ:
-        #     msg_suffix = '[CI - Testing]'
+        """
+        When coverage.py runs with "coverage run" command, environment variable COVERAGE_RUN will be set
+        """
+        if 'COVERAGE_RUN' in os.environ:
+            msg_suffix = '[CI - Testing]'
 
         if len(variance_list) > 0 and not dry_run:
             update_pre_commit_config(file, variance_list)
             owner_repo, active_branch_name = checkout_new_branch()
             push_commit(file, active_branch_name, msg_suffix)
-            create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix)
+            pr_number = create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix)
 
-            # if 'COVERAGE_RUN' in os.environ:
-            #     """
-            #     Cleanup is an arbitrary value.  During the CI-Testing process, the time.sleep allows
-            #     other status checks activities to complete before closing the Coverage Test PR.
-            #     """
-            #     repo = gh.get_repo(owner_repo)
-            #     pull = repo.get_pull(pr_number)
-            #     ref = repo.get_git_ref(f"heads/{active_branch_name}")
-            #     time.sleep(cleanup)
-            #     pull.edit(state="closed")
-            #     ref.delete()
+            if 'COVERAGE_RUN' in os.environ:
+                repo = gh.get_repo(owner_repo)
+                pull = repo.get_pull(pr_number)
+                ref = repo.get_git_ref(f"heads/{active_branch_name}")
+                time.sleep(cleanup)
+                pull.edit(state="closed")
+                ref.delete()
         else:
             print(f'\nUpdate revs in {file}: None\n')
     except Exception:
