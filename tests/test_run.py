@@ -112,8 +112,8 @@ class TestGetRevVariances(unittest.TestCase):
     def test_get_rev_variances_to_dict(self):
         variance_list = []
         for r in self.gen_repos_revs:
-            result = get_rev_variances(get_auth(), variance_list, r['owner_repo'], r['current_rev'])
-        assert type(result) is not None
+            get_rev_variances(get_auth(), variance_list, r['owner_repo'], r['current_rev'])
+        assert type(variance_list) is not None
 
 
 class TestUpdatePreCommit(unittest.TestCase):
