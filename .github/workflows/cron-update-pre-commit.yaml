@@ -10,11 +10,15 @@ env:
   PYTHON_VERSION: '3.12.x'
 
 permissions:
-  contents: write
+  contents: read
   pull-requests: write
 
 jobs:
   update-hooks:
+
+    permissions:
+      contents: write
+
     runs-on: ubuntu-latest
 
     outputs:

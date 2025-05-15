@@ -9,9 +9,15 @@ on:
 
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   # https://github.com/Mattraks/delete-workflow-runs
   stale-workflows:
+
+    permissions:
+      contents: write
 
     runs-on: ubuntu-latest
 
@@ -39,6 +45,9 @@ jobs:
   # https://github.com/actions/stale
   stale-issues-prs:
 
+    permissions:
+      contents: write
+
     runs-on: ubuntu-latest
 
     outputs:
@@ -63,6 +72,9 @@ jobs:
 
   # https://github.com/crs-k/stale-branches
   stale-branches:
+
+    permissions:
+      contents: write
 
     runs-on: ubuntu-latest
 
