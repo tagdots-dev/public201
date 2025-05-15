@@ -1,7 +1,5 @@
 # CHANGELOG
 
-## 0.9.1 (2025-05-15)
-
 ### Fix
 
 - ensure [CI-Testing] is appended to CI testing
