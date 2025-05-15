@@ -30,6 +30,8 @@ jobs:
     uses: ./.github/workflows/reusable-pre-commit.yaml
 
   build-test:
+    permissions:
+      contents: write
     uses: ./.github/workflows/reusable-build-test.yaml
 
   validate-release:
