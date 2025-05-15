@@ -14,6 +14,10 @@ on:  # yamllint disable-line rule:truthy
     types:
       - completed
 
+permissions:
+  contents: read
+  pull-requests: read
+
 jobs:
 
   on-success:
@@ -22,15 +26,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
-    # - shell: bash
-    #   # checkov:skip=CKV_GHA_2:Ensure run commands are not vulnerable to shell injection
-    #   run: |
-    #     echo "The triggering workflow passed"
-    #     echo "Repo Name   : ${{ github.repository }}"
-    #     echo "Branch Name : ${{ github.event.workflow_run.head_branch }}"
-    #     echo "Workflow    : ${{ github.event.workflow_run.name }}"
-    #     echo "Workflow URL: ${{ github.event.workflow_run.html_url }}"
 
     - name: Post message to Slack
       uses: slackapi/slack-github-action@v2.1.0
@@ -52,15 +47,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
-    # - shell: bash
-    #   # checkov:skip=CKV_GHA_2:Ensure run commands are not vulnerable to shell injection
-    #   run: |
-    #     echo "The triggering workflow failed"
-    #     echo "Repo Name   : ${{ github.repository }}"
-    #     echo "Branch Name : ${{ github.event.workflow_run.head_branch }}"
-    #     echo "Workflow    : ${{ github.event.workflow_run.name }}"
-    #     echo "Workflow URL: ${{ github.event.workflow_run.html_url }}"
 
     - name: Post message to Slack
       uses: slackapi/slack-github-action@v2.1.0
