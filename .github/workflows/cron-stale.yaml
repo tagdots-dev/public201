@@ -77,7 +77,7 @@ jobs:
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         days-before-stale: 14
-        days-before-delete: 7
+        days-before-delete: 20
         pr-check: true
 
     - shell: bash
