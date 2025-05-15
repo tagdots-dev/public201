@@ -43,21 +43,21 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      GITHUB_HEAD_REF: ${{ github.head_ref }}
+      GITHUB_SPEC_VER: ${GITHUB_HEAD_REF#release/}
+
     steps:
 
     - name: Checkout source code
       uses: actions/checkout@v4
 
     - id: set-release-branch
-      # checkov:skip=CKV_GHA_2:Ensure run commands are not vulnerable to shell injection
       shell: bash
       run: |
-        # set release branch info
-        GITHUB_HEAD_REF=${{ github.head_ref }}
-        GITHUB_SPEC_VER=${GITHUB_HEAD_REF#release/}
         # set release branch info to job output
-        echo "GITHUB_HEAD_REF=${{ github.head_ref }}"      >> "$GITHUB_OUTPUT"
-        echo "GITHUB_SPEC_VER=${GITHUB_HEAD_REF#release/}" >> "$GITHUB_OUTPUT"
+        echo "GITHUB_HEAD_REF=$GITHUB_HEAD_REF" >> "$GITHUB_OUTPUT"
+        echo "GITHUB_SPEC_VER=$GITHUB_SPEC_VER" >> "$GITHUB_OUTPUT"
 
     - shell: bash
       run: |
