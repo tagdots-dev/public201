@@ -87,8 +87,8 @@ class TestGetOwnerRepo(unittest.TestCase):
 
     ''' assert output is NOT a generator from an invalid file '''
     def test_get_owner_repo_return_generator_failure(self):
-        function_output_should_be_generator = get_owner_repo(self.file_invalid)
-        self.assertNotIsInstance(function_output_should_be_generator, type((x for x in [])))
+        # function_output_should_be_generator = get_owner_repo(self.file_invalid)
+        self.assertIsNone(get_owner_repo(self.file_invalid))
 
 
 class TestGetRevVariances(unittest.TestCase):
