@@ -18,9 +18,9 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
+      # ARTIFACT_ID: ${{ steps.set-artifact-id.outptus.ARTIFACT_ID }}
       COV_PER: ${{ steps.get-coverage-results.outputs.COV_PER }}
       COV_RUN: ${{ steps.get-coverage-results.outputs.COV_RUN }}
-      COV_REP: ${{ steps.get-coverage-reports.outputs.HTML_CONTENT }}
 
     steps:
     - name: Checkout source code
@@ -58,12 +58,20 @@ jobs:
         echo "COV_RUN=${{ steps.run-coverage-tests.outcome }}"            >> "$GITHUB_OUTPUT"
         echo "COV_PER=$(coverage report | grep TOTAL | awk '{print $6}')" >> "$GITHUB_OUTPUT"
 
-    - id: get-coverage-reports
-      run: |
-        # get coverage reports
-        cat htmlcov/index.html > temp_file.txt
-        HTML_CONTENT=$(cat temp_file.txt)
-        echo -n "HTML_CONTENT=$HTML_CONTENT" >> "$GITHUB_OUTPUT"
+    - name: Upload distributions
+      id: artifact-upload
+      uses: actions/upload-artifact@v4
+      with:
+        path: htmlcov/
+        if-no-files-found: error
+        retention-days: 3
+        overwrite: true
+        compression-level: 6
+
+    # - name: Set Artifact ID
+    #   id: set-artifact-id
+    #   run: |
+    #     echo "ARTIFACT_ID=${{ steps.artifact-upload.outputs.artifact-id }}" >> "$GITHUB_OUTPUT"
 
   notify-slack:
     if: always()
@@ -82,21 +90,31 @@ jobs:
           channel: "${{ secrets.SECRET_SLACK_CHANNEL_CRON_TASKS }}"
           text: "*Repository : ${{ github.repository }}*\n*Workflow   : ${{ github.workflow }}*
             ```
-            Coverage-Test-Job  : ${{ needs.coverage-test.jobs.conclusion }}\n
+            Coverage-Test-Job  : ${{ needs.coverage-test.outputs.result }}\n
             Coverage Tests     : ${{ needs.coverage-test.outputs.COV_RUN }}\n
             Coverage Percentage: ${{ needs.coverage-test.outputs.COV_PER }}\n
             Workflow URL       : https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
             ```"
 
+    - name: Download distributions
+      uses: actions/download-artifact@v4
+      with:
+        path: htmlcov
+        # artifact-ids: "${{ needs.coverage-test.outptus.ARTIFACT_ID }}"
+
+
+    - id: get-download-artifacts
+      run: |
+        # get download artifacts
+        tree tmp
+        tree .
+
     - name: Post coverage report to Slack
       uses: slackapi/slack-github-action@v2
       with:
-        method: chat.postMessage
+        method: files.uploadV2
         token: "${{ secrets.SECRET_SLACK_APP_GITHUB_BOT }}"
         payload: |
           channel: "${{ secrets.SECRET_SLACK_CHANNEL_CRON_TASKS }}"
-          attachments: json.dumps([
-            {
-              "${{ needs.coverage-test.outputs.COV_REP }}"
-            }
-          ])
+          initial_comment: "HTML report attached!"
+          file: "htmlcov/index.html"
