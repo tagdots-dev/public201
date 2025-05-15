@@ -10,14 +10,18 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+    actions: read
+    contents: read
+    issues: read
+    pull-requests: read
 
 jobs:
   # https://github.com/Mattraks/delete-workflow-runs
   stale-workflows:
 
     permissions:
-      contents: write
+      contents: read
+      actions: write
 
     runs-on: ubuntu-latest
 
@@ -45,7 +49,10 @@ jobs:
   stale-issues-prs:
 
     permissions:
+      actions: write
       contents: write
+      issues: write
+      pull-requests: write
 
     runs-on: ubuntu-latest
 
@@ -72,6 +79,7 @@ jobs:
   stale-branches:
 
     permissions:
+      issues: write
       contents: write
 
     runs-on: ubuntu-latest
