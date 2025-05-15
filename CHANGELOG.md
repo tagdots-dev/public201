@@ -1,5 +1,24 @@
 # CHANGELOG
 
+### Fix
+
+- ensure [CI-Testing] is appended to CI testing
+
+### Refactor
+
+- refactor codes to improve performance and coding style
+
+## 0.9.1 (2025-05-15)
+
+### Fix
+
+- try to reset tag back
+- ensure [CI-Testing] is appended to CI testing
+
+### Refactor
+
+- refactor codes to improve performance and coding style
+
 ## 0.9.0 (2025-05-07)
 
 ### Perf
