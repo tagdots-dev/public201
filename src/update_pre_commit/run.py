@@ -35,17 +35,17 @@ def get_owner_repo(file):
     Parameter:
     file: .pre-commit-config.yaml (default)
     """
-    try:
-        with open(f'{file}', 'r') as f:
-            data = yaml.safe_load(f)
-            return ({'owner_repo': '/'.join(r['repo'].rsplit('/', 2)[-2:]).replace('.git', ''),
-                    'current_rev': r['rev']} for r in data['repos'])
-            # return gen_repos_revs
+    # try:
+    with open(f'{file}', 'r') as f:
+        data = yaml.safe_load(f)
+        return ({'owner_repo': '/'.join(r['repo'].rsplit('/', 2)[-2:]).replace('.git', ''),
+                'current_rev': r['rev']} for r in data['repos'])
+        # return gen_repos_revs
 
-    except yaml.parser.ParserError as e:
-        print(f'Invalid YAML file - {e}')
-    except Exception as e:
-        print(f'Exception Error to get owner/repo: {e}.')
+    # except yaml.parser.ParserError as e:
+    #     print(f'Invalid YAML file - {e}')
+    # except Exception as e:
+    #     print(f'Exception Error to get owner/repo: {e}.')
 
 
 def start_thread(gh, variance_list, gen_repos_revs):  # pragma: no cover
