@@ -36,9 +36,7 @@ jobs:
 
     - name: Install python dependencies
       run: |
-        pip install -e .
-        pip --version
-        pip install coverage[toml]
+        make test-install
 
     - id: run-coverage-tests
       run: |
