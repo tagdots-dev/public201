@@ -25,10 +25,7 @@ def get_auth():
 
     Parameter: None
     """
-    try:
-        return Github(os.environ['GH_TOKEN'])
-    except KeyError as e:
-        print(f'Key Error: {e}')
+    return Github(os.environ['GH_TOKEN'])
 
 
 def get_owner_repo(file):
@@ -41,9 +38,9 @@ def get_owner_repo(file):
     try:
         with open(f'{file}', 'r') as f:
             data = yaml.safe_load(f)
-            gen_repos_revs = ({'owner_repo': '/'.join(r['repo'].rsplit('/', 2)[-2:]).replace('.git', ''),
-                              'current_rev': r['rev']} for r in data['repos'])
-            return gen_repos_revs
+            return ({'owner_repo': '/'.join(r['repo'].rsplit('/', 2)[-2:]).replace('.git', ''),
+                    'current_rev': r['rev']} for r in data['repos'])
+            # return gen_repos_revs
 
     except yaml.parser.ParserError as e:
         print(f'Invalid YAML file - {e}')

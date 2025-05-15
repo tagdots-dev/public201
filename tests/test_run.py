@@ -97,7 +97,7 @@ class TestGetRevVariances(unittest.TestCase):
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
 
-    ''' test generator '''
+    ''' test list instead of generator '''
     gen_repos_revs = [
         {'owner_repo': 'adrienverge/yamllint', 'current_rev': 'v1.37.0'},
         {'owner_repo': 'pre-commit/pre-commit-hooks', 'current_rev': 'v4.0.0'},
