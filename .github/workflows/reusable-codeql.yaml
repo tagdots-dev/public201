@@ -1,0 +1,60 @@
+---
+# NOTE: this file is managed by terraform
+
+name: re-codeql
+
+on:
+  workflow_call:
+
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+  security-events: read
+
+jobs:
+
+  analyze:
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      # https://aka.ms/codeql-docs/language-support
+      fail-fast: false
+      matrix:
+        language: ['actions', 'python']
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+    # https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@60168efe1c415ce0f5521ea06d5c2062adbeed1b # v3.28.17
+      with:
+        languages: ${{ matrix.language }}
+        queries: security-and-quality
+
+    # https://raw.githubusercontent.com/Malwarebytes/ghas-cli/refs/heads/main/.github/workflows/codeql-analysis.yml
+    # https://raw.githubusercontent.com/actions/download-artifact/refs/heads/main/.github/workflows/codeql-analysis.yml
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@60168efe1c415ce0f5521ea06d5c2062adbeed1b # v3.28.17
+      with:
+        output: codeql-results/
+
+    - name: Upload ${{ matrix.language }}
+      id: upload-artifacts
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 #v4.6.2
+      with:
+        name: codeql-${{ matrix.language }}
+        path: codeql-results/
+        if-no-files-found: error
+        retention-days: 3
+        overwrite: true
+        compression-level: 6
