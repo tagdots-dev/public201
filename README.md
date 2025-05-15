@@ -61,7 +61,7 @@ hadolint/hadolint (v2.11.0) is not using the latest release rev (v2.12.0)
 pycqa/flake8 (7.1.2) is not using the latest release tag (7.2.0)
 antonbabenko/pre-commit-terraform (v1.98.0) is not using the latest release rev (v1.98.1)
 
-Update pre-commit hooks: None
+Update revs in .pre-commit-config.yaml: None
 ```
 
 <br>
