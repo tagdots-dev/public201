@@ -84,6 +84,7 @@ jobs:
   test:
     permissions:
       contents: write
+      pull-requests: write
 
     needs: build
 

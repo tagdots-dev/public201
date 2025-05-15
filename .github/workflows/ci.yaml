@@ -32,6 +32,8 @@ jobs:
   build-test:
     permissions:
       contents: write
+      pull-requests: write
+
     uses: ./.github/workflows/reusable-build-test.yaml
 
   validate-release:
