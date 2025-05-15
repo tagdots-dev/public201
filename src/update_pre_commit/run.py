@@ -157,7 +157,7 @@ def push_commit(file, active_branch_name, msg_suffix):
     Parameter:
     file              : .pre-commit-config.yaml (default)
     active_branch_name: from checkout_new_branch
-    msg_suffix        : from main (this is used to differentiate commit made by CI testing)
+    msg_suffix        : from main (empty except for "coverage run" where [CI-Testing] is the msg_suffix)
     """
     repo_path = os.getcwd()
     branch = active_branch_name
