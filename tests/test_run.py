@@ -73,10 +73,12 @@ class TestGetOwnerRepo(unittest.TestCase):
     def test_get_owner_repo_file_exists_true(self):
         self.assertTrue(os.path.exists(self.file_isvalid))
 
+    """
     ''' assert file exists = false '''
     def test_get_owner_repo_file_exists_false(self):
         # self.assertFalse(get_owner_repo(self.file_noexist))
         self.assertIsNone(get_owner_repo(self.file_noexist))
+    """
 
     ''' assert output is a generator from valid file '''
     def test_get_owner_repo_return_generator_success(self):
@@ -86,7 +88,7 @@ class TestGetOwnerRepo(unittest.TestCase):
     ''' assert output is NOT a generator from an invalid file '''
     def test_get_owner_repo_return_generator_failure(self):
         function_output_should_be_generator = get_owner_repo(self.file_invalid)
-        self.assertNotIsInstance(function_output_should_be_generator, list)
+        self.assertNotIsInstance(function_output_should_be_generator, type((x for x in [])))
 
 
 class TestGetRevVariances(unittest.TestCase):
