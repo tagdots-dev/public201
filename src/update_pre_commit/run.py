@@ -161,7 +161,7 @@ def push_commit(file, active_branch_name, msg_suffix):
     """
     repo_path = os.getcwd()
     branch = active_branch_name
-    message = f'Update pre-commit-config {msg_suffix}'
+    message = f'update pre-commit-config {msg_suffix}'
     files_to_stage = [file]
 
     repo_obj = git.Repo(repo_path)
@@ -190,7 +190,7 @@ def create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix):
     pr_base_branch = repo.default_branch
     pr_body = json.dumps(variance_list)
     pr_branch = f'{owner}:{active_branch_name}'
-    pr_title = f'Update pre-commit-config {msg_suffix}'
+    pr_title = f'update pre-commit-config {msg_suffix}'
 
     print('Creating a Pull Request as follows:')
     print(f'Owner/Repo.  : {owner_repo}')

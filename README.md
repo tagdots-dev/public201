@@ -10,8 +10,8 @@
 ```
 * 🐍 Python (3.12+) (with virtualenv)
 * 🧰 export GH_TOKEN=<your GitHub Token>
-    - require permissions to write contents pull request
     - fine-grained personal access token is recommended
+    - require write permissions to contents and pull request
 ```
 
 <br>
@@ -22,10 +22,7 @@
 git clone https://github.com/tagdots/update-pre-commit
 cd update-pre-commit
 mkvirtualenv update-pre-commit
-workon update-pre-commit
-python -m pip install -U build
-python -m build
-python -m pip install -e .
+make build
 ```
 
 <br>
@@ -48,7 +45,6 @@ Usage: update-pre-commit [OPTIONS]
 Options:
   --file TEXT        <file> (default: .pre-commit-config.yaml).
   --dry-run BOOLEAN  <true, false> (default: true).
-  --cleanup INTEGER  Cleanup after CI Test PRs created (default: 90).
   --version          Show the version and exit.
   --help             Show this message and exit.
 ```
@@ -70,30 +66,30 @@ Update pre-commit hooks: None
 
 <br>
 
-With dry-run being false, **update-pre-commit** reads **.pre-commit-config.yaml**, produces a list of pre-commit hooks to update, updates hooks rev in **.pre-commit-config.yaml**, and creates a pull request.
+With dry-run being false, **update-pre-commit** reads **.pre-commit-config.yaml**, updates hooks rev in **.pre-commit-config.yaml**, and creates a pull request.
 ```
 $ update-pre-commit --dry-run false
 
 Starting update-pre-commit on .pre-commit-config.yaml (dry-run False)...
 
-hadolint/hadolint (v2.11.0) is not using the latest release rev (v2.12.0)
-pycqa/flake8 (7.1.2) is not using the latest release tag (7.2.0)
-antonbabenko/pre-commit-terraform (v1.98.0) is not using the latest release rev (v1.98.1)
-Update .pre-commit-config.yaml successfully
+antonbabenko/pre-commit-terraform (v1.98.1) is not using the latest release rev (v1.99.0)
+adrienverge/yamllint (v1.37.0) is not using the latest release rev (v1.37.1)
+
+Update revs in .pre-commit-config.yaml: Success
 
 Checkout new branch successfully....
 
 Push commits successfully:
-from local branch: update_hooks_01JR6JB1NENDM6FKJ5TZMFVMBE
-with commit hash : 52044a23a14a6c515532b830c4b68a4d934cd838
+from local branch: update_pre_commit_01JV8P09N4G5K9Q4DDD533ARBH
+with commit hash : 7b293faf5e14f6950bf28b510eb8d8c8beff26fe
 
 Creating a Pull Request as follows:
 Owner/Repo.  : tagdots/update-pre-commit
-Purpose      : update pre-commit hooks version
-Source Branch: tagdots:update_hooks_01JR6JB1NENDM6FKJ5TZMFVMBE
+Title        : update pre-commit-config
+Source Branch: tagdots:update_pre_commit_01JV8P09N4G5K9Q4DDD533ARBH
 PR for Branch: main
-Rev Variances: [{"owner_repo": "hadolint/hadolint", "current_rev": "v2.11.0", "new_rev": "v2.12.0"}, {"owner_repo": "pycqa/flake8", "current_rev": "7.1.2", "new_rev": "7.2.0"}, {"owner_repo": "antonbabenko/pre-commit-terraform", "current_rev": "v1.98.0", "new_rev": "v1.98.1"}]
-Created pull request #101 successfully:  https://github.com/tagdots/update-pre-commit/pull/101
+Rev Variances: [{"owner_repo": "antonbabenko/pre-commit-terraform", "current_rev": "v1.98.1", "new_rev": "v1.99.0"}, {"owner_repo": "adrienverge/yamllint", "current_rev": "v1.37.0", "new_rev": "v1.37.1"}]
+Created pull request #101 successfully: https://github.com/tagdots/update-pre-commit/pull/101
 ```
 
 <br>

@@ -52,8 +52,20 @@ jobs:
 
     - id: get-coverage-results
       run: |
+        # get coverage results
+        ls -l htmlcov/
         echo "COV_RUN=${{ steps.run-coverage-tests.outcome }}"            >> "$GITHUB_OUTPUT"
         echo "COV_PER=$(coverage report | grep TOTAL | awk '{print $6}')" >> "$GITHUB_OUTPUT"
+
+    - name: Upload artifacts
+      id: artifact-upload
+      uses: actions/upload-artifact@v4
+      with:
+        path: htmlcov/
+        if-no-files-found: error
+        retention-days: 3
+        overwrite: true
+        compression-level: 6
 
   notify-slack:
     if: always()
@@ -72,6 +84,7 @@ jobs:
           channel: "${{ secrets.SECRET_SLACK_CHANNEL_CRON_TASKS }}"
           text: "*Repository : ${{ github.repository }}*\n*Workflow   : ${{ github.workflow }}*
             ```
+            Coverage-Test-Job  : ${{ needs.coverage-test.result }}\n
             Coverage Tests     : ${{ needs.coverage-test.outputs.COV_RUN }}\n
             Coverage Percentage: ${{ needs.coverage-test.outputs.COV_PER }}\n
             Workflow URL       : https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
