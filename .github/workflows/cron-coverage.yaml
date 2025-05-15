@@ -18,7 +18,6 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      # ARTIFACT_ID: ${{ steps.set-artifact-id.outptus.ARTIFACT_ID }}
       COV_PER: ${{ steps.get-coverage-results.outputs.COV_PER }}
       COV_RUN: ${{ steps.get-coverage-results.outputs.COV_RUN }}
 
@@ -58,7 +57,7 @@ jobs:
         echo "COV_RUN=${{ steps.run-coverage-tests.outcome }}"            >> "$GITHUB_OUTPUT"
         echo "COV_PER=$(coverage report | grep TOTAL | awk '{print $6}')" >> "$GITHUB_OUTPUT"
 
-    - name: Upload distributions
+    - name: Upload artifacts
       id: artifact-upload
       uses: actions/upload-artifact@v4
       with:
@@ -67,11 +66,6 @@ jobs:
         retention-days: 3
         overwrite: true
         compression-level: 6
-
-    # - name: Set Artifact ID
-    #   id: set-artifact-id
-    #   run: |
-    #     echo "ARTIFACT_ID=${{ steps.artifact-upload.outputs.artifact-id }}" >> "$GITHUB_OUTPUT"
 
   notify-slack:
     if: always()
@@ -90,31 +84,8 @@ jobs:
           channel: "${{ secrets.SECRET_SLACK_CHANNEL_CRON_TASKS }}"
           text: "*Repository : ${{ github.repository }}*\n*Workflow   : ${{ github.workflow }}*
             ```
-            Coverage-Test-Job  : ${{ needs.coverage-test.outputs.result }}\n
+            Coverage-Test-Job  : ${{ needs.coverage-test.result }}\n
             Coverage Tests     : ${{ needs.coverage-test.outputs.COV_RUN }}\n
             Coverage Percentage: ${{ needs.coverage-test.outputs.COV_PER }}\n
             Workflow URL       : https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
             ```"
-
-    - name: Download distributions
-      uses: actions/download-artifact@v4
-      with:
-        path: htmlcov
-        # artifact-ids: "${{ needs.coverage-test.outptus.ARTIFACT_ID }}"
-
-
-    - id: get-download-artifacts
-      run: |
-        # get download artifacts
-        tree tmp
-        tree .
-
-    - name: Post coverage report to Slack
-      uses: slackapi/slack-github-action@v2
-      with:
-        method: files.uploadV2
-        token: "${{ secrets.SECRET_SLACK_APP_GITHUB_BOT }}"
-        payload: |
-          channel: "${{ secrets.SECRET_SLACK_CHANNEL_CRON_TASKS }}"
-          initial_comment: "HTML report attached!"
-          file: "htmlcov/index.html"
