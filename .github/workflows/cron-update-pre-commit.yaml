@@ -34,9 +34,7 @@ jobs:
 
     - name: Install python dependencies
       run: |
-        python -m pip install -U pip
-        python -m pip install -e .
-        python -m pip --version
+        make test-install
 
     - id: run-update-pre-commit
       run: python src/update_pre_commit/run.py --dry-run false
