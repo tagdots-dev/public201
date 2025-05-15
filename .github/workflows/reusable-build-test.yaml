@@ -63,12 +63,12 @@ jobs:
     - name: Set Artifact ID
       id: set-artifact-id
       run: |
-        echo "ARTIFACT_ID=${{ steps.upload-distributions.outputs.artifact-id }}" >> "$GITHUB_OUTPUT"
+        echo "ARTIFACT_ID=${{ steps.distributions.outputs.artifact-id }}" >> "$GITHUB_OUTPUT"
 
     - shell: bash
       run: |
         # output artifact id
-        echo "ARTIFACT_ID: ${{ steps.upload-distributions.outputs.artifact-id }}"
+        echo "ARTIFACT_ID: ${{ steps.distributions.outputs.artifact-id }}"
 
     - name: Set Workflow Run ID
       id: set-workflow-runid
