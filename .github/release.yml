@@ -5,8 +5,6 @@ changelog:
   exclude:
     authors:
       - tagdots-owner
-      - tagdots-dev-terraform-github
-      - tagdots-terraform-github
   categories:
     - title: "🚀 New features"
       labels:
