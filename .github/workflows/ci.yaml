@@ -21,8 +21,7 @@ on:  # yamllint disable-line rule:truthy
   workflow_dispatch:
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 jobs:
 
@@ -30,6 +29,11 @@ jobs:
     uses: ./.github/workflows/reusable-pre-commit.yaml
 
   build-test:
+
+    permissions:
+      contents: write
+      pull-requests: write
+
     uses: ./.github/workflows/reusable-build-test.yaml
 
   validate-release:
