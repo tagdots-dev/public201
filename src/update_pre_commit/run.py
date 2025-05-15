@@ -183,7 +183,7 @@ def create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix):
     owner_repo        : current github_owner/repository from {file}
     active_branch_name: from checkout_new_branch
     variance_list     : e.g. [{owner_repo: owner_repo, current_rev: current_rev, new_rev: new_rev }]
-    msg_suffix        : from main (this is used to differentiate commit made by CI testing)
+    msg_suffix        : from main (empty except for "coverage run" where [CI-Testing] is the msg_suffix)
     """
     owner = owner_repo.split('/')[0]
     repo = gh.get_repo(owner_repo)
