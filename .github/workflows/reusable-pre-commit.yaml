@@ -36,7 +36,8 @@ jobs:
     - shell: bash
       run: |
         # install package
-        pip install -U pip pre_commit==${{ env.PRE_COMMMIT_VERSION }} pyscan-rs==${{ env.PYSCAN_RS_VERSION }}
+        python -m pip install -U pip
+        python -m pip install pre_commit==${{ env.PRE_COMMMIT_VERSION }} pyscan-rs==${{ env.PYSCAN_RS_VERSION }}
 
     - shell: bash
       run: |
