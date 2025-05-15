@@ -75,7 +75,8 @@ class TestGetOwnerRepo(unittest.TestCase):
 
     ''' assert file exists = false '''
     def test_get_owner_repo_file_exists_false(self):
-        self.assertFalse(get_owner_repo(self.file_noexist))
+        # self.assertFalse(get_owner_repo(self.file_noexist))
+        self.assertIsNone(get_owner_repo(self.file_noexist))
 
     ''' assert output is a generator from valid file '''
     def test_get_owner_repo_return_generator_success(self):
