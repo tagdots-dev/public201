@@ -1,9 +1,5 @@
 ---
 # NOTE: this file is managed by terraform
-#
-# reference:
-# https://raw.githubusercontent.com/actions/download-artifact/refs/heads/main/.github/workflows/codeql-analysis.yml
-# https://raw.githubusercontent.com/Malwarebytes/ghas-cli/refs/heads/main/.github/workflows/codeql-analysis.yml
 
 name: re-codeql
 
@@ -38,13 +34,15 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
+    # https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
     - name: Initialize CodeQL
-      # https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
       uses: github/codeql-action/init@60168efe1c415ce0f5521ea06d5c2062adbeed1b # v3.28.17
       with:
         languages: ${{ matrix.language }}
         queries: security-and-quality
 
+    # https://raw.githubusercontent.com/Malwarebytes/ghas-cli/refs/heads/main/.github/workflows/codeql-analysis.yml
+    # https://raw.githubusercontent.com/actions/download-artifact/refs/heads/main/.github/workflows/codeql-analysis.yml
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@60168efe1c415ce0f5521ea06d5c2062adbeed1b # v3.28.17
       with:
