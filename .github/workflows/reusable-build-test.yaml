@@ -54,7 +54,7 @@ jobs:
       id: upload-distributions
       uses: actions/upload-artifact@v4
       with:
-        name: upload-distributions
+        name: distributions
         path: dist/
         if-no-files-found: error
         retention-days: 3
@@ -109,7 +109,7 @@ jobs:
       id: upload-coverage
       uses: actions/upload-artifact@v4
       with:
-        name: upload-coverage
+        name: coverage
         path: htmlcov/
         if-no-files-found: error
         retention-days: 3
