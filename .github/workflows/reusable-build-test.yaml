@@ -51,7 +51,7 @@ jobs:
 
     # set and get artifacts
     - name: Upload distributions
-      id: artifact-upload
+      id: upload-distributions
       uses: actions/upload-artifact@v4
       with:
         path: dist/
@@ -63,14 +63,13 @@ jobs:
     - name: Set Artifact ID
       id: set-artifact-id
       run: |
-        echo "ARTIFACT_ID=${{ steps.artifact-upload.outputs.artifact-id }}" >> "$GITHUB_OUTPUT"
+        echo "ARTIFACT_ID=${{ steps.upload-distributions.outputs.artifact-id }}" >> "$GITHUB_OUTPUT"
 
     - shell: bash
       run: |
         # output artifact id
-        echo "ARTIFACT_ID: ${{ steps.artifact-upload.outputs.artifact-id }}"
+        echo "ARTIFACT_ID: ${{ steps.upload-distributions.outputs.artifact-id }}"
 
-    # set and get github workflow_run id
     - name: Set Workflow Run ID
       id: set-workflow-runid
       run: |
@@ -105,8 +104,8 @@ jobs:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         PYTHONUNBUFFERED: "1"
 
-    - name: Upload artifacts
-      id: artifact-upload
+    - name: Upload Coverage
+      id: upload-coverage
       uses: actions/upload-artifact@v4
       with:
         path: htmlcov/
