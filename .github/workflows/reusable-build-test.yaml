@@ -5,6 +5,12 @@ name: re-build-test
 
 on:  # yamllint disable-line rule:truthy
   workflow_call:
+    outputs:
+      ARTIFACT_ID: ${{ jobs.build.outputs.ARTIFACT_ID }}
+
+      BUILD_VERSION: ${{ jobs.build.outputs.BUILD_VERSION }}
+
+      WORKFLOW_RUN_ID: ${{ jobs.build.outputs.WORKFLOW_RUN_ID }}
 
   workflow_dispatch:
 
