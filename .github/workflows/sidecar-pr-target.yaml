@@ -37,8 +37,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # - name: debug only
-    #   run: echo "${{ toJson(github) }}"
 
     - name: Slack message on PR activities
       uses: slackapi/slack-github-action@v2.1.0
