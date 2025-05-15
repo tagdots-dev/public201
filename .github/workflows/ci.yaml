@@ -38,6 +38,11 @@ jobs:
     uses: ./.github/workflows/reusable-build-test.yaml
 
   codeql:
+    permissions:
+      actions: write
+      contents: write
+      security-events: write
+
     uses: ./.github/workflows/reusable-codeql.yaml
 
   validate-release:
