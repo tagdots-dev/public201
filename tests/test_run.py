@@ -9,7 +9,7 @@ import shutil
 import sys
 import time
 import unittest
-from unittest import mock
+from unittest.mock import patch
 
 from click.testing import CliRunner
 from github import Github
@@ -42,12 +42,12 @@ class TestGetAuth(unittest.TestCase):
         self.assertIsInstance(get_auth(), Github)
 
     ''' assert mock env var GH_TOKEN not exists (KeyError)'''
-    @mock.patch.dict(os.environ, {}, clear=True)
+    @patch.dict(os.environ, {}, clear=True)
     def test_get_auth_gh_token_notExist(self):
         self.assertIsNone(get_auth())
 
     ''' assert mock env var GH_TOKEN with invalid value '''
-    @mock.patch.dict(os.environ, {'GH_TOKEN': 'github_pat_1234567890'}, clear=True)  # checkov:skip=CKV_SECRET_6
+    @patch.dict(os.environ, {'GH_TOKEN': 'github_pat_1234567890'}, clear=True)  # checkov:skip=CKV_SECRET_6
     def test_get_auth_gh_token_invalid(self):
         self.assertRaises(TypeError, get_auth())
 
