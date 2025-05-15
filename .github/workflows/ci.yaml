@@ -37,10 +37,13 @@ jobs:
 
     uses: ./.github/workflows/reusable-build-test.yaml
 
+  codeql:
+    uses: ./.github/workflows/reusable-codeql.yaml
+
   validate-release:
     if: ${{ startsWith(github.head_ref, 'release/') }}
 
-    needs: [pre-commit, build-test]
+    needs: [pre-commit, build-test, codeql]
 
     runs-on: ubuntu-latest
 
