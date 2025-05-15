@@ -37,7 +37,6 @@ jobs:
 
     - shell: bash
       id: set-step
-      # checkov:skip=CKV_GHA_2:Ensure run commands are not vulnerable to shell injection
       run: |
         echo "JB_NAME=stale-workflow"                       >> "$GITHUB_OUTPUT"
         echo "OUTCOME=${{ steps.stale-workflows.outcome }}" >> "$GITHUB_OUTPUT"
@@ -64,7 +63,6 @@ jobs:
         days-before-close: 5
 
     - shell: bash
-      # checkov:skip=CKV_GHA_2:Ensure run commands are not vulnerable to shell injection
       id: set-step
       run: |
         echo "JB_NAME=stale-issue-pr"                        >> "$GITHUB_OUTPUT"
@@ -93,7 +91,6 @@ jobs:
         pr-check: true
 
     - shell: bash
-      # checkov:skip=CKV_GHA_2:Ensure run commands are not vulnerable to shell injection
       id: set-step
       run: |
         echo "JB_NAME=stale-branch"                                >> "$GITHUB_OUTPUT"
