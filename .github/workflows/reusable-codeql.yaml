@@ -48,11 +48,11 @@ jobs:
       with:
         output: codeql-results/
 
-    - name: Upload artifacts
-      id: upload-artifacts
+    - name: Upload ${{ matrix.language }}
+      id: upload-${{ matrix.language }}
       uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 #v4.6.2
       with:
-        name: codeql
+        name: codeql-${{ matrix.language }}
         path: codeql-results/
         if-no-files-found: error
         retention-days: 3
