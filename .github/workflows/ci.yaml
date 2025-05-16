@@ -37,10 +37,24 @@ jobs:
 
     uses: ./.github/workflows/reusable-build-test.yaml
 
+  codeql:
+    if: ${{ github.event.repository.visibility == 'public' }}
+
+    permissions:
+      actions: write
+      contents: write
+      security-events: write
+
+    uses: ./.github/workflows/reusable-codeql.yaml
+
+  dependency:
+    if: ${{ github.event.repository.visibility == 'public' && (github.event_name == 'pull_request' || github.event.workflow_run.event == 'pull_request')}}
+    uses: ./.github/workflows/reusable-dependency-review.yaml
+
   validate-release:
     if: ${{ startsWith(github.head_ref, 'release/') }}
 
-    needs: [pre-commit, build-test]
+    needs: [pre-commit, build-test, dependency, codeql]
 
     runs-on: ubuntu-latest
 
