@@ -19,7 +19,7 @@ _This PR accomplishes the following...._
 
 
 <!-- Add / remove links as appropriate -->
-##### References
+#### References
 
 * Issues/Discussions about this change
 * Screenshots
