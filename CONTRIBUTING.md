@@ -33,6 +33,6 @@ We appreciate your time and effort and recommend the following:
 - [How to Fork a Repo and Submit a PR on GitHub](https://srivastavayushmaan1347.medium.com/how-to-fork-a-repository-make-changes-and-submit-a-pull-request-on-github-c05b0462403d)
 
 [code-of-conduct]: CODE_OF_CONDUCT.md
-[discussions]: /discussions
-[issues]: /issues
+[discussions]: https://github.com/tagdots-dev/public201/discussions
+[issues]: https://github.com/tagdots-dev/public201/issues
 [fork-to-pull-request]: https://srivastavayushmaan1347.medium.com/how-to-fork-a-repository-make-changes-and-submit-a-pull-request-on-github-c05b0462403d
