@@ -65,9 +65,9 @@ jobs:
     - id: stale-issues-prs
       uses: actions/stale@5bef64f19d7facfb25b37b414482c7164d639639 # v9.1.0
       with:
-        stale-issue-message: 'This issue is stale because it has been open 7 days with no activity. Remove stale label or comment or this will be closed in 5 days.'
-        days-before-stale: 7
-        days-before-close: 5
+        stale-issue-message: 'This issue is stale because it has been open 3 days with no activity. Remove stale label or comment or this will be closed in 3 days.'
+        days-before-stale: 4
+        days-before-close: 3
 
     - shell: bash
       id: set-step
@@ -94,8 +94,8 @@ jobs:
       uses: crs-k/stale-branches@a37be59a6836c05d4388e3dbc9f90381fbbaef55 # v8.0.0
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
-        days-before-stale: 14
-        days-before-delete: 20
+        days-before-stale: 8
+        days-before-delete: 10
         pr-check: true
 
     - shell: bash
