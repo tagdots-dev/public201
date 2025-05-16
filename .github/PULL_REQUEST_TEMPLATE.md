@@ -1,3 +1,4 @@
+<!-- NOTE: this file is managed by terraform -->
 <!-- Describe the issue -->
 #### Issue Summary
 _Summary of the issue_
@@ -9,7 +10,7 @@ _Summary of the issue_
 _This PR accomplishes the following...._
 
 
-<!-- What's actually been changed by this PR? -->
+<!-- What's been changed by this PR? -->
 #### What is on the PR?
 
 * change 1
@@ -18,7 +19,7 @@ _This PR accomplishes the following...._
 * ...etc.
 
 
-<!-- Add / remove links as appropriate -->
+<!-- Add/ remove links as appropriate -->
 #### References
 
 * Issues/Discussions about this change
