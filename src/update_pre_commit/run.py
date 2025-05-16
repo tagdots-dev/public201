@@ -25,10 +25,7 @@ def get_auth():
 
     Parameter: None
     """
-    try:
-        return Github(os.environ['GH_TOKEN'])
-    except KeyError as e:
-        print(f'Key Error: {e}')
+    return Github(os.environ['GH_TOKEN'])
 
 
 def get_owner_repo(file):
@@ -38,17 +35,10 @@ def get_owner_repo(file):
     Parameter:
     file: .pre-commit-config.yaml (default)
     """
-    try:
-        with open(f'{file}', 'r') as f:
-            data = yaml.safe_load(f)
-            gen_repos_revs = ({'owner_repo': '/'.join(r['repo'].rsplit('/', 2)[-2:]).replace('.git', ''),
-                              'current_rev': r['rev']} for r in data['repos'])
-            return gen_repos_revs
-
-    except yaml.parser.ParserError as e:
-        print(f'Invalid YAML file - {e}')
-    except Exception as e:
-        print(f'Exception Error to get owner/repo: {e}.')
+    with open(f'{file}', 'r') as f:
+        data = yaml.safe_load(f)
+        return ({'owner_repo': '/'.join(r['repo'].rsplit('/', 2)[-2:]).replace('.git', ''),
+                'current_rev': r['rev']} for r in data['repos'])
 
 
 def start_thread(gh, variance_list, gen_repos_revs):  # pragma: no cover
@@ -219,7 +209,8 @@ def main(file, dry_run):
         msg_suffix = ''
 
         """
-        When coverage.py runs with "coverage run" command, environment variable COVERAGE_RUN will be set
+        When coverage.py runs by the "coverage run" command, an environment variable COVERAGE_RUN is created.
+        The PR title will have the suffix [CI - Testing] to indicate that it is created from some "coverage run".
         """
         if 'COVERAGE_RUN' in os.environ:
             msg_suffix = '[CI - Testing]'
@@ -240,6 +231,7 @@ def main(file, dry_run):
         else:
             print(f'\nUpdate revs in {file}: None\n')
     except Exception:
+        print('Error: something went wrong !!')
         sys.exit(1)
 
 
