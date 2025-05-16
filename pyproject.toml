@@ -32,7 +32,7 @@ dependencies = [
   "ulid-py==1.1",
   "virtualenv==20.31.2",
 ]
-optional-dependencies.test = [ "commitizen", "coverage", "flake8", "isort", "pre-commit" ]
+optional-dependencies.test = [ "build", "commitizen", "coverage", "flake8", "isort", "pre-commit", "twine" ]
 
 urls.Changelog = "https://github.com/tagdots/update-pre-commit/blob/main/CHANGELOG.md"
 urls.Documentation = "https://github.com/tagdots/update-pre-commit/blob/main/README.md"
@@ -52,6 +52,11 @@ where = [ "src" ]
 
 [tool.setuptools.dynamic]
 version = { attr = "src.update_pre_commit.__init__" }
+
+[tool.pyproject-fmt]
+column_width = 125
+indent = 2
+keep_full_version = true
 
 [tool.coverage]
 source = [ "." ]
