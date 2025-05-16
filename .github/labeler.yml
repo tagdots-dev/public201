@@ -14,6 +14,9 @@ bugfix:
 hotfix:
   - head-branch: ['^hotfix']
 
+fix:
+  - head-branch: ['^fix']
+
 build:
   - head-branch: ['^build']
   - head-branch: ['^ci']
