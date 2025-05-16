@@ -1,7 +1,7 @@
 ---
 # NOTE: this file is managed by terraform
 
-name: re-codeql
+name: CodeQL
 
 on:
   workflow_call:
