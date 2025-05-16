@@ -1,4 +1,4 @@
-
+<!-- NOTE: this file is managed by terraform -->
 # Contributor Covenant Code of Conduct
 
 ## Our Pledge
