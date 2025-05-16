@@ -1,4 +1,5 @@
-# Contributing 
+<!-- NOTE: this file is managed by terraform -->
+# Contributing
 
 Hi there! We're thrilled that you'd like to contribute to this project. Your contribution is encouraging to us all here at **tagdots-dev**.
 
