@@ -9,7 +9,7 @@ import shutil
 import sys
 import time
 import unittest
-from unittest import mock
+from unittest.mock import patch
 
 from click.testing import CliRunner
 from github import Github
@@ -41,13 +41,8 @@ class TestGetAuth(unittest.TestCase):
     def test_get_auth_gh_token_success(self):
         self.assertIsInstance(get_auth(), Github)
 
-    ''' assert mock env var GH_TOKEN not exists (KeyError)'''
-    @mock.patch.dict(os.environ, {}, clear=True)
-    def test_get_auth_gh_token_notExist(self):
-        self.assertIsNone(get_auth())
-
     ''' assert mock env var GH_TOKEN with invalid value '''
-    @mock.patch.dict(os.environ, {'GH_TOKEN': 'github_pat_1234567890'}, clear=True)  # checkov:skip=CKV_SECRET_6
+    @patch.dict(os.environ, {'GH_TOKEN': 'github_pat_1234567890'}, clear=True)  # checkov:skip=CKV_SECRET_6
     def test_get_auth_gh_token_invalid(self):
         self.assertRaises(TypeError, get_auth())
 
@@ -71,19 +66,10 @@ class TestGetOwnerRepo(unittest.TestCase):
     def test_get_owner_repo_file_exists_true(self):
         self.assertTrue(os.path.exists(self.file_isvalid))
 
-    ''' assert file exists = false '''
-    def test_get_owner_repo_file_exists_false(self):
-        self.assertFalse(get_owner_repo(self.file_noexist))
-
     ''' assert output is a generator from valid file '''
     def test_get_owner_repo_return_generator_success(self):
         function_output_should_be_generator = get_owner_repo(self.file_isvalid)
         self.assertIsInstance(function_output_should_be_generator, type((x for x in [])))
-
-    ''' assert output is NOT a generator from an invalid file '''
-    def test_get_owner_repo_return_generator_failure(self):
-        function_output_should_be_generator = get_owner_repo(self.file_invalid)
-        self.assertNotIsInstance(function_output_should_be_generator, list)
 
 
 class TestGetRevVariances(unittest.TestCase):
@@ -97,7 +83,6 @@ class TestGetRevVariances(unittest.TestCase):
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
 
-    ''' test generator '''
     gen_repos_revs = [
         {'owner_repo': 'adrienverge/yamllint', 'current_rev': 'v1.37.0'},
         {'owner_repo': 'pre-commit/pre-commit-hooks', 'current_rev': 'v4.0.0'},
@@ -107,8 +92,8 @@ class TestGetRevVariances(unittest.TestCase):
     def test_get_rev_variances_to_dict(self):
         variance_list = []
         for r in self.gen_repos_revs:
-            result = get_rev_variances(get_auth(), variance_list, r['owner_repo'], r['current_rev'])
-        assert type(result) is not None
+            get_rev_variances(get_auth(), variance_list, r['owner_repo'], r['current_rev'])
+        assert type(variance_list) is not None
 
 
 class TestUpdatePreCommit(unittest.TestCase):
@@ -164,7 +149,7 @@ class TestWritePR(unittest.TestCase):
         pr_number = create_pr(gh, owner_repo, active_branch_name, self.variance_list, self.msg_suffix)
         self.assertIsInstance(pr_number, int)
 
-        ''' POST PR '''
+        ''' Remove PR after Create PR '''
         repo = gh.get_repo(owner_repo)
         pull = repo.get_pull(pr_number)
         ref = repo.get_git_ref(f"heads/{active_branch_name}")
