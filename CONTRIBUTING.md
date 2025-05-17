@@ -21,7 +21,7 @@ We appreciate your time and effort and recommend the following:
 1. Open an issue before your PR to provide additional contexts and promote positive dialogs.
 1. Submit separate pull requests for changes that are not dependent upon each other.
 
-1. [Fork and clone this repository][fork-to-pull-request].
+1. [Fork and clone this repository][fork-a-repository].
 1. Configure and install the dependencies: `make test-install`
 1. Create a new local branch: `git checkout -b <my-branch-name>`.
 1. Make your code changes and tests.
@@ -31,9 +31,9 @@ We appreciate your time and effort and recommend the following:
 
 ## 📚 Resources
 
-- [How to Fork a Repo and Submit a PR on GitHub](https://srivastavayushmaan1347.medium.com/how-to-fork-a-repository-make-changes-and-submit-a-pull-request-on-github-c05b0462403d)
+- [How to Fork a Repo](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo)
 
 [code-of-conduct]: CODE_OF_CONDUCT.md
 [discussions]: https://github.com/tagdots-dev/public201/discussions
 [issues]: https://github.com/tagdots-dev/public201/issues
-[fork-to-pull-request]: https://srivastavayushmaan1347.medium.com/how-to-fork-a-repository-make-changes-and-submit-a-pull-request-on-github-c05b0462403d
+[fork-a-repository]: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo
