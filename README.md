@@ -3,7 +3,9 @@
 # Update-Pre-Commit
 
 ## 😎 Why you need this?
-If you are already using **pre-commit** or you are planning to use **pre-commit** to improve your code quality, detect issues before code check-in, and reduce the burden on code reviewers, **update-pre-commit** can compliment your **pre-commit** process.  **Update-pre-commit** reads the `.pre-commit-config.yaml` and create a pull request on **GitHub**.  You can schedule a GitHub Action to run **update-pre-commit** on a regular basis.
+If you are already using **pre-commit** or you are planning to use **pre-commit** to improve your code quality, detect issues before code check-in, and reduce the burden on code reviewers, **update-pre-commit** can compliment your **pre-commit** process.
+
+**Update-pre-commit** reads the `.pre-commit-config.yaml` and create a pull request on **GitHub**.  You can schedule a GitHub Action to run **update-pre-commit** on a regular basis.
 
 <br>
 
@@ -12,7 +14,7 @@ If you are already using **pre-commit** or you are planning to use **pre-commit*
 * GitHub
   □ create an account.
   □ create a fine-grained personal access token.
-  □ ^^ token has write permissions to contents and pull requests
+  □ ^^ token has write permissions to contents and pull requests.
 
 * Python (3.12+)
   □ create a virtualenv for your git project to install update-pre-commit.
@@ -21,17 +23,22 @@ If you are already using **pre-commit** or you are planning to use **pre-commit*
 <br>
 
 ### 🔆 Install update-pre-commit
+
+Suppose your project name is hello-world
+
 ```
-~/work/<your git project> $ export GH_TOKEN=github_pat_xxxxxxxxxxxxx
-~/work/<your git project> $ pip install -U update-pre-commit
+~/work/hello-world $ mkvirtualenv hello-world
+(hello-world) ~/work/hello-world $ export GH_TOKEN=github_pat_xxxxxxxxxxxxx
+(hello-world) ~/work/hello-world $ pip install -U update-pre-commit
 ```
 
 <br>
 
-### 🔍 Using update-pre-commit
+### 🔍 Using update-pre-commit on hello-world project
+
 _**Shows command line options**_
 ```
-~/work/<your git project> $ update-pre-commit --help
+(hello-world) ~/work/hello-world $ update-pre-commit --help
 
 Usage: update-pre-commit [OPTIONS]
 
@@ -46,7 +53,7 @@ Options:
 
 _**Show version**_
 ```
-~/work/<your git project> $ update-pre-commit --version
+(hello-world) ~/work/hello-world $ update-pre-commit --version
 update-pre-commit, version 1.0.0
 ```
 
@@ -59,7 +66,7 @@ _**Run without any options**_
 1. produce a list of out-of-date pre-commit hooks.
 
 ```
-~/work/update-pre-commit $ update-pre-commit
+(hello-world) ~/work/hello-world $ update-pre-commit
 
 Starting update-pre-commit on .pre-commit-config.yaml (dry-run True)...
 
@@ -82,7 +89,7 @@ _**Run with `--dry-run false` option**_
 1. create a pull request against repository default branch.
 
 ```
-~/work/update-pre-commit $ update-pre-commit --dry-run false
+(hello-world) ~/work/hello-world $ update-pre-commit --dry-run false
 
 Starting update-pre-commit on .pre-commit-config.yaml (dry-run False)...
 
@@ -99,12 +106,12 @@ from local branch: update_pre_commit_01JV8P09N4G5K9Q4DDD533ARBH
 with commit hash : 7b293faf5e14f6950bf28b510eb8d8c8beff26fe
 
 Creating a Pull Request as follows:
-Owner/Repo.  : tagdots/update-pre-commit
+Owner/Repo.  : tagdots/hello-world
 Title        : update pre-commit-config
 Source Branch: tagdots:update_pre_commit_01JV8P09N4G5K9Q4DDD533ARBH
 PR for Branch: main
 Rev Variances: [{"owner_repo": "antonbabenko/pre-commit-terraform", "current_rev": "v1.98.1", "new_rev": "v1.99.0"}, {"owner_repo": "adrienverge/yamllint", "current_rev": "v1.37.0", "new_rev": "v1.37.1"}]
-Created pull request #101 successfully: https://github.com/tagdots/update-pre-commit/pull/101
+Created pull request #101 successfully: https://github.com/tagdots/hello-world/pull/101
 ```
 
 <br>
