@@ -12,6 +12,7 @@ Your contributions can be:
 - make a request for change, feature, or suggestion at [issues].
 - open a pull request.
 - engage in some positive technical discussions at [discussions].
+- provide feedback in email (developers@tagdots.com)
 
 
 ## 💻 Submitting a pull request
