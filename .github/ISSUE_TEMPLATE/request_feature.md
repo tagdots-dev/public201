@@ -6,6 +6,7 @@ about: Request A Feature or Change
 title: 'Feature: '
 labels: enhancement
 assignees: ''
+type: Feature
 
 ---
 
