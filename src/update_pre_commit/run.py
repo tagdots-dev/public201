@@ -23,7 +23,7 @@ def get_auth():
     """
     Creates an instance of the Github class to interact with GitHub API
 
-    Parameter: None
+    Parameter(s): None
     """
     return Github(os.environ['GH_TOKEN'])
 
@@ -32,7 +32,7 @@ def get_owner_repo(file):
     """
     Create generator to capture owner_repo and current_rev from {file}
 
-    Parameter:
+    Parameter(s):
     file: .pre-commit-config.yaml (default)
     """
     with open(f'{file}', 'r') as f:
@@ -45,7 +45,7 @@ def start_thread(gh, variance_list, gen_repos_revs):  # pragma: no cover
     """
     Create threads to enable concurrent execution within a single process
 
-    Parameter:
+    Parameter(s):
     gh            : github class object from get_auth()
     variance_list : empty list
     gen_repos_revs: class generator to iterate
@@ -65,7 +65,7 @@ def get_rev_variances(gh, variance_list, owner_repo, current_rev):
     Create Repository object and use get_latest_release or get_tags methods to obtain the latest rev or tag.
     Call add_variance_to_dict function to build variance_list
 
-    Parameters:
+    Parameter(s):
     gh           : github class object from get_auth()
     variance_list: empty list
     owner_repo   : current github_owner/repository from {file}
@@ -91,7 +91,7 @@ def add_variance_to_dict(owner_repo, current_rev, new_rev, variance_list):
     """
     Append rev variances to variance_list
 
-    Parameters:
+    Parameter(s):
     owner_repo : current github_owner/repository from {file}
     current_rev: current version on {file}
     new_rev    : new rev from get_rev_variances
@@ -107,7 +107,7 @@ def update_pre_commit_config(file, variance_list):
     Update Python object
     Dump Python object into {file}
 
-    Parameter:
+    Parameter(s):
     file         : .pre-commit-config.yaml (default)
     variance_list: e.g. [{owner_repo: owner_repo, current_rev: current_rev, new_rev: new_rev }]
     """
@@ -128,6 +128,8 @@ def update_pre_commit_config(file, variance_list):
 def checkout_new_branch():
     """
     Create a git object to checkout a new branch
+
+    Parameter(s): None
     """
     repo_path = os.getcwd()
     branch_suffix = ulid.new()
@@ -144,7 +146,7 @@ def push_commit(file, active_branch_name, msg_suffix):
     """
     Push commits to remote
 
-    Parameter:
+    Parameter(s):
     file              : .pre-commit-config.yaml (default)
     active_branch_name: from checkout_new_branch
     msg_suffix        : from main (empty except for "coverage run" where [CI-Testing] is the msg_suffix)
@@ -168,7 +170,7 @@ def create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix):
     """
     Create Pull Request
 
-    Parameter:
+    Parameter(s):
     gh                : github class object from get_auth()
     owner_repo        : current github_owner/repository from {file}
     active_branch_name: from checkout_new_branch
@@ -231,7 +233,7 @@ def main(file, dry_run):
         else:
             print(f'\nUpdate revs in {file}: None\n')
     except Exception:
-        print('Error: something went wrong !!')
+        print('Error: Something went wrong !!')
         sys.exit(1)
 
 
