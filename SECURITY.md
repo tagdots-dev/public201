@@ -1,3 +1,4 @@
+<!-- NOTE: this file is managed by terraform -->
 # Security
 
 This document outlines the security policy and procedures at TagDots, Inc..
@@ -22,12 +23,10 @@ Please include as much of the information listed below as you can to help us bet
 ### Handling security issues
 When we receive a security vulnerability report, we will coordinate the fix and release process, involving the following steps:
 
+  * Acknowledge the security issue within 14 days.
   * Confirm the problem and determine the affected versions.
   * Audit code to find any potential similar problems.
-  * Prepare fixes for all affected releases.
+  * Create fixes for all affected releases within 60 days.
 
 ### Comments on this policy
 If you have suggestions on how this process could be improved, please email us at security@tagdots.com.
-
-<br>
-NOTE: this file is managed by terraform
