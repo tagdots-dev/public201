@@ -29,7 +29,7 @@ If you are already using **pre-commit** or you are planning to use **pre-commit*
 <br>
 
 ### 🔍 Using update-pre-commit
-1. _**Shows command line options**_
+_**Shows command line options**_
 ```
 ~/work/<your git project> $ update-pre-commit --help
 
@@ -44,7 +44,7 @@ Options:
 
 <br>
 
-2. _**Show version**_
+_**Show version**_
 ```
 ~/work/<your git project> $ update-pre-commit --version
 update-pre-commit, version 1.0.0
@@ -52,7 +52,7 @@ update-pre-commit, version 1.0.0
 
 <br>
 
-3. _**Run without any options**_
+_**Run without any options**_
 
 **update-pre-commit** implicitly runs with the option `--dry-run true` and does the following:
 1. read `.pre-commit-config.yaml`.
@@ -72,7 +72,7 @@ Update revs in .pre-commit-config.yaml: None
 
 <br>
 
-4. _**Run with `--dry-run false` option**_
+_**Run with `--dry-run false` option**_
 
 **update-pre-commit** runs with `--dry-run false` option and does the following:
 1. read the `.pre-commit-config.yaml`.
