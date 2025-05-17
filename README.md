@@ -74,7 +74,7 @@ Update revs in .pre-commit-config.yaml: None
 
 _**Run with `--dry-run false` option**_
 
-**update-pre-commit** runs with `--dry-run false` option and does the following:
+**update-pre-commit** runs with the option `--dry-run false` and does the following:
 1. read the `.pre-commit-config.yaml`.
 1. produce a list of out-of-date pre-commit hooks.
 1. checkout a new git branch `update_pre_commit_01JV8P09N4G5K9Q4DDD533ARBH`.
@@ -86,8 +86,9 @@ _**Run with `--dry-run false` option**_
 
 Starting update-pre-commit on .pre-commit-config.yaml (dry-run False)...
 
-antonbabenko/pre-commit-terraform (v1.98.1) is not using the latest release rev (v1.99.0)
-adrienverge/yamllint (v1.37.0) is not using the latest release rev (v1.37.1)
+hadolint/hadolint (v2.11.0) is not using the latest release rev (v2.12.0)
+pycqa/flake8 (7.1.2) is not using the latest release tag (7.2.0)
+antonbabenko/pre-commit-terraform (v1.98.0) is not using the latest release rev (v1.99.0)
 
 Update revs in .pre-commit-config.yaml: Success
 
