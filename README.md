@@ -3,7 +3,7 @@
 # Update-Pre-Commit
 
 ## 😎 Why you need this?
-If you are already using **pre-commit** or you are planning to improve your code quality, detect issues before code check-in, and reduce the burden on code reviewers on _low hanging fruits_.  **Update-pre-commit** reads the `.pre-commit-config.yaml` and create a pull request on **GitHub**.  You can schedule a GitHub Action to run **update-pre-commit** on a regular basis.
+If you are already using **pre-commit** or you are planning to use **pre-commit** to improve your code quality, detect issues before code check-in, and reduce the burden on code reviewers, **update-pre-commit** can compliment your **pre-commit** process.  **Update-pre-commit** reads the `.pre-commit-config.yaml` and create a pull request on **GitHub**.  You can schedule a GitHub Action to run **update-pre-commit** on a regular basis.
 
 <br>
 
@@ -12,10 +12,10 @@ If you are already using **pre-commit** or you are planning to improve your code
 * GitHub
   □ create an account.
   □ create a fine-grained personal access token.
-  □ ^^ token with write permissions to contents and pull requests
+  □ ^^ token has write permissions to contents and pull requests
 
 * Python (3.12+)
-  □ create a virtualenv to install update-pre-commit.
+  □ create a virtualenv for your git project to install update-pre-commit.
 ```
 
 <br>
@@ -31,7 +31,7 @@ If you are already using **pre-commit** or you are planning to improve your code
 ### 🔍 Using update-pre-commit
 1. _**Shows command line options**_
 ```
-$ update-pre-commit --help
+~/work/<your git project> $ update-pre-commit --help
 
 Usage: update-pre-commit [OPTIONS]
 
@@ -46,7 +46,7 @@ Options:
 
 2. _**Show version**_
 ```
-$ update-pre-commit --version
+~/work/<your git project> $ update-pre-commit --version
 update-pre-commit, version 1.0.0
 ```
 
