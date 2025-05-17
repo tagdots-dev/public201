@@ -4,7 +4,7 @@
 name: 💡 Request A Feature or Change
 about: Request A Feature or Change
 title: 'Feature: '
-labels: feature
+labels: enhancement
 assignees: ''
 
 ---
