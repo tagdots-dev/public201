@@ -206,6 +206,7 @@ def create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix):
         return pr.number
     except Exception as e:
         print(f'Error: {e}\n')
+        return None
 
 
 @click.command()
