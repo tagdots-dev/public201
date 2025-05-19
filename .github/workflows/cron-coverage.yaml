@@ -86,8 +86,8 @@ jobs:
           channel: "${{ secrets.SECRET_SLACK_CHANNEL_CRON_TASKS }}"
           text: "*Repository : ${{ github.repository }}*\n*Workflow   : ${{ github.workflow }}*
             ```
-            Coverage-Test-Job  : ${{ needs.coverage-test.result }}\n
-            Coverage Tests     : ${{ needs.coverage-test.outputs.COV_RUN }}\n
+            Cron Job Result    : ${{ needs.coverage-test.result }}\n
+            Coverage Run       : ${{ needs.coverage-test.outputs.COV_RUN }}\n
             Coverage Percentage: ${{ needs.coverage-test.outputs.COV_PER }}\n
             Workflow URL       : https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
             ```"
