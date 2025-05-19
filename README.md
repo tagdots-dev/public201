@@ -2,41 +2,40 @@
 
 # Update-Pre-Commit
 
-## 😎 Why you need this?
-If you are already using **pre-commit** or you are planning to use **pre-commit** to improve your code quality, detect issues before code check-in, and reduce the burden on code reviewers, **update-pre-commit** can compliment your **pre-commit** process.
+## 😎 Why you need update-pre-commit?
+If you are already using `pre-commit` or you are planning to use `pre-commit` to detect issues before code check-in and reduce the burden on code reviewers, **update-pre-commit** can compliment `pre-commit`.
 
-**Update-pre-commit** reads the `.pre-commit-config.yaml` and create a pull request on **GitHub**.  You can schedule a GitHub Action to run **update-pre-commit** on a regular basis.
+**update-pre-commit** reads your project's `pre-commit` configuration file (`.pre-commit-config.yaml`), makes GitHub API call, and creates a pull request on **GitHub**.  You can use our `action` (coming soon) to run **update-pre-commit** on a regular basis to keep your `pre-commit` configuration up to date.
 
 <br>
 
-### 🪜 Prerequisites
+## 🪜 Prerequisites
 ```
 * GitHub
   □ create an account.
-  □ create a fine-grained personal access token.
-  □ ^^ token has write permissions to contents and pull requests.
+  □ create a fine-grained personal access token with write permissions to contents and pull requests.
 
 * Python (3.12+)
-  □ create a virtualenv for your git project to install update-pre-commit.
+  □ install update-pre-commit.
 ```
 
 <br>
 
-### 🔆 Install update-pre-commit
+## 🔆 Install update-pre-commit
 
-Suppose your project name is hello-world
+In the examples below, we install **update-pre-commit** on a project named `hello-world` in a virtual environment named after the project.
 
 ```
-~/work/hello-world $ mkvirtualenv hello-world
+~/work/hello-world $ workon hello-world
 (hello-world) ~/work/hello-world $ export GH_TOKEN=github_pat_xxxxxxxxxxxxx
 (hello-world) ~/work/hello-world $ pip install -U update-pre-commit
 ```
 
 <br>
 
-### 🔍 Using update-pre-commit on hello-world project
+## 🔍 Using update-pre-commit
 
-_**Shows command line options**_
+🏃 _**Run to show command line usage and options**_
 ```
 (hello-world) ~/work/hello-world $ update-pre-commit --help
 
@@ -51,7 +50,7 @@ Options:
 
 <br>
 
-_**Show version**_
+🏃 _**Run to show version**_
 ```
 (hello-world) ~/work/hello-world $ update-pre-commit --version
 update-pre-commit, version 1.0.0
@@ -59,10 +58,10 @@ update-pre-commit, version 1.0.0
 
 <br>
 
-_**Run without any options**_
+🏃 _**Run without any options**_
 
 **update-pre-commit** implicitly runs with the option `--dry-run true` and does the following:
-1. read `.pre-commit-config.yaml`.
+1. read the `.pre-commit-config.yaml`.
 1. produce a list of out-of-date pre-commit hooks.
 
 ```
@@ -79,7 +78,7 @@ Update revs in .pre-commit-config.yaml: None
 
 <br>
 
-_**Run with `--dry-run false` option**_
+🏃 _**Run with `--dry-run false` option**_
 
 **update-pre-commit** runs with the option `--dry-run false` and does the following:
 1. read the `.pre-commit-config.yaml`.
@@ -111,38 +110,35 @@ Title        : update pre-commit-config
 Source Branch: tagdots:update_pre_commit_01JV8P09N4G5K9Q4DDD533ARBH
 PR for Branch: main
 Rev Variances: [{"owner_repo": "antonbabenko/pre-commit-terraform", "current_rev": "v1.98.1", "new_rev": "v1.99.0"}, {"owner_repo": "adrienverge/yamllint", "current_rev": "v1.37.0", "new_rev": "v1.37.1"}]
+
 Created pull request #101 successfully: https://github.com/tagdots/hello-world/pull/101
 ```
 
 <br>
 
-### 😕  Troubleshooting
+## 😕  Troubleshooting
 
-**Step 1**
+**Step 1 - Ensure the following**
 
-Ensure the following
 ```
-- your project's .pre-commit-config.yaml file is valid.
-- your GitHub fine-grained personal access token has the appropriate permissions.
-- update-pre-commit can find the .pre-commit-config.yaml file at the root of YOUR project.
+* your project's .pre-commit-config.yaml file is valid.
+* your GitHub fine-grained personal access token has the write permissions to contents and pull requests.
+* update-pre-commit can find the .pre-commit-config.yaml file at the root of YOUR project.
 ```
 
-**Step 2**
-
-Open an [issue][issues]
-
+**Step 2 - Open an [issue][issues]**
 
 <br>
 
-### 🙏  Contributing
+## 🙏  Contributing
 
-- [Fork a Repo][fork-a-repository]
-- Open an [issue][issues]
-- Open a new [discussion][discussions]
+Pull requests and stars are always welcome.  For pull requests to be accepted on this project, you should follow [PEP8][pep8] when creating/updating Python codes.
+
+See [Contributing](CONTRIBUTING.md)
 
 <br>
 
-### 📚 References
+## 📚 References
 
 [Pre-Commit on Github](https://github.com/pre-commit/pre-commit-hooks)
 
@@ -152,10 +148,5 @@ Open an [issue][issues]
 
 <br>
 
-### 📖 License
-
-See [LICENSE](LICENSE).
-
-[discussions]: https://github.com/tagdots/update-pre-commit/discussions
-[fork-a-repository]: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo
 [issues]: https://github.com/tagdots/update-pre-commit/issues
+[pep8]: https://google.github.io/styleguide/pyguide.html
