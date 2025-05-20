@@ -153,7 +153,7 @@ jobs:
         method: chat.postMessage
         token: "${{ secrets.SECRET_SLACK_APP_GITHUB_BOT }}"
         payload: |
-          channel: "${{ secrets.SECRET_SLACK_CHANNEL_CRON_TASKS }}"
+          channel: "${{ secrets.SECRET_SLACK_CHANNEL_CICD }}"
           text: "
               *Repository: ${{ github.repository }}*\n
               *Workflow : ${{ github.workflow }} ${{ steps.get-overall-jobs-results.outputs.WORKFLOW_RESULT }}*
@@ -163,5 +163,5 @@ jobs:
               Job: build-test       - ${{ needs.build-test.result }}\n
               Job: codeql           - ${{ needs.codeql.result }}\n
               Job: dependency       - ${{ needs.dependency.result }}\n
-              Job: validate-release - ${{ needs.codeql.result }}
+              Job: validate-release - ${{ needs.validate-release.result }}
               ```"
