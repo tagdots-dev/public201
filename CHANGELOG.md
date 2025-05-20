@@ -8,6 +8,15 @@
 
 - refactor codes to improve performance and coding style
 
+## 0.9.5 (2025-05-19)
+
+### Fix
+
+- re-run and test on missing try-except block and re-do test_run
+- update optional dependencies and add tool.pyproject-fmt section
+- fix codeql findings
+- pin commit hash to harden security
+
 ## 0.9.1 (2025-05-15)
 
 ### Fix
