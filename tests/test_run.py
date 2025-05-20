@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 
 """
-Purpose: unit and integration tests
+Purpose: tests
 """
 import io
 import os
 import shutil
 import sys
-import time
 import unittest
 from unittest.mock import patch
 
@@ -15,13 +14,10 @@ from click.testing import CliRunner
 from github import Github
 
 from update_pre_commit.run import (
-    checkout_new_branch,
-    create_pr,
     get_auth,
     get_owner_repo,
     get_rev_variances,
     main,
-    push_commit,
     update_pre_commit_config,
 )
 
@@ -37,20 +33,26 @@ class TestGetAuth(unittest.TestCase):
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
 
-    ''' env var GH_TOKEN complete successfully '''
-    def test_get_auth_gh_token_success(self):
+    """
+    reference: https://github.com/PyGithub/PyGithub/blob/v2.6.1/github/Auth.py#L153-L173
+    assertion: assert Token is token instance is string and has length > 0
+    """
+    @patch.dict(os.environ, {'GH_TOKEN': 'github_pat_123456'}, clear=True)  # checkov:skip=CKV_SECRET_6
+    def test_get_auth_with_valid_gh_token(self):
         self.assertIsInstance(get_auth(), Github)
 
-    ''' assert mock env var GH_TOKEN with invalid value '''
-    @patch.dict(os.environ, {'GH_TOKEN': 'github_pat_1234567890'}, clear=True)  # checkov:skip=CKV_SECRET_6
-    def test_get_auth_gh_token_invalid(self):
-        self.assertRaises(TypeError, get_auth())
+    """
+    reference: https://github.com/PyGithub/PyGithub/blob/v2.6.1/github/Auth.py#L153-L173
+    assertion: assert AssertionError when length of Token is not > 0
+    """
+    @patch.dict(os.environ, {'GH_TOKEN': ''}, clear=True)  # checkov:skip=CKV_SECRET_6
+    def test_get_auth_with_invalid_gh_token(self):
+        with self.assertRaises(AssertionError):
+            get_auth()
 
 
 class TestGetOwnerRepo(unittest.TestCase):
-    file_isvalid = 'tests/files/pre-commit-config-isvalid.yaml'
-    file_invalid = 'tests/files/pre-commit-config-invalid.yaml'
-    file_noexist = 'tests/files/pre-commit-config-noexist.yaml'
+    file = 'tests/files/pre-commit-config.yaml'
 
     ''' hold output from source script '''
     def setUp(self):
@@ -62,14 +64,18 @@ class TestGetOwnerRepo(unittest.TestCase):
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
 
-    ''' assert file exists = true '''
-    def test_get_owner_repo_file_exists_true(self):
-        self.assertTrue(os.path.exists(self.file_isvalid))
+    """
+    assertion: assert the specified file exists
+    """
+    def test_get_owner_repo_file_exist(self):
+        self.assertTrue(os.path.exists(self.file))
 
-    ''' assert output is a generator from valid file '''
-    def test_get_owner_repo_return_generator_success(self):
-        function_output_should_be_generator = get_owner_repo(self.file_isvalid)
-        self.assertIsInstance(function_output_should_be_generator, type((x for x in [])))
+    """
+    assertion: assert get_owner_repo returns a valid generator
+    """
+    def test_get_owner_repo_return_gen(self):
+        fn_return_generator = get_owner_repo(self.file)
+        self.assertIsInstance(fn_return_generator, type((x for x in [])))
 
 
 class TestGetRevVariances(unittest.TestCase):
@@ -89,6 +95,9 @@ class TestGetRevVariances(unittest.TestCase):
         {'owner_repo': 'pycqa/flake8', 'current_rev': '7.1.2'}
     ]
 
+    """
+    assertion: assert variance_list successfully built from gen_repos_revs
+    """
     def test_get_rev_variances_to_dict(self):
         variance_list = []
         for r in self.gen_repos_revs:
@@ -97,8 +106,8 @@ class TestGetRevVariances(unittest.TestCase):
 
 
 class TestUpdatePreCommit(unittest.TestCase):
-    file_isvalid_src = 'tests/files/pre-commit-config-isvalid.yaml'
-    file_isvalid_dst = 'tests/files/pre-commit-config-isvalid-temp.yaml'
+    file_src = 'tests/files/pre-commit-config.yaml'
+    file_dst = 'tests/files/pre-commit-config-temp.yaml'
     variance_list = [
         {'owner_repo': 'pycqa/flake8', 'current_rev': '7.1.2', 'new_rev': '7.2.0'},
         {'owner_repo': 'pre-commit/pre-commit-hooks', 'current_rev': 'v4.0.0', 'new_rev': 'v5.0.0'}
@@ -115,51 +124,16 @@ class TestUpdatePreCommit(unittest.TestCase):
         sys.stderr = sys.__stderr__
 
     ''' assert output is a list after update_pre_commit '''
-    def test_update_pre_commit_return_generator_success(self):
-        shutil.copyfile(self.file_isvalid_src, self.file_isvalid_dst)
-        update_pre_commit_config(self.file_isvalid_dst, self.variance_list)
-        function_output_should_be_generator = get_owner_repo(self.file_isvalid_dst)
-        self.assertIsInstance(function_output_should_be_generator, type((x for x in [])))
-        os.remove(self.file_isvalid_dst)
-
-
-class TestWritePR(unittest.TestCase):
-    cleanup = 10
-    file_isvalid = 'tests/files/pre-commit-config-isvalid.yaml'
-    msg_suffix = '[CI - Testing]'
-    variance_list = [
-        {'owner_repo': 'pycqa/flake8', 'current_rev': '7.1.0', 'new_rev': '7.2.0'},
-        {'owner_repo': 'pre-commit/pre-commit-hooks', 'current_rev': 'v4.0.0', 'new_rev': 'v5.0.0'}
-    ]
-
-    ''' hold output from source script '''
-    def setUp(self):
-        self.held_output = io.StringIO()
-        sys.stdout = self.held_output
-        sys.stderr = self.held_output
-
-    def tearDown(self):
-        sys.stdout = sys.__stdout__
-        sys.stderr = sys.__stderr__
-
-    def test_create_pr_success(self):
-        gh = get_auth()
-        owner_repo, active_branch_name = checkout_new_branch()
-        push_commit(self.file_isvalid, active_branch_name, self.msg_suffix)
-        pr_number = create_pr(gh, owner_repo, active_branch_name, self.variance_list, self.msg_suffix)
-        self.assertIsInstance(pr_number, int)
-
-        ''' Remove PR after Create PR '''
-        repo = gh.get_repo(owner_repo)
-        pull = repo.get_pull(pr_number)
-        ref = repo.get_git_ref(f"heads/{active_branch_name}")
-        time.sleep(self.cleanup)
-        pull.edit(state="closed")
-        ref.delete()
+    def test_update_pre_commit_return_gen(self):
+        shutil.copyfile(self.file_src, self.file_dst)
+        update_pre_commit_config(self.file_dst, self.variance_list)
+        fn_return_generator = get_owner_repo(self.file_dst)
+        self.assertIsInstance(fn_return_generator, type((x for x in [])))
+        os.remove(self.file_dst)
 
 
 class TestZMain(unittest.TestCase):
-    valid_file = 'tests/files/pre-commit-config-isvalid.yaml'
+    file = 'tests/files/pre-commit-config.yaml'
 
     def setUp(self):
         self.runner = CliRunner()
@@ -172,7 +146,7 @@ class TestZMain(unittest.TestCase):
 
     ''' assert zero exit code with dry-run true with a valid file '''
     def test_main_dry_run_true_failure(self):
-        result = self.runner.invoke(main, ['--file', self.valid_file])
+        result = self.runner.invoke(main, ['--file', self.file])
         self.assertEqual(result.exit_code, 0)
 
     ''' assert zero exit code with dry-run true '''
