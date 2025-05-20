@@ -67,7 +67,7 @@ def start_thread(gh, variance_list, gen_repos_revs):  # pragma: no cover
 def get_rev_variances(gh, variance_list, owner_repo, current_rev):
     """
     Create Repository object and use get_latest_release or get_tags methods to obtain the latest rev or tag.
-    Call add_variance_to_dict function to build variance_list
+    Call add_variance_to_dict function to build variance_list.
 
     Parameter(s):
     gh           : github class object from get_auth()
@@ -91,7 +91,7 @@ def get_rev_variances(gh, variance_list, owner_repo, current_rev):
                     print(f'{owner_repo} ({current_rev}) is not using the latest release tag ({tag.name})')
                     add_variance_to_dict(owner_repo, current_rev, tag.name, variance_list)
 
-    except Exception as e:
+    except Exception as e:  # pragma: no cover
         if f'{e.status}' == "404":
             print(f'Repository: {owner_repo} not found but we will continue to process the rest.')
 
@@ -142,13 +142,19 @@ def checkout_new_branch():
     """
     repo_path = os.getcwd()
     branch_suffix = ulid.new()
-    repo_obj = git.Repo(repo_path)
-    repo_obj_branch_name = repo_obj.create_head(f'update_pre_commit_{branch_suffix}')
-    repo_obj_branch_name.checkout()
-    repo_obj_remote_url = repo_obj.remotes.origin.url
-    owner_repo = '/'.join(repo_obj_remote_url.rsplit('/', 2)[-2:]).replace('.git', '')
-    print('Checkout new branch successfully....\n')
-    return owner_repo, repo_obj_branch_name
+
+    try:
+        repo_obj = git.Repo(repo_path)
+        repo_obj_branch_name = repo_obj.create_head(f'update_pre_commit_{branch_suffix}')
+        repo_obj_branch_name.checkout()
+        repo_obj_remote_url = repo_obj.remotes.origin.url
+        owner_repo = '/'.join(repo_obj_remote_url.rsplit('/', 2)[-2:]).replace('.git', '')
+        print('Checkout new branch successfully....\n')
+        return owner_repo, repo_obj_branch_name
+
+    except Exception as e:  # pragma: no cover
+        print(f'Error: {e}\n')
+        return None
 
 
 def push_commit(file, active_branch_name, msg_suffix):
@@ -165,14 +171,19 @@ def push_commit(file, active_branch_name, msg_suffix):
     message = f'update pre-commit-config {msg_suffix}'
     files_to_stage = [file]
 
-    repo_obj = git.Repo(repo_path)
-    repo_obj.index.add(files_to_stage)  # other option ('*')
-    repo_obj.index.write()
-    commit = repo_obj.index.commit(message)
-    repo_obj.git.push("--set-upstream", 'origin', branch)
-    print('Push commits successfully:')
-    print(f'from local branch: {branch}')
-    print(f'with commit hash : {commit.hexsha}\n')
+    try:
+        repo_obj = git.Repo(repo_path)
+        repo_obj.index.add(files_to_stage)  # other option ('*')
+        repo_obj.index.write()
+        commit = repo_obj.index.commit(message)
+        repo_obj.git.push("--set-upstream", 'origin', branch)
+        print('Push commits successfully:')
+        print(f'from local branch: {branch}')
+        print(f'with commit hash : {commit.hexsha}\n')
+
+    except Exception as e:  # pragma: no cover
+        print(f'Error: {e}\n')
+        return None
 
 
 def create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix):
@@ -204,7 +215,8 @@ def create_pr(gh, owner_repo, active_branch_name, variance_list, msg_suffix):
         pr = repo.create_pull(title=pr_title, body=pr_body, head=pr_branch, base=pr_base_branch)
         print(f'Create pull request #{pr.number} successfully: {pr.html_url}\n')
         return pr.number
-    except Exception as e:
+
+    except Exception as e:  # pragma: no cover
         print(f'Error: {e}\n')
         return None
 
@@ -245,11 +257,10 @@ def main(file, dry_run):
                 ref.delete()
         else:
             print(f'\nUpdate revs in {file}: None\n')
+
     except Exception:
-        print('Error !! Ensure that:')
-        print('- the fine-grained token is valid.')
-        print('- the fine-grained token has write permissions to contents and pull requests.')
-        print('- the pre-commit config file is valid.')
+        print('Error !! Ensure that the pre-commit config file is valid and the fine-grained token\
+               has write permissions to contents and pull requests.')
         sys.exit(1)
 
 
