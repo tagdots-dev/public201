@@ -141,13 +141,7 @@ jobs:
       shell: bash
       run: |
         # get overall result from all of the previous jobs
-        if "${{ \
-            needs.pre-commit.result == 'success' && \
-            needs.build-test.result == 'success' && \
-            contains(fromJSON('["success", "skipped"]'), needs.codeql.result) && \
-            contains(fromJSON('["success", "skipped"]'), needs.dependency.result) && \
-            contains(fromJSON('["success", "skipped"]'), needs.validate-release.result) \
-          }}"; then
+        if "${{ needs.pre-commit.result == 'success' && needs.build-test.result == 'success' && contains(fromJSON('["success", "skipped"]'), needs.codeql.result) && contains(fromJSON('["success", "skipped"]'), needs.dependency.result) && contains(fromJSON('["success", "skipped"]'), needs.validate-release.result) }}"; then
           echo "WORKFLOW_RESULT=:white_check_mark:" >> "$GITHUB_OUTPUT"
         else
           echo "WORKFLOW_RESULT=:no_entry:" >> "$GITHUB_OUTPUT"
