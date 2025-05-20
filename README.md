@@ -5,7 +5,7 @@
 ## 😎 Why you need update-pre-commit?
 If you are already using `pre-commit` or you are planning to use `pre-commit` to detect issues before code check-in and reduce the burden on code reviewers, **update-pre-commit** can compliment `pre-commit`.
 
-**update-pre-commit** reads your project's `pre-commit` configuration file (`.pre-commit-config.yaml`), makes GitHub API call, and creates a pull request on **GitHub**.  You can use our `action` (coming soon) to run **update-pre-commit** and keep your `pre-commit` configuration up to date.
+**update-pre-commit** reads your project's `pre-commit` configuration file (`.pre-commit-config.yaml`), makes GitHub API call to get the latest update on each of the pre-commit hooks, and creates a pull request on **GitHub**.  You can use our `action` (coming soon) to run **update-pre-commit** and keep your `pre-commit` configuration up to date.
 
 <br>
 
