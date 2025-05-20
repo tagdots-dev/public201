@@ -1,5 +1,4 @@
 ---
-# NOTE: this file is managed by terraform
 
 name: re-pre-commit
 
@@ -10,11 +9,8 @@ on:  # yamllint disable-line rule:truthy
 
 env:
   HADOLINT_VERSION: 'v2.12.0'
-  PRE_COMMMIT_VERSION: '4.2.0'
-  PYSCAN_RS_VERSION: '0.1.7'
   PYTHON_VERSION: '3.12.x'
   TERRAFORM_VERSION: '1.11.x'
-  TFLINT_VERSION: 'v0.55.1'
 
 permissions:
   contents: read
@@ -36,8 +32,7 @@ jobs:
     - shell: bash
       run: |
         # install package
-        python -m pip install -U pip
-        python -m pip install pre_commit==${{ env.PRE_COMMMIT_VERSION }} pyscan-rs==${{ env.PYSCAN_RS_VERSION }}
+        make test-install
 
     - shell: bash
       run: |
@@ -59,8 +54,6 @@ jobs:
 
     - name: Install tflint
       uses: terraform-linters/setup-tflint@90f302c255ef959cbfb4bd10581afecdb7ece3e6 # v4.1.1
-      with:
-        tflint_version: ${{ env.TFLINT_VERSION }}
 
     - name: Run pre-commit on everything
       run: pre-commit run -a -v
