@@ -1,5 +1,4 @@
 ---
-# NOTE: this file is managed by terraform
 
 name: CI
 
@@ -125,3 +124,44 @@ jobs:
           exit 1
         fi
     # --- release validation ends here --- #
+
+  notify-slack:
+    if: always()
+    needs: [pre-commit, build-test, codeql, dependency, validate-release]
+
+    runs-on: ubuntu-latest
+
+    outputs:
+      WORKFLOW_RESULT: ${{ steps.get-previous-jobs-results.outputs.WORKFLOW_RESULT }}
+
+    steps:
+
+    - name: Get Overall Jobs Results
+      id: get-overall-jobs-results
+      shell: bash
+      run: |
+        # get overall result from all of the previous jobs
+        if "${{ needs.pre-commit.result == 'success' && needs.build-test.result == 'success' && needs.codeql.result in ['success', 'skipped'] && needs.dependency.result in ['success', 'skipped'] && needs.validate-release.result in ['success', 'skipped'] }}"; then
+          echo "WORKFLOW_RESULT=:white_check_mark:" >> "$GITHUB_OUTPUT"
+        else
+          echo "WORKFLOW_RESULT=:no_entry:" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: Post message to Slack
+      uses: slackapi/slack-github-action@b0fa283ad8fea605de13dc3f449259339835fc52 # v2.1.0
+      with:
+        method: chat.postMessage
+        token: "${{ secrets.SECRET_SLACK_APP_GITHUB_BOT }}"
+        payload: |
+          channel: "${{ secrets.SECRET_SLACK_CHANNEL_CRON_TASKS }}"
+          text: "
+              *Repository: ${{ github.repository }}*\n
+              *Workflow : ${{ github.workflow }} ${{ steps.get-overall-jobs-results.outputs.WORKFLOW_RESULT }}*
+              ```
+              URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\n
+              Job: pre-commit       - ${{ needs.pre-commit.result }}\n
+              Job: build-test       - ${{ needs.build-test.result }}\n
+              Job: codeql           - ${{ needs.codeql.result }}\n
+              Job: dependency       - ${{ needs.dependency.result }}\n
+              Job: validate-release - ${{ needs.codeql.result }}
+              ```"
