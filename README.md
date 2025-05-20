@@ -13,11 +13,13 @@ If you are already using `pre-commit` or you are planning to use `pre-commit` to
 ```
 * GitHub
   □ create an account.
-  □ create a fine-grained personal access token with write permissions to contents and pull requests.
+  □ create a fine-grained personal access token with appropriate permissions (see attachment below).
 
 * Python (3.12+)
   □ install update-pre-commit.
 ```
+
+![GitHub Token Permission](assets/github_token-permissions.png)
 
 <br>
 
