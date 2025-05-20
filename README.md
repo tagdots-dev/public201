@@ -125,7 +125,7 @@ Created pull request #101 successfully: https://github.com/tagdots/hello-world/p
 
 ```
 * your project's .pre-commit-config.yaml file is valid.
-* your GitHub fine-grained personal access token has the write permissions to contents and pull requests.
+* your GitHub fine-grained token has the write permissions to contents and pull requests.
 * update-pre-commit can find the .pre-commit-config.yaml file at the root of YOUR project.
 ```
 
