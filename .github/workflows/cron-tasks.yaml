@@ -73,7 +73,7 @@ jobs:
         days-before-stale: 8
         days-before-delete: 10
         pr-check: true
-        branches-filter-regex: '^((?!main))'
+        branches-filter-regex: '^((?!main|badge))'
 
   notify-slack:
     if: always()
