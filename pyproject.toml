@@ -32,7 +32,7 @@ dependencies = [
   "ulid-py==1.1",
   "virtualenv==20.31.2",
 ]
-optional-dependencies.test = [ "build", "commitizen", "coverage", "flake8", "isort", "pre-commit", "twine" ]
+optional-dependencies.test = [ "build", "commitizen", "coverage", "flake8", "isort", "pre-commit", "pyscan-rs", "twine" ]
 
 urls.Changelog = "https://github.com/tagdots/update-pre-commit/blob/main/CHANGELOG.md"
 urls.Documentation = "https://github.com/tagdots/update-pre-commit/blob/main/README.md"
