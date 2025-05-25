@@ -15,7 +15,7 @@ repos:
     - --config
     - .github/config/hadolint-cfg.yaml
 - repo: https://github.com/adrienverge/yamllint
-  rev: v1.37.0
+  rev: v1.37.1
   hooks:
   - name: Check Yaml to verify syntax and more
     id: yamllint
@@ -48,7 +48,7 @@ repos:
     id: trailing-whitespace
     exclude: ^tests/|^.gitignore$
 - repo: https://github.com/tox-dev/pyproject-fmt
-  rev: v2.5.1
+  rev: v2.6.0
   hooks:
   - name: Python format pyproject.toml
     id: pyproject-fmt
@@ -63,7 +63,7 @@ repos:
   - name: Python flake8
     id: flake8
 - repo: https://github.com/antonbabenko/pre-commit-terraform
-  rev: v1.98.1
+  rev: v1.99.0
   hooks:
   - name: Terraform format
     id: terraform_fmt
