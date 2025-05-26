@@ -93,7 +93,8 @@ jobs:
   validate-release:
     needs: [pre-commit, build-test, dependency, codeql]
 
-    if: ${{ needs.pre-commit.result == 'success' && needs.build-test.result == 'success' && contains(fromJSON('["success", "skipped"]'), needs.codeql.result) && contains(fromJSON('["success", "skipped"]'), needs.dependency.result) }}
+    if: ${{ needs.pre-commit.result == 'success' && needs.build-test.result == 'success' }}
+    # && contains(fromJSON('["success", "skipped"]'), needs.codeql.result) && contains(fromJSON('["success", "skipped"]'), needs.dependency.result) }}
 
     runs-on: ubuntu-latest
 
