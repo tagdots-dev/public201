@@ -56,9 +56,13 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      HREF = ${{ github.head_ref }}
+
+
     steps:
     - run: echo "${{ toJson(github) }}"
-    - run: echo "${{ github.head_ref }}"
+    - run: echo "${HREF}"
     - run: echo "${{ needs.pre-commit.result }}"
     - run: echo "${{ needs.build-test.result }}"
     - run: echo "${{ needs.codeql.result }}"
@@ -67,7 +71,7 @@ jobs:
     - shell: bash
       run: |
         # test if statment on release prefix
-        if [[ "${{ startsWith(github.head_ref, 'release/') }}" ]]; then
+        if [[ "${{ startsWith(github.head_ref, 'release/') }}" == true ]]; then
           echo "good"
         else
           echo "bad"
@@ -76,7 +80,7 @@ jobs:
     - shell: bash
       run: |
         # test if results statment
-        if [[ "${{ needs.pre-commit.result == 'success' && needs.build-test.result == 'success' && contains(fromJSON('["success", "skipped"]'), needs.codeql.result) && contains(fromJSON('["success", "skipped"]'), needs.dependency.result) }}" ]]; then
+        if [[ "${{ needs.pre-commit.result == 'success' && needs.build-test.result == 'success' && contains(fromJSON('["success", "skipped"]'), needs.codeql.result) && contains(fromJSON('["success", "skipped"]'), needs.dependency.result) }}" == true ]]; then
           echo "good"
         else
           echo "bad"
@@ -85,7 +89,7 @@ jobs:
     - shell: bash
       run: |
         # test if release + results statment
-        if [[ "${{ startsWith(github.head_ref, 'release/') && (needs.pre-commit.result == 'success' && needs.build-test.result == 'success' && contains(fromJSON('["success", "skipped"]'), needs.codeql.result) && contains(fromJSON('["success", "skipped"]'), needs.dependency.result)) }}" ]]; then
+        if [[ "${{ startsWith(github.head_ref, 'release/') && (needs.pre-commit.result == 'success' && needs.build-test.result == 'success' && contains(fromJSON('["success", "skipped"]'), needs.codeql.result) && contains(fromJSON('["success", "skipped"]'), needs.dependency.result)) }}" == true ]]; then
           echo "good"
         else
           echo "bad"
