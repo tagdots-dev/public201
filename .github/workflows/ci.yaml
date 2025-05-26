@@ -63,6 +63,15 @@ jobs:
     - run: echo "${{ needs.codeql.result }}"
     - run: echo "${{ needs.dependency.result }}"
 
+    - shell: bash
+      run: |
+        # test if statment
+        if [[ ${{ needs.pre-commit.result == 'success' && needs.build-test.result == 'success' && contains(fromJSON('["success", "skipped"]'), needs.codeql.result) && contains(fromJSON('["success", "skipped"]'), needs.dependency.result) }} ]]; then
+          echo "good"
+        else
+          echo "bad"
+        fi
+
   validate-release:
     needs: [pre-commit, build-test, dependency, codeql]
 
