@@ -50,6 +50,19 @@ jobs:
     if: ${{ github.event.repository.visibility == 'public' && (github.event_name == 'pull_request' || github.event.workflow_run.event == 'pull_request')}}
     uses: ./.github/workflows/reusable-dependency-review.yaml
 
+  test:
+    if: always()
+    needs: [pre-commit, build-test, dependency, codeql]
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - run: echo ${{ toJson(github) }}
+    - run: echo ${{ needs.pre-commit.result }}
+    - run: echo ${{ needs.build-test.result }}
+    - run: echo ${{ needs.codeql.result }}
+    - run: echo ${{ needs.dependency.result }}
+
   validate-release:
     needs: [pre-commit, build-test, dependency, codeql]
 
