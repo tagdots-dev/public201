@@ -67,7 +67,7 @@ jobs:
     - shell: bash
       run: |
         # test if public statment
-        if [[ ${{ github.event.repository.visibility == 'public' }} ]]; then
+        if [[ "${{ github.event.repository.visibility == 'public' }}" ]]; then
           echo "good"
         else
           echo "bad"
@@ -76,7 +76,7 @@ jobs:
     - shell: bash
       run: |
         # test if results statment
-        if [[ ${{ needs.pre-commit.result == 'success' && needs.build-test.result == 'success' && contains(fromJSON('["success", "skipped"]'), needs.codeql.result) && contains(fromJSON('["success", "skipped"]'), needs.dependency.result) }} ]]; then
+        if [[ "${{ needs.pre-commit.result == 'success' && needs.build-test.result == 'success' && contains(fromJSON('["success", "skipped"]'), needs.codeql.result) && contains(fromJSON('["success", "skipped"]'), needs.dependency.result) }}" ]]; then
           echo "good"
         else
           echo "bad"
@@ -85,7 +85,7 @@ jobs:
     - shell: bash
       run: |
         # test if public + results statment
-        if [[ ${{ github.event.repository.visibility == 'public' && (needs.pre-commit.result == 'success' && needs.build-test.result == 'success' && contains(fromJSON('["success", "skipped"]'), needs.codeql.result) && contains(fromJSON('["success", "skipped"]'), needs.dependency.result)) }} ]]; then
+        if [[ "${{ github.event.repository.visibility == 'public' && (needs.pre-commit.result == 'success' && needs.build-test.result == 'success' && contains(fromJSON('["success", "skipped"]'), needs.codeql.result) && contains(fromJSON('["success", "skipped"]'), needs.dependency.result)) }}" ]]; then
           echo "good"
         else
           echo "bad"
